@@ -10,6 +10,7 @@ services:
       - ./apps/api-gateway/.env
     depends_on:
       - db
+      - nats
       - events
       - tickets
     volumes:
@@ -28,6 +29,7 @@ services:
       - ./apps/events/.env
     depends_on:
       - db
+      - nats
     volumes:
       - .:/app
       - /app/node_modules
@@ -42,6 +44,7 @@ services:
       - ./apps/tickets/.env
     depends_on:
       - db
+      - nats
     volumes:
       - .:/app
       - /app/node_modules
@@ -56,6 +59,12 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - 5432:5432
+  nats:
+    image: nats
+    environment:
+      - NATS_URL=nats://nats:4222
+    ports:
+      - 4222:4222
 volumes:
   pgdata:
     driver: local
