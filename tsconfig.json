@@ -31,5 +31,8 @@
         "libs/contracts/src/*"
       ]
     }
+  },
+  "watchOptions": {
+    "watchFile": "fixedPollingInterval"
   }
 }

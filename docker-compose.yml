@@ -1,0 +1,58 @@
+services:
+  api-gateway:
+    build:
+      context: .
+      dockerfile: ./apps/api-gateway/Dockerfile
+      target: development
+    command: npm run start:dev api-gateway
+    env_file:
+      - .env
+      - ./apps/api-gateway/.env
+    depends_on:
+      - db
+      - events
+      - tickets
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - ${API_GATEWAY_PORT}:${API_GATEWAY_PORT}
+  events:
+    build:
+      context: .
+      dockerfile: ./apps/events/Dockerfile
+      target: development
+    command: npm run start:dev events
+    env_file:
+      - .env
+      - ./apps/events/.env
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+      - /app/node_modules
+  tickets:
+    build:
+      context: .
+      dockerfile: ./apps/tickets/Dockerfile
+      target: development
+    command: npm run start:dev tickets
+    env_file:
+      - .env
+      - ./apps/tickets/.env
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+      - /app/node_modules
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata:
+    driver: local
