@@ -6,7 +6,7 @@ import {
 import { NatsServices } from '../enums';
 
 export class NatsFactory {
-  static createNatsOptions(service: NatsServices): NatsOptions {
+  static createOptions(service: NatsServices): NatsOptions {
     return {
       transport: Transport.NATS,
       options: {
@@ -19,7 +19,7 @@ export class NatsFactory {
   static createClientProvider(service: NatsServices): ClientProviderOptions {
     return {
       name: service,
-      ...NatsFactory.createNatsOptions(service),
+      ...NatsFactory.createOptions(service),
     };
   }
 }
