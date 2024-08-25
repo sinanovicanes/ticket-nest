@@ -10,7 +10,7 @@ export const DatabaseProvider: Provider = {
   inject: [ConfigService],
   useFactory: async (configService: ConfigService) => {
     const client = new Client({
-      connectionString: configService.get<string>('DB_URL'),
+      connectionString: configService.get<string>('DATABASE_URL'),
     });
 
     await client.connect();
