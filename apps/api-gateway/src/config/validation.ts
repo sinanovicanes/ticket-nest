@@ -2,10 +2,10 @@ import {
   ConfigValidationFactory,
   SharedEnvironmentVariables,
 } from '@app/common/config';
-import { IsPort } from 'class-validator';
+import { IsValidPort } from '@app/common/validators';
 
 export class EnvironmentVariables extends SharedEnvironmentVariables {
-  @IsPort()
+  @IsValidPort()
   PORT: number;
 }
 
