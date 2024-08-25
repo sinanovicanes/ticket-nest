@@ -31,6 +31,10 @@ export class EventsService {
   }
 
   async delete(id: number) {
-    return await this.db.delete(event).where(eq(event.id, id)).returning();
+    const result = await this.db
+      .delete(event)
+      .where(eq(event.id, id))
+      .returning()[0];
+    return result ?? null;
   }
 }

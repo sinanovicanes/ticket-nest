@@ -3,6 +3,7 @@ import { ApiGatewayController } from './api-gateway.controller';
 import { ApiGatewayService } from './api-gateway.service';
 import { ConfigModule } from '@nestjs/config';
 import { validate } from './config/validation';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { validate } from './config/validation';
       envFilePath: ['.env', 'apps/api-gateway/.env'],
       validate,
     }),
+    EventsModule,
   ],
   controllers: [ApiGatewayController],
   providers: [ApiGatewayService],
