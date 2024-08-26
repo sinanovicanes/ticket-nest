@@ -1,7 +1,11 @@
 import { Controller } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { CreateEventDto, EventsMessagePatterns } from '@app/contracts/events';
+import {
+  CreateEventDto,
+  EventsMessagePatterns,
+  FindEventsOptionsDto,
+} from '@app/contracts/events';
 
 @Controller()
 export class EventsController {
@@ -13,8 +17,8 @@ export class EventsController {
   }
 
   @MessagePattern(EventsMessagePatterns.FIND)
-  findMany(@Payload() { page, limit }) {
-    return this.eventsService.findMany(page, limit);
+  findMany(@Payload() options: FindEventsOptionsDto) {
+    return this.eventsService.findMany(options);
   }
 
   @MessagePattern(EventsMessagePatterns.FIND_ONE)
