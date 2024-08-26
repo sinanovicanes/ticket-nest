@@ -61,7 +61,7 @@ export class FindEventsOptionsDto {
 
   // Transform the value to an array if it's not already
   // This is useful when the value is passed as a query parameter
-  // e.g. orderBy=name,date
+  // e.g. orderByFields=name,date
   @Transform(({ value }) => (Array.isArray(value) ? value : value.split(',')))
   @IsOptional()
   @IsEnum(OrderByFields, { each: true })
