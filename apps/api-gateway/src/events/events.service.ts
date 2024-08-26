@@ -2,6 +2,7 @@ import { NatsServices } from '@app/common/nats';
 import {
   CreateEventDto,
   EventsMessagePatterns,
+  FindEventsOptionsDto,
   UpdateEventDto,
 } from '@app/contracts/events';
 import { Inject, Injectable } from '@nestjs/common';
@@ -15,8 +16,8 @@ export class EventsService {
     return this.client.send(EventsMessagePatterns.CREATE, createEventDto);
   }
 
-  findAll(page?: number, limit?: number) {
-    return this.client.send(EventsMessagePatterns.FIND, { page, limit });
+  findAll(options: FindEventsOptionsDto) {
+    return this.client.send(EventsMessagePatterns.FIND, options);
   }
 
   findOne(id: number) {
