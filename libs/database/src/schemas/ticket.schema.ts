@@ -1,24 +1,17 @@
 import { relations } from 'drizzle-orm';
-import {
-  integer,
-  pgTable,
-  serial,
-  timestamp,
-  varchar,
-} from 'drizzle-orm/pg-core';
+import { integer, pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
+import { createPgTimestamps } from '../utils';
 import { ticketStatus } from './enums';
 import { event } from './event.schema';
-import { ticketsForSale } from './tickets-for-sale.schema';
-import { createPgTimestamps } from '../utils';
 import { payment } from './payment.schema';
+import { ticketsForSale } from './tickets-for-sale.schema';
 
 export const ticket = pgTable('tickets', {
-  id: serial('id').primaryKey(),
-  uuid: varchar('uuid', { length: 255 }).notNull().unique(),
-  eventId: integer('event_id')
+  id: uuid('id').primaryKey().defaultRandom(),
+  eventId: uuid('event_id')
     .notNull()
     .references(() => event.id),
-  ticketSaleId: integer('ticket_sale_id')
+  ticketSaleId: uuid('ticket_sale_id')
     .notNull()
     .references(() => ticketsForSale.id),
   ownerEmail: varchar('owner_email', { length: 255 }).notNull(),

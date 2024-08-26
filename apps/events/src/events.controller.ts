@@ -22,7 +22,7 @@ export class EventsController {
   }
 
   @MessagePattern(EventsMessagePatterns.FIND_ONE)
-  findOne(@Payload() id: number) {
+  findOne(@Payload() id: string) {
     return this.eventsService.findOne(id);
   }
 
@@ -32,7 +32,7 @@ export class EventsController {
   }
 
   @MessagePattern(EventsMessagePatterns.DELETE)
-  delete(@Payload() id: number) {
+  delete(@Payload() id: string) {
     return this.eventsService.delete(id);
   }
 }

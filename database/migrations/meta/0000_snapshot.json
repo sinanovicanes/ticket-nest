@@ -1,5 +1,5 @@
 {
-  "id": "db088e80-5de5-4182-ba5a-77b0fe4a8da4",
+  "id": "184a33b1-cdaf-4e6d-a0c6-1030ec8f5b51",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -10,9 +10,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "name": {
           "name": "name",
@@ -34,7 +35,7 @@
         },
         "location_id": {
           "name": "location_id",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -78,25 +79,20 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
-        },
-        "uuid": {
-          "name": "uuid",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "event_id": {
           "name": "event_id",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
         "ticket_sale_id": {
           "name": "ticket_sale_id",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -159,15 +155,7 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "tickets_uuid_unique": {
-          "name": "tickets_uuid_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "uuid"
-          ]
-        }
-      }
+      "uniqueConstraints": {}
     },
     "public.discount_codes": {
       "name": "discount_codes",
@@ -175,13 +163,14 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "ticket_sale_id": {
           "name": "ticket_sale_id",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -256,9 +245,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "name": {
           "name": "name",
@@ -278,14 +268,14 @@
           "primaryKey": false,
           "notNull": true
         },
-        "full_address": {
-          "name": "full_address",
+        "address": {
+          "name": "address",
           "type": "varchar(500)",
           "primaryKey": false,
           "notNull": true
         },
-        "full_address_2": {
-          "name": "full_address_2",
+        "address_2": {
+          "name": "address_2",
           "type": "varchar(500)",
           "primaryKey": false,
           "notNull": false
@@ -316,13 +306,14 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "ticket_id": {
           "name": "ticket_id",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -378,13 +369,14 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "event_id": {
           "name": "event_id",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },

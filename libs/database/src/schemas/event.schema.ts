@@ -2,8 +2,8 @@ import { relations } from 'drizzle-orm';
 import {
   integer,
   pgTable,
-  serial,
   timestamp,
+  uuid,
   varchar,
 } from 'drizzle-orm/pg-core';
 import { createPgTimestamps } from '../utils';
@@ -12,11 +12,11 @@ import { ticket } from './ticket.schema';
 import { ticketsForSale } from './tickets-for-sale.schema';
 
 export const event = pgTable('events', {
-  id: serial('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 255 }).notNull(),
   date: timestamp('date', { mode: 'string' }).notNull(),
   description: varchar('description', { length: 2000 }).notNull(),
-  locationId: integer('location_id')
+  locationId: uuid('location_id')
     .notNull()
     .references(() => location.id),
   ...createPgTimestamps(),

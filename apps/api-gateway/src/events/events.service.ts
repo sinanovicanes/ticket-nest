@@ -20,18 +20,18 @@ export class EventsService {
     return this.client.send(EventsMessagePatterns.FIND, options);
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.client.send(EventsMessagePatterns.FIND_ONE, id);
   }
 
-  update(id: number, updateEventDto: UpdateEventDto) {
+  update(id: string, updateEventDto: UpdateEventDto) {
     return this.client.send(EventsMessagePatterns.UPDATE, {
       id,
       ...updateEventDto,
     });
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.client.send(EventsMessagePatterns.DELETE, id);
   }
 }

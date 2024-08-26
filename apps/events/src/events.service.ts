@@ -11,7 +11,7 @@ import { asc, between, desc, eq, ilike, or, SQL } from 'drizzle-orm';
 export class EventsService {
   @InjectDB() private readonly db: Database;
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const results = await this.db.select().from(event).where(eq(event.id, id));
     return results[0];
   }
@@ -79,7 +79,7 @@ export class EventsService {
     return await this.db.update(event).set(dto).returning();
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     const result = await this.db
       .delete(event)
       .where(eq(event.id, id))

@@ -11,30 +11,28 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "events" (
-	"id" serial PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar(255) NOT NULL,
 	"date" timestamp NOT NULL,
 	"description" varchar(2000) NOT NULL,
-	"location_id" integer NOT NULL,
+	"location_id" uuid NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tickets" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"uuid" varchar(255) NOT NULL,
-	"event_id" integer NOT NULL,
-	"ticket_sale_id" integer NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"event_id" uuid NOT NULL,
+	"ticket_sale_id" uuid NOT NULL,
 	"owner_email" varchar(255) NOT NULL,
 	"status" "ticket_statuses" DEFAULT 'RESERVED' NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL,
-	CONSTRAINT "tickets_uuid_unique" UNIQUE("uuid")
+	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "discount_codes" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"ticket_sale_id" integer NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"ticket_sale_id" uuid NOT NULL,
 	"discount_type" "discount_types" NOT NULL,
 	"amount" integer NOT NULL,
 	"code" varchar(255) NOT NULL,
@@ -45,19 +43,19 @@ CREATE TABLE IF NOT EXISTS "discount_codes" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "locations" (
-	"id" serial PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar(255) NOT NULL,
 	"city" varchar(255) NOT NULL,
 	"province" varchar(255) NOT NULL,
-	"full_address" varchar(500) NOT NULL,
-	"full_address_2" varchar(500),
+	"address" varchar(500) NOT NULL,
+	"address_2" varchar(500),
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "payments" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"ticket_id" integer NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"ticket_id" uuid NOT NULL,
 	"default_price" integer NOT NULL,
 	"payment" integer NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
@@ -65,8 +63,8 @@ CREATE TABLE IF NOT EXISTS "payments" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tickets_for_sale" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"event_id" integer NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"event_id" uuid NOT NULL,
 	"name" varchar(255) NOT NULL,
 	"description" varchar(2000) NOT NULL,
 	"quantity" integer NOT NULL,

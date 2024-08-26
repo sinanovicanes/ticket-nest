@@ -18,5 +18,5 @@ export class CreateEventDto {
   @IsDateString()
   date: string;
   @IsInt()
-  locationId: number;
+  locationId: string;
 }

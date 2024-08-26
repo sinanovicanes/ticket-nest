@@ -2,18 +2,18 @@ import { relations } from 'drizzle-orm';
 import {
   integer,
   pgTable,
-  serial,
   timestamp,
+  uuid,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { ticketsForSale } from './tickets-for-sale.schema';
-import { discountType } from './enums';
 import { createPgTimestamps } from '../utils';
+import { discountType } from './enums';
 import { payment } from './payment.schema';
+import { ticketsForSale } from './tickets-for-sale.schema';
 
 export const discountCode = pgTable('discount_codes', {
-  id: serial('id').primaryKey(),
-  ticketSaleId: integer('ticket_sale_id')
+  id: uuid('id').primaryKey().defaultRandom(),
+  ticketSaleId: uuid('ticket_sale_id')
     .notNull()
     .references(() => ticketsForSale.id),
   discountType: discountType('discount_type').notNull(),
