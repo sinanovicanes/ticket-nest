@@ -5,7 +5,7 @@ import {
 } from '@app/contracts/events';
 import { Database, event, InjectDB, location } from '@app/database';
 import { Injectable } from '@nestjs/common';
-import { asc, between, desc, eq } from 'drizzle-orm';
+import { asc, between, desc, eq, ilike, or, SQL } from 'drizzle-orm';
 
 @Injectable()
 export class EventsService {
@@ -17,7 +17,16 @@ export class EventsService {
   }
 
   async findMany(options: FindEventsOptionsDto) {
-    const { page, limit, startDate, endDate, order, orderBy } = options;
+    const {
+      page,
+      limit,
+      startDate,
+      endDate,
+      order,
+      orderByFields,
+      search,
+      searchFields,
+    } = options;
     const offset = (page - 1) * limit;
 
     const dbQuery = this.db
@@ -45,9 +54,19 @@ export class EventsService {
       dbQuery.where(between(event.date, startDate, endDate));
     }
 
-    const orderBySql =
-      order == 'ASC' ? asc(event[orderBy]) : desc(event[orderBy]);
-    dbQuery.orderBy(orderBySql);
+    if (search) {
+      const searchConditions = searchFields.map((field) =>
+        ilike(event[field], `%${search}%`),
+      );
+
+      dbQuery.where(or(...searchConditions));
+    }
+
+    const orderByColumns = orderByFields.map((orderBy) =>
+      order == 'ASC' ? asc(event[orderBy]) : desc(event[orderBy]),
+    );
+
+    dbQuery.orderBy(...orderByColumns);
 
     return await dbQuery;
   }
