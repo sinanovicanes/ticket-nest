@@ -8,8 +8,8 @@ export const location = pgTable('locations', {
   name: varchar('name', { length: 255 }).notNull(),
   city: varchar('city', { length: 255 }).notNull(),
   province: varchar('province', { length: 255 }).notNull(),
-  fullAddress: varchar('full_address', { length: 500 }).notNull(),
-  fullAddress2: varchar('full_address_2', { length: 500 }),
+  address: varchar('address', { length: 500 }).notNull(),
+  address2: varchar('address_2', { length: 500 }),
   ...createPgTimestamps(),
 });
 
