@@ -63,6 +63,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/database/tsconfig.lib.json"
       }
+    },
+    "ticket-sales": {
+      "type": "application",
+      "root": "apps/ticket-sales",
+      "entryFile": "main",
+      "sourceRoot": "apps/ticket-sales/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/ticket-sales/tsconfig.app.json"
+      }
     }
   }
 }
