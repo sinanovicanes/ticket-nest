@@ -4,6 +4,7 @@ import {
   EventsMessagePatterns,
   FindEventsOptionsDto,
   UpdateEventDto,
+  UpdateEventMessageDto,
 } from '@app/contracts/events';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
@@ -12,8 +13,8 @@ import { ClientProxy } from '@nestjs/microservices';
 export class EventsService {
   @Inject(NatsServices.EVENTS) private readonly client: ClientProxy;
 
-  create(createEventDto: CreateEventDto) {
-    return this.client.send(EventsMessagePatterns.CREATE, createEventDto);
+  create(dto: CreateEventDto) {
+    return this.client.send(EventsMessagePatterns.CREATE, dto);
   }
 
   findAll(options: FindEventsOptionsDto) {
@@ -24,11 +25,11 @@ export class EventsService {
     return this.client.send(EventsMessagePatterns.FIND_ONE, id);
   }
 
-  update(id: string, updateEventDto: UpdateEventDto) {
+  update(id: string, dto: UpdateEventDto) {
     return this.client.send(EventsMessagePatterns.UPDATE, {
       id,
-      ...updateEventDto,
-    });
+      dto,
+    } as UpdateEventMessageDto);
   }
 
   remove(id: string) {
