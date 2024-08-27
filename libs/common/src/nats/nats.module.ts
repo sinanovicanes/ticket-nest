@@ -10,9 +10,7 @@ export class NatsModule {
       module: NatsModule,
       imports: [
         ClientsModule.register({
-          clients: services.map((service) =>
-            NatsFactory.createClientProvider(service),
-          ),
+          clients: services.map(NatsFactory.createClientProvider),
         }),
       ],
       providers: [],
