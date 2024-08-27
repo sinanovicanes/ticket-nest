@@ -3,7 +3,13 @@ import {
   FindTicketSalesOptionsDto,
   UpdateTicketSalesDto,
 } from '@app/contracts/ticket-sales';
-import { Database, event, InjectDB, ticketSales } from '@app/database';
+import {
+  Database,
+  event,
+  InjectDB,
+  SelectFieldsFactory,
+  ticketSales,
+} from '@app/database';
 import { Injectable } from '@nestjs/common';
 import { asc, between, desc, eq, gte, ilike, lte, or } from 'drizzle-orm';
 
@@ -19,7 +25,6 @@ export class TicketSalesService {
     return results.pop();
   }
 
-  // TODO: Add find options
   async findMany(options: FindTicketSalesOptionsDto) {
     const {
       page,
@@ -33,24 +38,20 @@ export class TicketSalesService {
       minPrice,
       maxPrice,
       eventId,
+      selectFields,
     } = options;
     const offset = (page - 1) * limit;
 
+    const fields = SelectFieldsFactory.createFromDto(
+      selectFields,
+      ticketSales,
+      {
+        event,
+      },
+    );
+
     const dbQuery = this.db
-      .select({
-        id: ticketSales.id,
-        name: ticketSales.name,
-        description: ticketSales.description,
-        price: ticketSales.price,
-        event: {
-          id: event.id,
-          name: event.name,
-          description: event.description,
-          date: event.date,
-          createdAt: event.createdAt,
-          updatedAt: event.updatedAt,
-        },
-      })
+      .select(fields)
       .from(ticketSales)
       .leftJoin(event, eq(ticketSales.eventId, event.id))
       .offset(offset)

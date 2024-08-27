@@ -9,9 +9,8 @@ export const payment = pgTable('payments', {
   ticketId: uuid('ticket_id')
     .notNull()
     .references(() => ticket.id),
-  default_price: integer('default_price').notNull(),
-  // TODO: Add discountId
-  // discountId: integer('discount_id').references(() => .id),
+  defaultPrice: integer('default_price').notNull(),
+  discountId: integer('discount_id').references(() => discountCode.id),
   payment: integer('payment').notNull(),
   ...createPgTimestamps(),
 });

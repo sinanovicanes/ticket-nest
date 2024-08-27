@@ -1,7 +1,7 @@
 import { NatsServices } from '@app/common/nats';
 import {
   CreateTicketSalesDto,
-  FindTicketSalesOptionsDto,
+  FindTicketSalesQueryDto,
   TicketSalesMessagePatterns,
   UpdateTicketSalesDto,
   UpdateTicketSalesMessageDto,
@@ -17,7 +17,7 @@ export class TicketSalesService {
     return this.client.send(TicketSalesMessagePatterns.CREATE, dto);
   }
 
-  findMany(options: FindTicketSalesOptionsDto) {
+  findMany(options: FindTicketSalesQueryDto) {
     return this.client.send(TicketSalesMessagePatterns.FIND_MANY, options);
   }
 

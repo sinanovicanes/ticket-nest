@@ -6,11 +6,13 @@ import {
   uuid,
   varchar,
 } from 'drizzle-orm/pg-core';
+import { TableFields } from '../types';
 import { createPgTimestamps } from '../utils';
 import { discountKind } from './enums';
 import { payment } from './payment.schema';
 import { ticketSales } from './ticket-sales.schema';
 
+export type discountCodeFields = TableFields<typeof discountCode>;
 export const discountCode = pgTable('discount_codes', {
   id: uuid('id').primaryKey().defaultRandom(),
   ticketSalesId: uuid('ticket_sales_id')

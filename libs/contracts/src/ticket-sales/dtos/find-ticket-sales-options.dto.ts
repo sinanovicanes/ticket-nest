@@ -1,3 +1,4 @@
+import { TicketSalesSelectFieldsDto } from '@app/database/dtos';
 import { Transform, Type } from 'class-transformer';
 import {
   IsDateString,
@@ -8,6 +9,7 @@ import {
   Length,
   Max,
   Min,
+  ValidateNested,
 } from 'class-validator';
 
 enum OrderOptions {
@@ -87,4 +89,10 @@ export class FindTicketSalesOptionsDto {
   @IsOptional()
   @IsString()
   eventId?: string;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => TicketSalesSelectFieldsDto)
+  selectFields: TicketSalesSelectFieldsDto =
+    TicketSalesSelectFieldsDto.default();
 }
