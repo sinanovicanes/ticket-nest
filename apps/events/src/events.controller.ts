@@ -5,6 +5,7 @@ import {
   CreateEventDto,
   EventsMessagePatterns,
   FindEventsOptionsDto,
+  UpdateEventMessageDto,
 } from '@app/contracts/events';
 
 @Controller()
@@ -27,8 +28,8 @@ export class EventsController {
   }
 
   @MessagePattern(EventsMessagePatterns.UPDATE)
-  update(@Payload() dto: CreateEventDto) {
-    return this.eventsService.update(dto);
+  update(@Payload() { id, dto }: UpdateEventMessageDto) {
+    return this.eventsService.updateOne(id, dto);
   }
 
   @MessagePattern(EventsMessagePatterns.DELETE)

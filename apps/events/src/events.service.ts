@@ -75,8 +75,14 @@ export class EventsService {
     return await this.db.insert(event).values(dto).returning();
   }
 
-  async update(dto: UpdateEventDto) {
-    return await this.db.update(event).set(dto).returning();
+  async updateOne(id: string, dto: UpdateEventDto) {
+    const results = await this.db
+      .update(event)
+      .set(dto)
+      .where(eq(event.id, id))
+      .returning();
+
+    return results.pop() ?? null;
   }
 
   async delete(id: string) {
