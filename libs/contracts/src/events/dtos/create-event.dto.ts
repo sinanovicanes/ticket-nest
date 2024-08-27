@@ -17,6 +17,7 @@ export class CreateEventDto {
   description: string;
   @IsDateString()
   date: string;
-  @IsInt()
+  @IsString()
+  @IsNotEmpty()
   locationId: string;
 }
