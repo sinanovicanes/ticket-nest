@@ -12,6 +12,7 @@ services:
       - db
       - nats
       - events
+      - ticket-sales
       - tickets
     volumes:
       - .:/app
@@ -33,6 +34,22 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+  ticket-sales:
+    build:
+      context: .
+      dockerfile: ./apps/ticket-sales/Dockerfile
+      target: development
+    command: npm run start:dev ticket-sales
+    env_file:
+      - .env
+      - ./apps/ticket-sales/.env
+    depends_on:
+      - db
+      - nats
+      - events
+    volumes:
+      - .:/app
+      - /app/node_modules
   tickets:
     build:
       context: .
@@ -45,6 +62,8 @@ services:
     depends_on:
       - db
       - nats
+      - events
+      - ticket-sales
     volumes:
       - .:/app
       - /app/node_modules
