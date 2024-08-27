@@ -4,4 +4,4 @@ export * from './ticket.schema';
 export * from './discount-code.schema';
 export * from './location.schema';
 export * from './payment.schema';
-export * from './tickets-for-sale.schema';
+export * from './ticket-sales.schema';

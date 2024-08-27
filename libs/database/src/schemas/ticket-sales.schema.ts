@@ -5,7 +5,7 @@ import { discountCode } from './discount-code.schema';
 import { event } from './event.schema';
 import { ticket } from './ticket.schema';
 
-export const ticketsForSale = pgTable('tickets_for_sale', {
+export const ticketSales = pgTable('ticket_sales', {
   id: uuid('id').primaryKey().defaultRandom(),
   eventId: uuid('event_id')
     .notNull()
@@ -17,14 +17,11 @@ export const ticketsForSale = pgTable('tickets_for_sale', {
   ...createPgTimestamps(),
 });
 
-export const ticketsForSaleRelations = relations(
-  ticketsForSale,
-  ({ one, many }) => ({
-    event: one(event, {
-      fields: [ticketsForSale.eventId],
-      references: [event.id],
-    }),
-    discountCodes: many(discountCode),
-    tickets: many(ticket),
+export const ticketSalesRelations = relations(ticketSales, ({ one, many }) => ({
+  event: one(event, {
+    fields: [ticketSales.eventId],
+    references: [event.id],
   }),
-);
+  discountCodes: many(discountCode),
+  tickets: many(ticket),
+}));

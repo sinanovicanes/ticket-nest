@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS "events" (
 CREATE TABLE IF NOT EXISTS "tickets" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"event_id" uuid NOT NULL,
-	"ticket_sale_id" uuid NOT NULL,
+	"ticket_sales_id" uuid NOT NULL,
 	"owner_email" varchar(255) NOT NULL,
 	"status" "ticket_statuses" DEFAULT 'RESERVED' NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS "tickets" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "discount_codes" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"ticket_sale_id" uuid NOT NULL,
+	"ticket_sales_id" uuid NOT NULL,
 	"discount_type" "discount_types" NOT NULL,
 	"amount" integer NOT NULL,
 	"code" varchar(255) NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS "payments" (
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "tickets_for_sale" (
+CREATE TABLE IF NOT EXISTS "ticket_sales" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"event_id" uuid NOT NULL,
 	"name" varchar(255) NOT NULL,
@@ -86,13 +86,13 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "tickets" ADD CONSTRAINT "tickets_ticket_sale_id_tickets_for_sale_id_fk" FOREIGN KEY ("ticket_sale_id") REFERENCES "public"."tickets_for_sale"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "tickets" ADD CONSTRAINT "tickets_ticket_sales_id_ticket_sales_id_fk" FOREIGN KEY ("ticket_sales_id") REFERENCES "public"."ticket_sales"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "discount_codes" ADD CONSTRAINT "discount_codes_ticket_sale_id_tickets_for_sale_id_fk" FOREIGN KEY ("ticket_sale_id") REFERENCES "public"."tickets_for_sale"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "discount_codes" ADD CONSTRAINT "discount_codes_ticket_sales_id_ticket_sales_id_fk" FOREIGN KEY ("ticket_sales_id") REFERENCES "public"."ticket_sales"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -104,7 +104,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "tickets_for_sale" ADD CONSTRAINT "tickets_for_sale_event_id_events_id_fk" FOREIGN KEY ("event_id") REFERENCES "public"."events"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "ticket_sales" ADD CONSTRAINT "ticket_sales_event_id_events_id_fk" FOREIGN KEY ("event_id") REFERENCES "public"."events"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

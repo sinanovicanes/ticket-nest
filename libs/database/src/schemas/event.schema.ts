@@ -9,7 +9,7 @@ import {
 import { createPgTimestamps } from '../utils';
 import { location } from './location.schema';
 import { ticket } from './ticket.schema';
-import { ticketsForSale } from './tickets-for-sale.schema';
+import { ticketSales } from './ticket-sales.schema';
 
 export const event = pgTable('events', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -28,5 +28,5 @@ export const eventRelations = relations(event, ({ many, one }) => ({
     references: [location.id],
   }),
   tickets: many(ticket),
-  ticketsForSale: many(ticketsForSale),
+  ticketSales: many(ticketSales),
 }));

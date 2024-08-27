@@ -1,5 +1,5 @@
 {
-  "id": "184a33b1-cdaf-4e6d-a0c6-1030ec8f5b51",
+  "id": "0f615ae1-89cf-45dd-8986-653f79eb768d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -90,8 +90,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "ticket_sale_id": {
-          "name": "ticket_sale_id",
+        "ticket_sales_id": {
+          "name": "ticket_sales_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -140,12 +140,12 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "tickets_ticket_sale_id_tickets_for_sale_id_fk": {
-          "name": "tickets_ticket_sale_id_tickets_for_sale_id_fk",
+        "tickets_ticket_sales_id_ticket_sales_id_fk": {
+          "name": "tickets_ticket_sales_id_ticket_sales_id_fk",
           "tableFrom": "tickets",
-          "tableTo": "tickets_for_sale",
+          "tableTo": "ticket_sales",
           "columnsFrom": [
-            "ticket_sale_id"
+            "ticket_sales_id"
           ],
           "columnsTo": [
             "id"
@@ -168,8 +168,8 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "ticket_sale_id": {
-          "name": "ticket_sale_id",
+        "ticket_sales_id": {
+          "name": "ticket_sales_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -222,12 +222,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "discount_codes_ticket_sale_id_tickets_for_sale_id_fk": {
-          "name": "discount_codes_ticket_sale_id_tickets_for_sale_id_fk",
+        "discount_codes_ticket_sales_id_ticket_sales_id_fk": {
+          "name": "discount_codes_ticket_sales_id_ticket_sales_id_fk",
           "tableFrom": "discount_codes",
-          "tableTo": "tickets_for_sale",
+          "tableTo": "ticket_sales",
           "columnsFrom": [
-            "ticket_sale_id"
+            "ticket_sales_id"
           ],
           "columnsTo": [
             "id"
@@ -363,8 +363,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.tickets_for_sale": {
-      "name": "tickets_for_sale",
+    "public.ticket_sales": {
+      "name": "ticket_sales",
       "schema": "",
       "columns": {
         "id": {
@@ -421,9 +421,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "tickets_for_sale_event_id_events_id_fk": {
-          "name": "tickets_for_sale_event_id_events_id_fk",
-          "tableFrom": "tickets_for_sale",
+        "ticket_sales_event_id_events_id_fk": {
+          "name": "ticket_sales_event_id_events_id_fk",
+          "tableFrom": "ticket_sales",
           "tableTo": "events",
           "columnsFrom": [
             "event_id"

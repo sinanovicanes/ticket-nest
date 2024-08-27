@@ -4,16 +4,16 @@ import { createPgTimestamps } from '../utils';
 import { ticketStatus } from './enums';
 import { event } from './event.schema';
 import { payment } from './payment.schema';
-import { ticketsForSale } from './tickets-for-sale.schema';
+import { ticketSales } from './ticket-sales.schema';
 
 export const ticket = pgTable('tickets', {
   id: uuid('id').primaryKey().defaultRandom(),
   eventId: uuid('event_id')
     .notNull()
     .references(() => event.id),
-  ticketSaleId: uuid('ticket_sale_id')
+  ticketSalesId: uuid('ticket_sales_id')
     .notNull()
-    .references(() => ticketsForSale.id),
+    .references(() => ticketSales.id),
   ownerEmail: varchar('owner_email', { length: 255 }).notNull(),
   status: ticketStatus('status').notNull().default('RESERVED'),
   ...createPgTimestamps(),
@@ -24,9 +24,9 @@ export const ticketRelations = relations(ticket, ({ one }) => ({
     fields: [ticket.eventId],
     references: [event.id],
   }),
-  ticketForSale: one(ticketsForSale, {
-    fields: [ticket.ticketSaleId],
-    references: [ticketsForSale.id],
+  ticketForSale: one(ticketSales, {
+    fields: [ticket.ticketSalesId],
+    references: [ticketSales.id],
   }),
   payment: one(payment, {
     fields: [ticket.id],

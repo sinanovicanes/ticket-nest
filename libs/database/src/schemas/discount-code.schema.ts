@@ -9,13 +9,13 @@ import {
 import { createPgTimestamps } from '../utils';
 import { discountType } from './enums';
 import { payment } from './payment.schema';
-import { ticketsForSale } from './tickets-for-sale.schema';
+import { ticketSales } from './ticket-sales.schema';
 
 export const discountCode = pgTable('discount_codes', {
   id: uuid('id').primaryKey().defaultRandom(),
-  ticketSaleId: uuid('ticket_sale_id')
+  ticketSalesId: uuid('ticket_sales_id')
     .notNull()
-    .references(() => ticketsForSale.id),
+    .references(() => ticketSales.id),
   discountType: discountType('discount_type').notNull(),
   amount: integer('amount').notNull(),
   code: varchar('code', { length: 255 }).notNull(),
@@ -27,9 +27,9 @@ export const discountCode = pgTable('discount_codes', {
 export const discountCodeRelations = relations(
   discountCode,
   ({ one, many }) => ({
-    ticketsForSale: one(ticketsForSale, {
-      fields: [discountCode.ticketSaleId],
-      references: [ticketsForSale.id],
+    ticketSales: one(ticketSales, {
+      fields: [discountCode.ticketSalesId],
+      references: [ticketSales.id],
     }),
     payments: many(payment),
   }),
