@@ -7,7 +7,7 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core';
 import { createPgTimestamps } from '../utils';
-import { discountType } from './enums';
+import { discountKind } from './enums';
 import { payment } from './payment.schema';
 import { ticketSales } from './ticket-sales.schema';
 
@@ -16,7 +16,7 @@ export const discountCode = pgTable('discount_codes', {
   ticketSalesId: uuid('ticket_sales_id')
     .notNull()
     .references(() => ticketSales.id),
-  discountType: discountType('discount_type').notNull(),
+  kind: discountKind('kind').notNull(),
   amount: integer('amount').notNull(),
   code: varchar('code', { length: 255 }).notNull(),
   maxUsage: integer('max_usage').notNull(),

@@ -1,11 +1,11 @@
 DO $$ BEGIN
- CREATE TYPE "public"."discount_types" AS ENUM('PERCENTAGE', 'FIXED');
+ CREATE TYPE "public"."discount_kind" AS ENUM('PERCENTAGE', 'FIXED');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- CREATE TYPE "public"."ticket_statuses" AS ENUM('SOLD', 'CANCELLED', 'RESERVED');
+ CREATE TYPE "public"."ticket_statuses" AS ENUM('SOLD', 'RESERVED', 'CANCELLED');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS "tickets" (
 CREATE TABLE IF NOT EXISTS "discount_codes" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"ticket_sales_id" uuid NOT NULL,
-	"discount_type" "discount_types" NOT NULL,
+	"kind" "discount_kind" NOT NULL,
 	"amount" integer NOT NULL,
 	"code" varchar(255) NOT NULL,
 	"max_usage" integer NOT NULL,

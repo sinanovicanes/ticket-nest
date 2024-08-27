@@ -1,5 +1,5 @@
 {
-  "id": "0f615ae1-89cf-45dd-8986-653f79eb768d",
+  "id": "175e7170-fda6-4900-8326-a97533660750",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -174,9 +174,9 @@
           "primaryKey": false,
           "notNull": true
         },
-        "discount_type": {
-          "name": "discount_type",
-          "type": "discount_types",
+        "kind": {
+          "name": "kind",
+          "type": "discount_kind",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
@@ -440,8 +440,8 @@
     }
   },
   "enums": {
-    "public.discount_types": {
-      "name": "discount_types",
+    "public.discount_kind": {
+      "name": "discount_kind",
       "schema": "public",
       "values": [
         "PERCENTAGE",
@@ -453,8 +453,8 @@
       "schema": "public",
       "values": [
         "SOLD",
-        "CANCELLED",
-        "RESERVED"
+        "RESERVED",
+        "CANCELLED"
       ]
     }
   },

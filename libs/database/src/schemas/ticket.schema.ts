@@ -5,6 +5,7 @@ import { ticketStatus } from './enums';
 import { event } from './event.schema';
 import { payment } from './payment.schema';
 import { ticketSales } from './ticket-sales.schema';
+import { TicketStatus } from '../enums';
 
 export const ticket = pgTable('tickets', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -15,7 +16,7 @@ export const ticket = pgTable('tickets', {
     .notNull()
     .references(() => ticketSales.id),
   ownerEmail: varchar('owner_email', { length: 255 }).notNull(),
-  status: ticketStatus('status').notNull().default('RESERVED'),
+  status: ticketStatus('status').notNull().default(TicketStatus.RESERVED),
   ...createPgTimestamps(),
 });
 
@@ -24,7 +25,7 @@ export const ticketRelations = relations(ticket, ({ one }) => ({
     fields: [ticket.eventId],
     references: [event.id],
   }),
-  ticketForSale: one(ticketSales, {
+  ticketSales: one(ticketSales, {
     fields: [ticket.ticketSalesId],
     references: [ticketSales.id],
   }),
