@@ -1,5 +1,6 @@
 import {
   CreateTicketSalesDto,
+  FindTicketSalesOptionsDto,
   TicketSalesMessagePatterns,
   UpdateTicketSalesMessageDto,
 } from '@app/contracts/ticket-sales';
@@ -16,9 +17,9 @@ export class TicketSalesController {
     return this.ticketSalesService.create(dto);
   }
 
-  @MessagePattern(TicketSalesMessagePatterns.FIND)
-  findMany() {
-    return this.ticketSalesService.findMany();
+  @MessagePattern(TicketSalesMessagePatterns.FIND_MANY)
+  findMany(@Payload() options: FindTicketSalesOptionsDto) {
+    return this.ticketSalesService.findMany(options);
   }
 
   @MessagePattern(TicketSalesMessagePatterns.FIND_ONE)

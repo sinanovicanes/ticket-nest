@@ -17,8 +17,8 @@ export class EventsService {
     return this.client.send(EventsMessagePatterns.CREATE, dto);
   }
 
-  findAll(options: FindEventsOptionsDto) {
-    return this.client.send(EventsMessagePatterns.FIND, options);
+  findMany(options: FindEventsOptionsDto) {
+    return this.client.send(EventsMessagePatterns.FIND_MANY, options);
   }
 
   findOne(id: string) {

@@ -5,7 +5,7 @@ import {
 } from '@app/contracts/events';
 import { Database, event, InjectDB, location } from '@app/database';
 import { Injectable } from '@nestjs/common';
-import { asc, between, desc, eq, ilike, or, SQL } from 'drizzle-orm';
+import { asc, between, desc, eq, ilike, or } from 'drizzle-orm';
 
 @Injectable()
 export class EventsService {

@@ -1,6 +1,7 @@
 import { NatsServices } from '@app/common/nats';
 import {
   CreateTicketSalesDto,
+  FindTicketSalesOptionsDto,
   TicketSalesMessagePatterns,
   UpdateTicketSalesDto,
   UpdateTicketSalesMessageDto,
@@ -16,8 +17,8 @@ export class TicketSalesService {
     return this.client.send(TicketSalesMessagePatterns.CREATE, dto);
   }
 
-  findAll() {
-    return this.client.send(TicketSalesMessagePatterns.FIND, {});
+  findMany(options: FindTicketSalesOptionsDto) {
+    return this.client.send(TicketSalesMessagePatterns.FIND_MANY, options);
   }
 
   findOne(id: string) {

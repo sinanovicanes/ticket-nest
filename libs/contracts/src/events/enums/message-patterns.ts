@@ -2,6 +2,6 @@ export enum EventsMessagePatterns {
   CREATE = 'event.create',
   UPDATE = 'event.update',
   DELETE = 'event.delete',
-  FIND = 'event.find',
+  FIND_MANY = 'event.findMany',
   FIND_ONE = 'event.findOne',
 }

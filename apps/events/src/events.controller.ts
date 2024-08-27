@@ -17,7 +17,7 @@ export class EventsController {
     return this.eventsService.create(dto);
   }
 
-  @MessagePattern(EventsMessagePatterns.FIND)
+  @MessagePattern(EventsMessagePatterns.FIND_MANY)
   findMany(@Payload() options: FindEventsOptionsDto) {
     return this.eventsService.findMany(options);
   }

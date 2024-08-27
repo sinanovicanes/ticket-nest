@@ -8,7 +8,7 @@ export class EventsController {
 
   @Get()
   findAll(@Query() query: FindEventsOptionsDto) {
-    return this.eventsService.findAll(query);
+    return this.eventsService.findMany(query);
   }
 
   @Get(':id')
