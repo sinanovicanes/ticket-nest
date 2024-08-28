@@ -23,29 +23,21 @@ export class TicketSelectFieldsDto
   @ValidateNested()
   @Type(() => TicketSalesSelectFieldsDto)
   @Transform(({ value }) =>
-    value === true ? TicketSalesSelectFieldsDto.default() : value,
+    value === true ? new TicketSalesSelectFieldsDto() : value,
   )
-  ticketSales: TicketSalesSelectFieldsDto;
+  ticketSales?: TicketSalesSelectFieldsDto;
 
   @IsOptional()
   @ValidateNested()
   @Type(() => EventSelectFieldsDto)
   @Transform(({ value }) =>
-    value === true ? EventSelectFieldsDto.default() : value,
+    value === true ? new EventSelectFieldsDto() : value,
   )
-  event: EventSelectFieldsDto;
+  event?: EventSelectFieldsDto;
 
-  static default(): TicketSelectFieldsDto {
-    return new TicketSelectFieldsDto({
-      id: true,
-      ownerEmail: true,
-      status: true,
-      event: EventSelectFieldsDto.default(),
-      ticketSales: TicketSalesSelectFieldsDto.default(),
-    });
-  }
-
-  constructor(partial: Partial<TicketSelectFieldsDto>) {
-    Object.assign(this, partial);
+  constructor(partial?: Partial<TicketSelectFieldsDto>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
   }
 }

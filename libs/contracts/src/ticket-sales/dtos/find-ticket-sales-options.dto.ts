@@ -93,6 +93,5 @@ export class FindTicketSalesOptionsDto {
   @IsOptional()
   @ValidateNested()
   @Type(() => TicketSalesSelectFieldsDto)
-  selectFields: TicketSalesSelectFieldsDto =
-    TicketSalesSelectFieldsDto.default();
+  selectFields: TicketSalesSelectFieldsDto = new TicketSalesSelectFieldsDto();
 }

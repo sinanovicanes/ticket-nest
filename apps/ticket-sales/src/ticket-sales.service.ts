@@ -9,6 +9,8 @@ import {
   InjectDB,
   SelectFieldsFactory,
   ticketSales,
+  location,
+  TicketSalesSelectFieldsDto,
 } from '@app/database';
 import { Injectable } from '@nestjs/common';
 import { asc, between, desc, eq, gte, ilike, lte, or } from 'drizzle-orm';
@@ -17,12 +19,32 @@ import { asc, between, desc, eq, gte, ilike, lte, or } from 'drizzle-orm';
 export class TicketSalesService {
   @InjectDB() private readonly db: Database;
 
-  async findOne(id: string) {
-    const results = await this.db
-      .select()
+  async findOne(id: string, selectFields: TicketSalesSelectFieldsDto) {
+    const fields = SelectFieldsFactory.createFromDto(
+      selectFields,
+      ticketSales,
+      {
+        event,
+        location,
+      },
+    );
+
+    const query = this.db
+      .select(fields)
       .from(ticketSales)
       .where(eq(ticketSales.id, id));
-    return results.pop();
+
+    if (selectFields.event) {
+      query.leftJoin(event, eq(ticketSales.eventId, event.id));
+    }
+
+    if (selectFields.event.location) {
+      query.leftJoin(location, eq(event.locationId, location.id));
+    }
+
+    const results = await query;
+
+    return results.pop() ?? null;
   }
 
   async findMany(options: FindTicketSalesOptionsDto) {
@@ -47,6 +69,7 @@ export class TicketSalesService {
       ticketSales,
       {
         event,
+        location,
       },
     );
 
@@ -54,6 +77,7 @@ export class TicketSalesService {
       .select(fields)
       .from(ticketSales)
       .leftJoin(event, eq(ticketSales.eventId, event.id))
+      .leftJoin(location, eq(event.locationId, location.id))
       .offset(offset)
       .limit(limit);
 

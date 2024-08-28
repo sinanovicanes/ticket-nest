@@ -24,29 +24,21 @@ export class PaymentSelectFieldsDto
   @ValidateNested()
   @Type(() => TicketSelectFieldsDto)
   @Transform(({ value }) =>
-    value === true ? TicketSelectFieldsDto.default() : value,
+    value === true ? new TicketSelectFieldsDto() : value,
   )
-  ticket: TicketSelectFieldsDto;
+  ticket?: TicketSelectFieldsDto;
 
   @IsOptional()
   @ValidateNested()
   @Type(() => DiscountCodeSelectFieldsDto)
   @Transform(({ value }) =>
-    value === true ? DiscountCodeSelectFieldsDto.default() : value,
+    value === true ? new DiscountCodeSelectFieldsDto() : value,
   )
-  discountCode: DiscountCodeSelectFieldsDto;
+  discountCode?: DiscountCodeSelectFieldsDto;
 
-  static default(): PaymentSelectFieldsDto {
-    return new PaymentSelectFieldsDto({
-      id: true,
-      defaultPrice: true,
-      payment: true,
-      ticket: TicketSelectFieldsDto.default(),
-      discountCode: DiscountCodeSelectFieldsDto.default(),
-    });
-  }
-
-  constructor(partial: Partial<PaymentSelectFieldsDto>) {
-    Object.assign(this, partial);
+  constructor(partial?: Partial<PaymentSelectFieldsDto>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
   }
 }

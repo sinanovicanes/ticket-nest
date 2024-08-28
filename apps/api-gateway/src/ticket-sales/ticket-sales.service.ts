@@ -1,11 +1,14 @@
 import { NatsServices } from '@app/common/nats';
 import {
   CreateTicketSalesDto,
+  FindOneTicketSalesMessageDto,
+  FindTicketSalesOptionsDto,
   FindTicketSalesQueryDto,
   TicketSalesMessagePatterns,
   UpdateTicketSalesDto,
   UpdateTicketSalesMessageDto,
 } from '@app/contracts/ticket-sales';
+import { TicketSalesSelectFieldsDto } from '@app/database';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
@@ -17,12 +20,15 @@ export class TicketSalesService {
     return this.client.send(TicketSalesMessagePatterns.CREATE, dto);
   }
 
-  findMany(options: FindTicketSalesQueryDto) {
+  findMany(options: FindTicketSalesOptionsDto) {
     return this.client.send(TicketSalesMessagePatterns.FIND_MANY, options);
   }
 
-  findOne(id: string) {
-    return this.client.send(TicketSalesMessagePatterns.FIND_ONE, id);
+  findOne(id: string, selectFields: TicketSalesSelectFieldsDto) {
+    return this.client.send(TicketSalesMessagePatterns.FIND_ONE, {
+      id,
+      selectFields,
+    } as FindOneTicketSalesMessageDto);
   }
 
   update(id: string, dto: UpdateTicketSalesDto) {

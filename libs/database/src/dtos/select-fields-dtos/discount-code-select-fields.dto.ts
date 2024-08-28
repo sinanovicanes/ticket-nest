@@ -29,23 +29,13 @@ export class DiscountCodeSelectFieldsDto
   @ValidateNested()
   @Type(() => TicketSalesSelectFieldsDto)
   @Transform(({ value }) =>
-    value === true ? TicketSalesSelectFieldsDto.default() : value,
+    value === true ? new TicketSalesSelectFieldsDto() : value,
   )
-  ticketSales: TicketSalesSelectFieldsDto;
+  ticketSales?: TicketSalesSelectFieldsDto;
 
-  static default(): DiscountCodeSelectFieldsDto {
-    return new DiscountCodeSelectFieldsDto({
-      id: true,
-      kind: true,
-      amount: true,
-      code: true,
-      maxUsage: true,
-      expiresAt: true,
-      ticketSales: TicketSalesSelectFieldsDto.default(),
-    });
-  }
-
-  constructor(partial: Partial<DiscountCodeSelectFieldsDto>) {
-    Object.assign(this, partial);
+  constructor(partial?: Partial<DiscountCodeSelectFieldsDto>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
   }
 }

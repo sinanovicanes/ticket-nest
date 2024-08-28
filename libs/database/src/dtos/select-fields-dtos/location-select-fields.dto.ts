@@ -1,37 +1,38 @@
 import { location } from '@app/database/schemas';
 import { TableFields } from '@app/database/types';
-import { IsOptional } from 'class-validator';
+import { IsBoolean, IsOptional } from 'class-validator';
 
-export class LocationSelectFieldsDto implements TableFields<typeof location> {
+export class LocationSelectFieldsDto
+  implements Partial<TableFields<typeof location>>
+{
   @IsOptional()
-  id: boolean;
+  @IsBoolean()
+  id?: boolean;
   @IsOptional()
-  name: boolean;
+  @IsBoolean()
+  name?: boolean;
   @IsOptional()
-  city: boolean;
+  @IsBoolean()
+  city?: boolean;
   @IsOptional()
-  province: boolean;
+  @IsBoolean()
+  province?: boolean;
   @IsOptional()
-  address: boolean;
+  @IsBoolean()
+  address?: boolean;
   @IsOptional()
-  address2: boolean;
+  @IsBoolean()
+  address2?: boolean;
   @IsOptional()
-  createdAt: boolean;
+  @IsBoolean()
+  createdAt?: boolean;
   @IsOptional()
-  updatedAt: boolean;
+  @IsBoolean()
+  updatedAt?: boolean;
 
-  static default(): LocationSelectFieldsDto {
-    return new LocationSelectFieldsDto({
-      id: true,
-      name: true,
-      city: true,
-      province: true,
-      address: true,
-      address2: true,
-    });
-  }
-
-  constructor(partial: Partial<LocationSelectFieldsDto>) {
-    Object.assign(this, partial);
+  constructor(partial?: Partial<LocationSelectFieldsDto>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
   }
 }

@@ -13,11 +13,40 @@ export class TicketSalesController {
   ) {
     // Add eventId to options
     options.eventId = eventId;
-    return this.ticketSalesService.findMany(options);
+    return this.ticketSalesService.findMany({
+      ...options,
+      selectFields: {
+        id: true,
+        name: true,
+        description: true,
+        price: true,
+        createdAt: true,
+      },
+    });
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.ticketSalesService.findOne(id);
+    return this.ticketSalesService.findOne(id, {
+      id: true,
+      name: true,
+      description: true,
+      price: true,
+      createdAt: true,
+      event: {
+        id: true,
+        name: true,
+        description: true,
+        date: true,
+        location: {
+          id: true,
+          name: true,
+          address: true,
+          address2: true,
+          city: true,
+          province: true,
+        },
+      },
+    });
   }
 }

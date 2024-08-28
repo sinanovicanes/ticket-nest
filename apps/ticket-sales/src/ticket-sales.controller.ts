@@ -1,5 +1,6 @@
 import {
   CreateTicketSalesDto,
+  FindOneTicketSalesMessageDto,
   FindTicketSalesOptionsDto,
   TicketSalesMessagePatterns,
   UpdateTicketSalesMessageDto,
@@ -23,8 +24,8 @@ export class TicketSalesController {
   }
 
   @MessagePattern(TicketSalesMessagePatterns.FIND_ONE)
-  findOne(@Payload() id: string) {
-    return this.ticketSalesService.findOne(id);
+  findOne(@Payload() { id, selectFields }: FindOneTicketSalesMessageDto) {
+    return this.ticketSalesService.findOne(id, selectFields);
   }
 
   @MessagePattern(TicketSalesMessagePatterns.UPDATE)

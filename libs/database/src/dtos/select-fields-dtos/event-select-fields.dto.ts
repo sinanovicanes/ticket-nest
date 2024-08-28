@@ -5,39 +5,32 @@ import { event } from '@app/database/schemas';
 import { TableFields } from '@app/database/types';
 
 export class EventSelectFieldsDto
-  implements Omit<TableFields<typeof event>, 'locationId'>
+  implements Partial<Omit<TableFields<typeof event>, 'locationId'>>
 {
   @IsOptional()
-  id: boolean;
+  id?: boolean;
   @IsOptional()
-  name: boolean;
+  name?: boolean;
   @IsOptional()
-  description: boolean;
+  description?: boolean;
   @IsOptional()
-  date: boolean;
+  date?: boolean;
   @IsOptional()
-  createdAt: boolean;
+  createdAt?: boolean;
   @IsOptional()
-  updatedAt: boolean;
+  updatedAt?: boolean;
 
   @IsOptional()
   @ValidateNested()
   @Type(() => LocationSelectFieldsDto)
   @Transform(({ value }) =>
-    value === true ? LocationSelectFieldsDto.default() : value,
+    value === true ? new LocationSelectFieldsDto() : value,
   )
-  location: LocationSelectFieldsDto;
+  location?: LocationSelectFieldsDto;
 
-  static default(): EventSelectFieldsDto {
-    return new EventSelectFieldsDto({
-      id: true,
-      name: true,
-      description: true,
-      date: true,
-    });
-  }
-
-  constructor(partial: Partial<EventSelectFieldsDto>) {
-    Object.assign(this, partial);
+  constructor(partial?: Partial<EventSelectFieldsDto>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
   }
 }

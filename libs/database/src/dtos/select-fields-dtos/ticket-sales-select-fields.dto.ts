@@ -5,41 +5,33 @@ import { ticketSales } from '@app/database/schemas';
 import { TableFields } from '@app/database/types';
 
 export class TicketSalesSelectFieldsDto
-  implements Omit<TableFields<typeof ticketSales>, 'eventId'>
+  implements Partial<Omit<TableFields<typeof ticketSales>, 'eventId'>>
 {
   @IsOptional()
-  id: boolean;
+  id?: boolean;
   @IsOptional()
-  name: boolean;
+  name?: boolean;
   @IsOptional()
-  description: boolean;
+  description?: boolean;
   @IsOptional()
-  price: boolean;
+  price?: boolean;
   @IsOptional()
-  quantity: boolean;
+  quantity?: boolean;
   @IsOptional()
-  createdAt: boolean;
+  createdAt?: boolean;
   @IsOptional()
-  updatedAt: boolean;
+  updatedAt?: boolean;
   @IsOptional()
   @ValidateNested()
   @Type(() => EventSelectFieldsDto)
   @Transform(({ value }) =>
-    value === true ? EventSelectFieldsDto.default() : value,
+    value === true ? new EventSelectFieldsDto() : value,
   )
-  event: EventSelectFieldsDto;
+  event?: EventSelectFieldsDto;
 
-  static default() {
-    return new TicketSalesSelectFieldsDto({
-      id: true,
-      name: true,
-      description: true,
-      price: true,
-      event: EventSelectFieldsDto.default(),
-    });
-  }
-
-  constructor(partial: Partial<TicketSalesSelectFieldsDto>) {
-    Object.assign(this, partial);
+  constructor(partial?: Partial<TicketSalesSelectFieldsDto>) {
+    if (partial) {
+      Object.assign(this, partial);
+    }
   }
 }
