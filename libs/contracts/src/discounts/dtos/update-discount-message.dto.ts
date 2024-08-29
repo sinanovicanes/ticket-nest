@@ -1,4 +1,3 @@
-import { TicketSelectFieldsDto } from '@app/database';
 import { Type } from 'class-transformer';
 import {
   IsNotEmpty,
@@ -6,14 +5,15 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
+import { UpdateDiscountDto } from './update-discount.dto';
 
-export class FindOneTicketMessageDto {
+export class UpdateDiscountMessageDto {
   @IsString()
   @IsNotEmpty()
   id: string;
 
   @IsObject()
   @ValidateNested()
-  @Type(() => TicketSelectFieldsDto)
-  selectFields: TicketSelectFieldsDto;
+  @Type(() => UpdateDiscountDto)
+  dto: UpdateDiscountDto;
 }
