@@ -2,7 +2,7 @@ import { paymentSchema } from '@app/database/schemas';
 import { TableFields } from '@app/database/types';
 import { Transform, Type } from 'class-transformer';
 import { IsOptional, ValidateNested } from 'class-validator';
-import { DiscountCodeSelectFieldsDto } from './discount-code-select-fields.dto';
+import { DiscountSelectFieldsDto } from './discount-select-fields.dto';
 import { TicketSelectFieldsDto } from './ticket-select-fields.dto';
 
 export class PaymentSelectFieldsDto
@@ -30,11 +30,11 @@ export class PaymentSelectFieldsDto
 
   @IsOptional()
   @ValidateNested()
-  @Type(() => DiscountCodeSelectFieldsDto)
+  @Type(() => DiscountSelectFieldsDto)
   @Transform(({ value }) =>
-    value === true ? new DiscountCodeSelectFieldsDto() : value,
+    value === true ? new DiscountSelectFieldsDto() : value,
   )
-  discountCode?: DiscountCodeSelectFieldsDto;
+  discount?: DiscountSelectFieldsDto;
 
   constructor(partial?: Partial<PaymentSelectFieldsDto>) {
     if (partial) {

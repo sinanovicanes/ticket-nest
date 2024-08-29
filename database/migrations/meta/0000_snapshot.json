@@ -1,5 +1,5 @@
 {
-  "id": "175e7170-fda6-4900-8326-a97533660750",
+  "id": "ec064280-36fe-4ba6-ad9b-f17fd4e452b5",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -157,8 +157,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.discount_codes": {
-      "name": "discount_codes",
+    "public.discounts": {
+      "name": "discounts",
       "schema": "",
       "columns": {
         "id": {
@@ -222,9 +222,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "discount_codes_ticket_sales_id_ticket_sales_id_fk": {
-          "name": "discount_codes_ticket_sales_id_ticket_sales_id_fk",
-          "tableFrom": "discount_codes",
+        "discounts_ticket_sales_id_ticket_sales_id_fk": {
+          "name": "discounts_ticket_sales_id_ticket_sales_id_fk",
+          "tableFrom": "discounts",
           "tableTo": "ticket_sales",
           "columnsFrom": [
             "ticket_sales_id"
@@ -323,6 +323,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "discount_id": {
+          "name": "discount_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
         "payment": {
           "name": "payment",
           "type": "integer",
@@ -352,6 +358,19 @@
           "tableTo": "tickets",
           "columnsFrom": [
             "ticket_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "payments_discount_id_discounts_id_fk": {
+          "name": "payments_discount_id_discounts_id_fk",
+          "tableFrom": "payments",
+          "tableTo": "discounts",
+          "columnsFrom": [
+            "discount_id"
           ],
           "columnsTo": [
             "id"

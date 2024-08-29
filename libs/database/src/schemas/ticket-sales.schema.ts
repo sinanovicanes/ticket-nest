@@ -1,7 +1,7 @@
 import { relations } from 'drizzle-orm';
 import { integer, pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
 import { createPgTimestamps } from '../utils';
-import { discountCodeSchema } from './discount-code.schema';
+import { discountSchema } from './discount.schema';
 import { eventSchema } from './event.schema';
 import { ticketSchema } from './ticket.schema';
 
@@ -24,7 +24,7 @@ export const ticketSalesRelations = relations(
       fields: [ticketSalesSchema.eventId],
       references: [eventSchema.id],
     }),
-    discountCodes: many(discountCodeSchema),
+    discount: many(discountSchema),
     tickets: many(ticketSchema),
   }),
 );

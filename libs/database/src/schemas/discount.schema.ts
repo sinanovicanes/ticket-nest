@@ -11,7 +11,7 @@ import { discountKind } from './enums';
 import { paymentSchema } from './payment.schema';
 import { ticketSalesSchema } from './ticket-sales.schema';
 
-export const discountCodeSchema = pgTable('discount_codes', {
+export const discountSchema = pgTable('discounts', {
   id: uuid('id').primaryKey().defaultRandom(),
   ticketSalesId: uuid('ticket_sales_id')
     .notNull()
@@ -24,13 +24,10 @@ export const discountCodeSchema = pgTable('discount_codes', {
   ...createPgTimestamps(),
 });
 
-export const discountCodeRelations = relations(
-  discountCodeSchema,
-  ({ one, many }) => ({
-    ticketSales: one(ticketSalesSchema, {
-      fields: [discountCodeSchema.ticketSalesId],
-      references: [ticketSalesSchema.id],
-    }),
-    payments: many(paymentSchema),
+export const discountRelations = relations(discountSchema, ({ one, many }) => ({
+  ticketSales: one(ticketSalesSchema, {
+    fields: [discountSchema.ticketSalesId],
+    references: [ticketSalesSchema.id],
   }),
-);
+  payments: many(paymentSchema),
+}));
