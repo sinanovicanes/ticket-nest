@@ -3,7 +3,7 @@ import {
   FindEventsOptionsDto,
   UpdateEventDto,
 } from '@app/contracts/events';
-import { Database, event, InjectDB, location } from '@app/database';
+import { Database, eventSchema, InjectDB, locationSchema } from '@app/database';
 import { Injectable } from '@nestjs/common';
 import { asc, between, desc, eq, ilike, or } from 'drizzle-orm';
 
@@ -12,7 +12,10 @@ export class EventsService {
   @InjectDB() private readonly db: Database;
 
   async findOne(id: string) {
-    const results = await this.db.select().from(event).where(eq(event.id, id));
+    const results = await this.db
+      .select()
+      .from(eventSchema)
+      .where(eq(eventSchema.id, id));
     return results[0];
   }
 
@@ -31,39 +34,39 @@ export class EventsService {
 
     const dbQuery = this.db
       .select({
-        id: event.id,
-        name: event.name,
-        description: event.description,
-        date: event.date,
-        createdAt: event.createdAt,
-        updatedAt: event.updatedAt,
+        id: eventSchema.id,
+        name: eventSchema.name,
+        description: eventSchema.description,
+        date: eventSchema.date,
+        createdAt: eventSchema.createdAt,
+        updatedAt: eventSchema.updatedAt,
         location: {
-          name: location.name,
-          city: location.city,
-          province: location.province,
-          address: location.address,
-          address2: location.address2,
+          name: locationSchema.name,
+          city: locationSchema.city,
+          province: locationSchema.province,
+          address: locationSchema.address,
+          address2: locationSchema.address2,
         },
       })
-      .from(event)
-      .leftJoin(location, eq(event.locationId, location.id))
+      .from(eventSchema)
+      .leftJoin(locationSchema, eq(eventSchema.locationId, locationSchema.id))
       .offset(offset)
       .limit(limit);
 
     if (startDate && endDate) {
-      dbQuery.where(between(event.date, startDate, endDate));
+      dbQuery.where(between(eventSchema.date, startDate, endDate));
     }
 
     if (search) {
       const searchConditions = searchFields.map((field) =>
-        ilike(event[field], `%${search}%`),
+        ilike(eventSchema[field], `%${search}%`),
       );
 
       dbQuery.where(or(...searchConditions));
     }
 
     const orderByColumns = orderByFields.map((orderBy) =>
-      order == 'ASC' ? asc(event[orderBy]) : desc(event[orderBy]),
+      order == 'ASC' ? asc(eventSchema[orderBy]) : desc(eventSchema[orderBy]),
     );
 
     dbQuery.orderBy(...orderByColumns);
@@ -72,14 +75,14 @@ export class EventsService {
   }
 
   async create(dto: CreateEventDto) {
-    return await this.db.insert(event).values(dto).returning();
+    return await this.db.insert(eventSchema).values(dto).returning();
   }
 
   async updateOne(id: string, dto: UpdateEventDto) {
     const results = await this.db
-      .update(event)
+      .update(eventSchema)
       .set(dto)
-      .where(eq(event.id, id))
+      .where(eq(eventSchema.id, id))
       .returning();
 
     return results.pop() ?? null;
@@ -87,8 +90,8 @@ export class EventsService {
 
   async delete(id: string) {
     const result = await this.db
-      .delete(event)
-      .where(eq(event.id, id))
+      .delete(eventSchema)
+      .where(eq(eventSchema.id, id))
       .returning()[0];
     return result ?? null;
   }

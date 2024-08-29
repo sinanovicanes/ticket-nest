@@ -1,11 +1,11 @@
 import { Transform, Type } from 'class-transformer';
 import { IsOptional, ValidateNested } from 'class-validator';
 import { EventSelectFieldsDto } from './event-select-fields.dto';
-import { ticketSales } from '@app/database/schemas';
+import { ticketSalesSchema } from '@app/database/schemas';
 import { TableFields } from '@app/database/types';
 
 export class TicketSalesSelectFieldsDto
-  implements Partial<Omit<TableFields<typeof ticketSales>, 'eventId'>>
+  implements Partial<Omit<TableFields<typeof ticketSalesSchema>, 'eventId'>>
 {
   @IsOptional()
   id?: boolean;

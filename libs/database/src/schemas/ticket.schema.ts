@@ -2,35 +2,35 @@ import { relations } from 'drizzle-orm';
 import { integer, pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
 import { createPgTimestamps } from '../utils';
 import { ticketStatus } from './enums';
-import { event } from './event.schema';
-import { payment } from './payment.schema';
-import { ticketSales } from './ticket-sales.schema';
+import { eventSchema } from './event.schema';
+import { paymentSchema } from './payment.schema';
+import { ticketSalesSchema } from './ticket-sales.schema';
 import { TicketStatus } from '../enums';
 
-export const ticket = pgTable('tickets', {
+export const ticketSchema = pgTable('tickets', {
   id: uuid('id').primaryKey().defaultRandom(),
   eventId: uuid('event_id')
     .notNull()
-    .references(() => event.id),
+    .references(() => eventSchema.id),
   ticketSalesId: uuid('ticket_sales_id')
     .notNull()
-    .references(() => ticketSales.id),
+    .references(() => ticketSalesSchema.id),
   ownerEmail: varchar('owner_email', { length: 255 }).notNull(),
   status: ticketStatus('status').notNull().default(TicketStatus.RESERVED),
   ...createPgTimestamps(),
 });
 
-export const ticketRelations = relations(ticket, ({ one }) => ({
-  event: one(event, {
-    fields: [ticket.eventId],
-    references: [event.id],
+export const ticketRelations = relations(ticketSchema, ({ one }) => ({
+  event: one(eventSchema, {
+    fields: [ticketSchema.eventId],
+    references: [eventSchema.id],
   }),
-  ticketSales: one(ticketSales, {
-    fields: [ticket.ticketSalesId],
-    references: [ticketSales.id],
+  ticketSales: one(ticketSalesSchema, {
+    fields: [ticketSchema.ticketSalesId],
+    references: [ticketSalesSchema.id],
   }),
-  payment: one(payment, {
-    fields: [ticket.id],
-    references: [payment.ticketId],
+  payment: one(paymentSchema, {
+    fields: [ticketSchema.id],
+    references: [paymentSchema.ticketId],
   }),
 }));

@@ -1,4 +1,4 @@
-import { ticket } from '@app/database/schemas';
+import { ticketSchema } from '@app/database/schemas';
 import { TableFields } from '@app/database/types';
 import { Transform, Type } from 'class-transformer';
 import { IsOptional, ValidateNested } from 'class-validator';
@@ -6,7 +6,8 @@ import { TicketSalesSelectFieldsDto } from './ticket-sales-select-fields.dto';
 import { EventSelectFieldsDto } from './event-select-fields.dto';
 
 export class TicketSelectFieldsDto
-  implements Omit<TableFields<typeof ticket>, 'eventId' | 'ticketSalesId'>
+  implements
+    Omit<TableFields<typeof ticketSchema>, 'eventId' | 'ticketSalesId'>
 {
   @IsOptional()
   id: boolean;

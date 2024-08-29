@@ -5,11 +5,11 @@ import {
 } from '@app/contracts/ticket-sales';
 import {
   Database,
-  event,
+  eventSchema,
   InjectDB,
   SelectFieldsFactory,
-  ticketSales,
-  location,
+  ticketSalesSchema,
+  locationSchema,
   TicketSalesSelectFieldsDto,
 } from '@app/database';
 import { Injectable } from '@nestjs/common';
@@ -22,24 +22,30 @@ export class TicketSalesService {
   async findOne(id: string, selectFields: TicketSalesSelectFieldsDto) {
     const fields = SelectFieldsFactory.createFromDto(
       selectFields,
-      ticketSales,
+      ticketSalesSchema,
       {
-        event,
-        location,
+        event: eventSchema,
+        location: locationSchema,
       },
     );
 
     const query = this.db
       .select(fields)
-      .from(ticketSales)
-      .where(eq(ticketSales.id, id));
+      .from(ticketSalesSchema)
+      .where(eq(ticketSalesSchema.id, id));
 
     if (selectFields.event) {
-      query.leftJoin(event, eq(ticketSales.eventId, event.id));
+      query.leftJoin(
+        eventSchema,
+        eq(ticketSalesSchema.eventId, eventSchema.id),
+      );
     }
 
     if (selectFields.event.location) {
-      query.leftJoin(location, eq(event.locationId, location.id));
+      query.leftJoin(
+        locationSchema,
+        eq(eventSchema.locationId, locationSchema.id),
+      );
     }
 
     const results = await query;
@@ -66,48 +72,50 @@ export class TicketSalesService {
 
     const fields = SelectFieldsFactory.createFromDto(
       selectFields,
-      ticketSales,
+      ticketSalesSchema,
       {
-        event,
-        location,
+        event: eventSchema,
+        location: locationSchema,
       },
     );
 
     const dbQuery = this.db
       .select(fields)
-      .from(ticketSales)
-      .leftJoin(event, eq(ticketSales.eventId, event.id))
-      .leftJoin(location, eq(event.locationId, location.id))
+      .from(ticketSalesSchema)
+      .leftJoin(eventSchema, eq(ticketSalesSchema.eventId, eventSchema.id))
+      .leftJoin(locationSchema, eq(eventSchema.locationId, locationSchema.id))
       .offset(offset)
       .limit(limit);
 
     if (eventId) {
-      dbQuery.where(eq(ticketSales.eventId, eventId));
+      dbQuery.where(eq(ticketSalesSchema.eventId, eventId));
     } else {
       // Only filter by date if eventId is not provided
       if (!eventId && startDate && endDate) {
-        dbQuery.where(between(event.date, startDate, endDate));
+        dbQuery.where(between(eventSchema.date, startDate, endDate));
       }
     }
 
     if (minPrice && maxPrice) {
-      dbQuery.where(between(ticketSales.price, minPrice, maxPrice));
+      dbQuery.where(between(ticketSalesSchema.price, minPrice, maxPrice));
     } else if (minPrice) {
-      dbQuery.where(gte(ticketSales.price, minPrice));
+      dbQuery.where(gte(ticketSalesSchema.price, minPrice));
     } else if (maxPrice) {
-      dbQuery.where(lte(ticketSales.price, maxPrice));
+      dbQuery.where(lte(ticketSalesSchema.price, maxPrice));
     }
 
     if (search) {
       const searchConditions = searchFields.map((field) =>
-        ilike(ticketSales[field], `%${search}%`),
+        ilike(ticketSalesSchema[field], `%${search}%`),
       );
 
       dbQuery.where(or(...searchConditions));
     }
 
     const orderByColumns = orderByFields.map((orderBy) =>
-      order == 'ASC' ? asc(ticketSales[orderBy]) : desc(ticketSales[orderBy]),
+      order == 'ASC'
+        ? asc(ticketSalesSchema[orderBy])
+        : desc(ticketSalesSchema[orderBy]),
     );
 
     dbQuery.orderBy(...orderByColumns);
@@ -116,14 +124,14 @@ export class TicketSalesService {
   }
 
   async create(dto: CreateTicketSalesDto) {
-    return await this.db.insert(ticketSales).values(dto).returning();
+    return await this.db.insert(ticketSalesSchema).values(dto).returning();
   }
 
   async updateOne(id: string, dto: UpdateTicketSalesDto) {
     const results = await this.db
-      .update(ticketSales)
+      .update(ticketSalesSchema)
       .set(dto)
-      .where(eq(ticketSales.id, id))
+      .where(eq(ticketSalesSchema.id, id))
       .returning();
 
     return results.pop() ?? null;
@@ -131,8 +139,8 @@ export class TicketSalesService {
 
   async delete(id: string) {
     const results = await this.db
-      .delete(ticketSales)
-      .where(eq(ticketSales.id, id))
+      .delete(ticketSalesSchema)
+      .where(eq(ticketSalesSchema.id, id))
       .returning();
 
     return results.pop() ?? null;

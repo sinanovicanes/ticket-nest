@@ -1,11 +1,11 @@
 import { IsOptional, ValidateNested } from 'class-validator';
 import { LocationSelectFieldsDto } from './location-select-fields.dto';
 import { Transform, Type } from 'class-transformer';
-import { event } from '@app/database/schemas';
+import { eventSchema } from '@app/database/schemas';
 import { TableFields } from '@app/database/types';
 
 export class EventSelectFieldsDto
-  implements Partial<Omit<TableFields<typeof event>, 'locationId'>>
+  implements Partial<Omit<TableFields<typeof eventSchema>, 'locationId'>>
 {
   @IsOptional()
   id?: boolean;

@@ -1,4 +1,4 @@
-import { payment } from '@app/database/schemas';
+import { paymentSchema } from '@app/database/schemas';
 import { TableFields } from '@app/database/types';
 import { Transform, Type } from 'class-transformer';
 import { IsOptional, ValidateNested } from 'class-validator';
@@ -6,7 +6,7 @@ import { DiscountCodeSelectFieldsDto } from './discount-code-select-fields.dto';
 import { TicketSelectFieldsDto } from './ticket-select-fields.dto';
 
 export class PaymentSelectFieldsDto
-  implements Omit<TableFields<typeof payment>, 'ticketId' | 'discountId'>
+  implements Omit<TableFields<typeof paymentSchema>, 'ticketId' | 'discountId'>
 {
   @IsOptional()
   id: boolean;

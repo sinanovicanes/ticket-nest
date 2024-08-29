@@ -6,18 +6,16 @@ import {
   uuid,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { TableFields } from '../types';
 import { createPgTimestamps } from '../utils';
 import { discountKind } from './enums';
-import { payment } from './payment.schema';
-import { ticketSales } from './ticket-sales.schema';
+import { paymentSchema } from './payment.schema';
+import { ticketSalesSchema } from './ticket-sales.schema';
 
-export type discountCodeFields = TableFields<typeof discountCode>;
-export const discountCode = pgTable('discount_codes', {
+export const discountCodeSchema = pgTable('discount_codes', {
   id: uuid('id').primaryKey().defaultRandom(),
   ticketSalesId: uuid('ticket_sales_id')
     .notNull()
-    .references(() => ticketSales.id),
+    .references(() => ticketSalesSchema.id),
   kind: discountKind('kind').notNull(),
   amount: integer('amount').notNull(),
   code: varchar('code', { length: 255 }).notNull(),
@@ -27,12 +25,12 @@ export const discountCode = pgTable('discount_codes', {
 });
 
 export const discountCodeRelations = relations(
-  discountCode,
+  discountCodeSchema,
   ({ one, many }) => ({
-    ticketSales: one(ticketSales, {
-      fields: [discountCode.ticketSalesId],
-      references: [ticketSales.id],
+    ticketSales: one(ticketSalesSchema, {
+      fields: [discountCodeSchema.ticketSalesId],
+      references: [ticketSalesSchema.id],
     }),
-    payments: many(payment),
+    payments: many(paymentSchema),
   }),
 );

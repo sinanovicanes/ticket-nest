@@ -1,9 +1,9 @@
-import { location } from '@app/database/schemas';
+import { locationSchema } from '@app/database/schemas';
 import { TableFields } from '@app/database/types';
 import { IsBoolean, IsOptional } from 'class-validator';
 
 export class LocationSelectFieldsDto
-  implements Partial<TableFields<typeof location>>
+  implements Partial<TableFields<typeof locationSchema>>
 {
   @IsOptional()
   @IsBoolean()

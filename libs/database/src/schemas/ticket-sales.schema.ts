@@ -1,15 +1,15 @@
 import { relations } from 'drizzle-orm';
 import { integer, pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
 import { createPgTimestamps } from '../utils';
-import { discountCode } from './discount-code.schema';
-import { event } from './event.schema';
-import { ticket } from './ticket.schema';
+import { discountCodeSchema } from './discount-code.schema';
+import { eventSchema } from './event.schema';
+import { ticketSchema } from './ticket.schema';
 
-export const ticketSales = pgTable('ticket_sales', {
+export const ticketSalesSchema = pgTable('ticket_sales', {
   id: uuid('id').primaryKey().defaultRandom(),
   eventId: uuid('event_id')
     .notNull()
-    .references(() => event.id),
+    .references(() => eventSchema.id),
   name: varchar('name', { length: 255 }).notNull(),
   description: varchar('description', { length: 2000 }).notNull(),
   quantity: integer('quantity').notNull(),
@@ -17,11 +17,14 @@ export const ticketSales = pgTable('ticket_sales', {
   ...createPgTimestamps(),
 });
 
-export const ticketSalesRelations = relations(ticketSales, ({ one, many }) => ({
-  event: one(event, {
-    fields: [ticketSales.eventId],
-    references: [event.id],
+export const ticketSalesRelations = relations(
+  ticketSalesSchema,
+  ({ one, many }) => ({
+    event: one(eventSchema, {
+      fields: [ticketSalesSchema.eventId],
+      references: [eventSchema.id],
+    }),
+    discountCodes: many(discountCodeSchema),
+    tickets: many(ticketSchema),
   }),
-  discountCodes: many(discountCode),
-  tickets: many(ticket),
-}));
+);
