@@ -1,5 +1,5 @@
 {
-  "id": "ec064280-36fe-4ba6-ad9b-f17fd4e452b5",
+  "id": "8f10e533-0ee6-49d3-9891-a8e4ce276916",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -332,6 +332,12 @@
         "payment": {
           "name": "payment",
           "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "checkout_session_id": {
+          "name": "checkout_session_id",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },

@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS "payments" (
 	"default_price" integer NOT NULL,
 	"discount_id" uuid,
 	"payment" integer NOT NULL,
+	"checkout_session_id" varchar NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );

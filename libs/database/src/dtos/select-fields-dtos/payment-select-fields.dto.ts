@@ -21,6 +21,9 @@ export class PaymentSelectFieldsDto
   updatedAt: boolean;
 
   @IsOptional()
+  checkoutSessionId: boolean;
+
+  @IsOptional()
   @ValidateNested()
   @Type(() => TicketSelectFieldsDto)
   @Transform(({ value }) =>

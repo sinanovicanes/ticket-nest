@@ -1,5 +1,5 @@
 import { relations } from 'drizzle-orm';
-import { integer, pgTable, uuid } from 'drizzle-orm/pg-core';
+import { integer, pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
 import { createPgTimestamps } from '../utils';
 import { discountSchema } from './discount.schema';
 import { ticketSchema } from './ticket.schema';
@@ -12,6 +12,7 @@ export const paymentSchema = pgTable('payments', {
   defaultPrice: integer('default_price').notNull(),
   discountId: uuid('discount_id').references(() => discountSchema.id),
   payment: integer('payment').notNull(),
+  checkoutSessionId: varchar('checkout_session_id').notNull(),
   ...createPgTimestamps(),
 });
 
