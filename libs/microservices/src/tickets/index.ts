@@ -1,2 +1,2 @@
 export * from './tickets.micro.service';
-export * from './tickets.module';
+export * from './tickets.micro.service.module';
