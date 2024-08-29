@@ -1,12 +1,10 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsString, IsUUID } from 'class-validator';
 
 export class CreateTicketDto {
-  @IsString()
-  @IsNotEmpty()
+  @IsUUID()
   eventId: string;
 
-  @IsString()
-  @IsNotEmpty()
+  @IsUUID()
   ticketSalesId: string;
 
   @IsString()

@@ -1,12 +1,14 @@
 import {
   IsDateString,
-  IsInt,
   IsNotEmpty,
   IsString,
+  IsUUID,
   Length,
 } from 'class-validator';
 
 export class CreateEventDto {
+  @IsUUID()
+  locationId: string;
   @IsString()
   @IsNotEmpty()
   @Length(3, 255)
@@ -17,7 +19,4 @@ export class CreateEventDto {
   description: string;
   @IsDateString()
   date: string;
-  @IsString()
-  @IsNotEmpty()
-  locationId: string;
 }

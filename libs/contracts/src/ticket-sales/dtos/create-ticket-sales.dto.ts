@@ -1,8 +1,15 @@
-import { IsInt, IsNotEmpty, IsString, Length, Max, Min } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsString,
+  IsUUID,
+  Length,
+  Max,
+  Min,
+} from 'class-validator';
 
 export class CreateTicketSalesDto {
-  @IsString()
-  @IsNotEmpty()
+  @IsUUID()
   eventId: string;
   @IsString()
   @IsNotEmpty()
