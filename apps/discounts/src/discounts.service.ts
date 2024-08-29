@@ -1,15 +1,68 @@
 import { CreateDiscountDto, UpdateDiscountDto } from '@app/contracts/discounts';
-import { Database, discountSchema, InjectDB } from '@app/database';
+import {
+  Database,
+  discountSchema,
+  InjectDB,
+  paymentSchema,
+} from '@app/database';
 import { Injectable } from '@nestjs/common';
-import { eq } from 'drizzle-orm';
+import { and, count, eq } from 'drizzle-orm';
+import { DiscountUtils } from './utils';
 
 @Injectable()
 export class DiscountsService {
   constructor(@InjectDB() private readonly db: Database) {}
 
+  async findByCode(code: string, salesId: string) {
+    const hashedCode = DiscountUtils.encrypt(code);
+    const results = await this.db
+      .select({
+        usageCount: count(paymentSchema.id),
+        ...discountSchema._.columns,
+      })
+      .from(discountSchema)
+      .leftJoin(paymentSchema, eq(discountSchema.id, paymentSchema.discountId))
+      .groupBy(discountSchema.id)
+      .where(
+        and(
+          eq(discountSchema.code, hashedCode),
+          eq(discountSchema.ticketSalesId, salesId),
+        ),
+      );
+    const result = results.pop();
+
+    if (!result) {
+      // Add error handling
+      return null;
+    }
+
+    return result;
+  }
+
+  async validateCode(code: string, salesId: string) {
+    const discount = await this.findByCode(code, salesId);
+
+    if (!discount) {
+      return false;
+    }
+
+    if (new Date(discount.expiresAt) < new Date()) {
+      return false;
+    }
+
+    if (discount.usageCount >= discount.maxUsage) {
+      return false;
+    }
+
+    return true;
+  }
+
   async create(dto: CreateDiscountDto) {
-    // TODO: Hash the code
-    return await this.db.insert(discountSchema).values(dto).returning();
+    const hashedCode = DiscountUtils.encrypt(dto.code);
+    return await this.db
+      .insert(discountSchema)
+      .values({ ...dto, code: hashedCode })
+      .returning();
   }
 
   async updateOne(id: string, dto: UpdateDiscountDto) {
