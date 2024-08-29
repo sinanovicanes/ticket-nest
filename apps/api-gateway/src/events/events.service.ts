@@ -1,38 +1,32 @@
-import { NatsServices } from '@app/common/nats';
 import {
   CreateEventDto,
-  EventsMessagePatterns,
   FindEventsOptionsDto,
   UpdateEventDto,
-  UpdateEventMessageDto,
 } from '@app/contracts/events';
-import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { EventsMicroService } from '@app/microservices';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class EventsService {
-  @Inject(NatsServices.EVENTS) private readonly client: ClientProxy;
+  constructor(private readonly eventsMicroService: EventsMicroService) {}
 
   create(dto: CreateEventDto) {
-    return this.client.send(EventsMessagePatterns.CREATE, dto);
+    return this.eventsMicroService.create(dto);
   }
 
   findMany(options: FindEventsOptionsDto) {
-    return this.client.send(EventsMessagePatterns.FIND_MANY, options);
+    return this.eventsMicroService.findMany(options);
   }
 
   findOne(id: string) {
-    return this.client.send(EventsMessagePatterns.FIND_ONE, id);
+    return this.eventsMicroService.findOne(id);
   }
 
   update(id: string, dto: UpdateEventDto) {
-    return this.client.send(EventsMessagePatterns.UPDATE, {
-      id,
-      dto,
-    } as UpdateEventMessageDto);
+    return this.eventsMicroService.update(id, dto);
   }
 
   remove(id: string) {
-    return this.client.send(EventsMessagePatterns.DELETE, id);
+    return this.eventsMicroService.remove(id);
   }
 }

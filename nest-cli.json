@@ -72,6 +72,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/ticket-sales/tsconfig.app.json"
       }
+    },
+    "microservices": {
+      "type": "library",
+      "root": "libs/microservices",
+      "entryFile": "index",
+      "sourceRoot": "libs/microservices/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/microservices/tsconfig.lib.json"
+      }
     }
   }
 }

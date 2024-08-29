@@ -1,10 +1,10 @@
+import { EventsMicroServiceModule } from '@app/microservices';
 import { Module } from '@nestjs/common';
-import { EventsService } from './events.service';
 import { EventsController } from './events.controller';
-import { NatsModule, NatsServices } from '@app/common/nats';
+import { EventsService } from './events.service';
 
 @Module({
-  imports: [NatsModule.register(NatsServices.EVENTS)],
+  imports: [EventsMicroServiceModule],
   controllers: [EventsController],
   providers: [EventsService],
 })

@@ -1,10 +1,10 @@
+import { TicketSalesMicroServiceModule } from '@app/microservices';
 import { Module } from '@nestjs/common';
-import { TicketSalesService } from './ticket-sales.service';
 import { TicketSalesController } from './ticket-sales.controller';
-import { NatsModule, NatsServices } from '@app/common/nats';
+import { TicketSalesService } from './ticket-sales.service';
 
 @Module({
-  imports: [NatsModule.register(NatsServices.TICKET_SALES)],
+  imports: [TicketSalesMicroServiceModule],
   controllers: [TicketSalesController],
   providers: [TicketSalesService],
 })

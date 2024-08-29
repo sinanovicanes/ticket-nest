@@ -1,4 +1,4 @@
-export enum TicketMessagePatterns {
+export enum TicketsMessagePatterns {
   CREATE = 'ticket.create',
   UPDATE = 'ticket.update',
   DELETE = 'ticket.delete',

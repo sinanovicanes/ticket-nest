@@ -2,7 +2,7 @@ import {
   CreateTicketDto,
   FindOneTicketMessageDto,
   FindTicketOptionsDto,
-  TicketMessagePatterns,
+  TicketsMessagePatterns,
   UpdateTicketMessageDto,
 } from '@app/contracts/tickets';
 import { Controller } from '@nestjs/common';
@@ -13,27 +13,27 @@ import { TicketsService } from './tickets.service';
 export class TicketsController {
   constructor(private readonly ticketsService: TicketsService) {}
 
-  @MessagePattern(TicketMessagePatterns.CREATE)
+  @MessagePattern(TicketsMessagePatterns.CREATE)
   create(@Payload() dto: CreateTicketDto) {
     return this.ticketsService.create(dto);
   }
 
-  @MessagePattern(TicketMessagePatterns.FIND_MANY)
+  @MessagePattern(TicketsMessagePatterns.FIND_MANY)
   findMany(@Payload() options: FindTicketOptionsDto) {
     return this.ticketsService.findMany(options);
   }
 
-  @MessagePattern(TicketMessagePatterns.FIND_ONE)
+  @MessagePattern(TicketsMessagePatterns.FIND_ONE)
   findOne(@Payload() { id, selectFields }: FindOneTicketMessageDto) {
     return this.ticketsService.findOne(id, selectFields);
   }
 
-  @MessagePattern(TicketMessagePatterns.UPDATE)
+  @MessagePattern(TicketsMessagePatterns.UPDATE)
   update(@Payload() { id, dto }: UpdateTicketMessageDto) {
     return this.ticketsService.updateOne(id, dto);
   }
 
-  @MessagePattern(TicketMessagePatterns.DELETE)
+  @MessagePattern(TicketsMessagePatterns.DELETE)
   delete(@Payload() id: string) {
     return this.ticketsService.delete(id);
   }

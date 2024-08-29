@@ -1,44 +1,35 @@
-import { NatsServices } from '@app/common/nats';
 import {
   CreateTicketSalesDto,
-  FindOneTicketSalesMessageDto,
   FindTicketSalesOptionsDto,
-  FindTicketSalesQueryDto,
-  TicketSalesMessagePatterns,
   UpdateTicketSalesDto,
-  UpdateTicketSalesMessageDto,
 } from '@app/contracts/ticket-sales';
 import { TicketSalesSelectFieldsDto } from '@app/database';
-import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { TicketSalesMicroService } from '@app/microservices';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class TicketSalesService {
-  @Inject(NatsServices.TICKET_SALES) private readonly client: ClientProxy;
+  constructor(
+    private readonly ticketSalesMicroService: TicketSalesMicroService,
+  ) {}
 
   create(dto: CreateTicketSalesDto) {
-    return this.client.send(TicketSalesMessagePatterns.CREATE, dto);
+    return this.ticketSalesMicroService.create(dto);
   }
 
   findMany(options: FindTicketSalesOptionsDto) {
-    return this.client.send(TicketSalesMessagePatterns.FIND_MANY, options);
+    return this.ticketSalesMicroService.findMany(options);
   }
 
   findOne(id: string, selectFields: TicketSalesSelectFieldsDto) {
-    return this.client.send(TicketSalesMessagePatterns.FIND_ONE, {
-      id,
-      selectFields,
-    } as FindOneTicketSalesMessageDto);
+    return this.ticketSalesMicroService.findOne(id, selectFields);
   }
 
   update(id: string, dto: UpdateTicketSalesDto) {
-    return this.client.send(TicketSalesMessagePatterns.UPDATE, {
-      id,
-      dto,
-    } as UpdateTicketSalesMessageDto);
+    return this.ticketSalesMicroService.update(id, dto);
   }
 
   remove(id: string) {
-    return this.client.send(TicketSalesMessagePatterns.DELETE, id);
+    return this.ticketSalesMicroService.remove(id);
   }
 }
