@@ -8,31 +8,42 @@ import {
 } from '@app/contracts/events';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class EventsMicroService {
   @Inject(NatsServices.EVENTS) private readonly client: ClientProxy;
 
   create(dto: CreateEventDto) {
-    return this.client.send(EventsMessagePatterns.CREATE, dto);
+    const source = this.client.send(EventsMessagePatterns.CREATE, dto);
+
+    return firstValueFrom(source);
   }
 
   findMany(options: FindEventsOptionsDto) {
-    return this.client.send(EventsMessagePatterns.FIND_MANY, options);
+    const source = this.client.send(EventsMessagePatterns.FIND_MANY, options);
+
+    return firstValueFrom(source);
   }
 
   findOne(id: string) {
-    return this.client.send(EventsMessagePatterns.FIND_ONE, id);
+    const source = this.client.send(EventsMessagePatterns.FIND_ONE, id);
+
+    return firstValueFrom(source);
   }
 
   update(id: string, dto: UpdateEventDto) {
-    return this.client.send(EventsMessagePatterns.UPDATE, {
+    const source = this.client.send(EventsMessagePatterns.UPDATE, {
       id,
       dto,
     } as UpdateEventMessageDto);
+
+    return firstValueFrom(source);
   }
 
   remove(id: string) {
-    return this.client.send(EventsMessagePatterns.DELETE, id);
+    const source = this.client.send(EventsMessagePatterns.DELETE, id);
+
+    return firstValueFrom(source);
   }
 }

@@ -10,34 +10,48 @@ import {
 import { TicketSalesSelectFieldsDto } from '@app/database';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class TicketSalesMicroService {
   @Inject(NatsServices.TICKET_SALES) private readonly client: ClientProxy;
 
   create(dto: CreateTicketSalesDto) {
-    return this.client.send(TicketSalesMessagePatterns.CREATE, dto);
+    const source = this.client.send(TicketSalesMessagePatterns.CREATE, dto);
+
+    return firstValueFrom(source);
   }
 
   findMany(options: FindTicketSalesOptionsDto) {
-    return this.client.send(TicketSalesMessagePatterns.FIND_MANY, options);
+    const source = this.client.send(
+      TicketSalesMessagePatterns.FIND_MANY,
+      options,
+    );
+
+    return firstValueFrom(source);
   }
 
   findOne(id: string, selectFields: TicketSalesSelectFieldsDto) {
-    return this.client.send(TicketSalesMessagePatterns.FIND_ONE, {
+    const source = this.client.send(TicketSalesMessagePatterns.FIND_ONE, {
       id,
       selectFields,
     } as FindOneTicketSalesMessageDto);
+
+    return firstValueFrom(source);
   }
 
   update(id: string, dto: UpdateTicketSalesDto) {
-    return this.client.send(TicketSalesMessagePatterns.UPDATE, {
+    const source = this.client.send(TicketSalesMessagePatterns.UPDATE, {
       id,
       dto,
     } as UpdateTicketSalesMessageDto);
+
+    return firstValueFrom(source);
   }
 
   remove(id: string) {
-    return this.client.send(TicketSalesMessagePatterns.DELETE, id);
+    const source = this.client.send(TicketSalesMessagePatterns.DELETE, id);
+
+    return firstValueFrom(source);
   }
 }

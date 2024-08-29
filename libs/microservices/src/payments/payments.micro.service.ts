@@ -10,34 +10,45 @@ import { PaymentSelectFieldsDto } from '@app/database';
 import { NatsServices } from '@app/microservices';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class PaymentsMicroService {
   @Inject(NatsServices.PAYMENTS) private readonly client: ClientProxy;
 
   create(dto: CreatePaymentDto) {
-    return this.client.send(PaymentsMessagePatterns.CREATE, dto);
+    const source = this.client.send(PaymentsMessagePatterns.CREATE, dto);
+
+    return firstValueFrom(source);
   }
 
   findMany(options: FindPaymentOptionsDto) {
-    return this.client.send(PaymentsMessagePatterns.FIND_MANY, options);
+    const source = this.client.send(PaymentsMessagePatterns.FIND_MANY, options);
+
+    return firstValueFrom(source);
   }
 
   findOne(id: string, selectFields: PaymentSelectFieldsDto) {
-    return this.client.send(PaymentsMessagePatterns.FIND_ONE, {
+    const source = this.client.send(PaymentsMessagePatterns.FIND_ONE, {
       id,
       selectFields,
     } as FindOnePaymentMessageDto);
+
+    return firstValueFrom(source);
   }
 
   update(id: string, dto: UpdatePaymentDto) {
-    return this.client.send(PaymentsMessagePatterns.UPDATE, {
+    const source = this.client.send(PaymentsMessagePatterns.UPDATE, {
       id,
       dto,
     } as UpdatePaymentMessageDto);
+
+    return firstValueFrom(source);
   }
 
   remove(id: string) {
-    return this.client.send(PaymentsMessagePatterns.DELETE, id);
+    const source = this.client.send(PaymentsMessagePatterns.DELETE, id);
+
+    return firstValueFrom(source);
   }
 }
