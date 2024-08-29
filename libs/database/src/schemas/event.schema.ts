@@ -1,15 +1,9 @@
 import { relations } from 'drizzle-orm';
-import {
-  integer,
-  pgTable,
-  timestamp,
-  uuid,
-  varchar,
-} from 'drizzle-orm/pg-core';
+import { pgTable, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
 import { createPgTimestamps } from '../utils';
 import { locationSchema } from './location.schema';
-import { ticketSchema } from './ticket.schema';
 import { ticketSalesSchema } from './ticket-sales.schema';
+import { ticketSchema } from './ticket.schema';
 
 export const eventSchema = pgTable('events', {
   id: uuid('id').primaryKey().defaultRandom(),

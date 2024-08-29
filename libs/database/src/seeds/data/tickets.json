@@ -1,0 +1,44 @@
+[
+  {
+    "event": "Event 1",
+    "ticketSales": "Ticket 1",
+    "ownerEmail": "test@test.com",
+    "status": "SOLD"
+  },
+  {
+    "event": "Event 2",
+    "ticketSales": "Ticket 2",
+    "ownerEmail": "test2@test.com",
+    "status": "RESERVED"
+  },
+  {
+    "event": "Event 3",
+    "ticketSales": "Ticket 3",
+    "ownerEmail": "test2@test.com",
+    "status": "SOLD"
+  },
+  {
+    "event": "Event 1",
+    "ticketSales": "Ticket 1",
+    "ownerEmail": "test3@test.com",
+    "status": "CANCELLED"
+  },
+  {
+    "event": "Event 2",
+    "ticketSales": "Ticket 2",
+    "ownerEmail": "test4@test.com",
+    "status": "RESERVED"
+  },
+  {
+    "event": "Event 3",
+    "ticketSales": "Ticket 3",
+    "ownerEmail": "test3@test.com",
+    "status": "CANCELLED"
+  },
+  {
+    "event": "Event 1",
+    "ticketSales": "Ticket 1",
+    "ownerEmail": "test4@test.com",
+    "status": "SOLD"
+  }
+]

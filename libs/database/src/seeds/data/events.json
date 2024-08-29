@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Event 1",
+    "description": "Event 1 Description",
+    "location": "New York",
+    "date": "2025-01-01"
+  },
+  {
+    "name": "Event 2",
+    "description": "Event 2 Description",
+    "location": "Los Angeles",
+    "date": "2025-02-01"
+  },
+  {
+    "name": "Event 3",
+    "description": "Event 3 Description",
+    "location": "Chicago",
+    "date": "2025-03-01"
+  }
+]

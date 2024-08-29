@@ -1,0 +1,23 @@
+[
+  {
+    "event": "Event 1",
+    "name": "Ticket 1",
+    "description": "Ticket 1 Description",
+    "quantity": 100,
+    "price": 25000
+  },
+  {
+    "event": "Event 2",
+    "name": "Ticket 2",
+    "description": "Ticket 2 Description",
+    "quantity": 50,
+    "price": 35000
+  },
+  {
+    "event": "Event 3",
+    "name": "Ticket 3",
+    "description": "Ticket 3 Description",
+    "quantity": 75,
+    "price": 45000
+  }
+]

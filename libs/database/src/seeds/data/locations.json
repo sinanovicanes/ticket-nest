@@ -1,0 +1,23 @@
+[
+  {
+    "name": "New York",
+    "city": "New York",
+    "province": "New York",
+    "address": "123 Main St",
+    "address2": "Apt 1"
+  },
+  {
+    "name": "Los Angeles",
+    "city": "Los Angeles",
+    "province": "California",
+    "address": "456 Elm St",
+    "address2": "Suite 2"
+  },
+  {
+    "name": "Chicago",
+    "city": "Chicago",
+    "province": "Illinois",
+    "address": "789 Oak St",
+    "address2": "Unit 3"
+  }
+]

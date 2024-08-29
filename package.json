@@ -20,7 +20,8 @@
     "test:e2e": "jest --config ./apps/api-gateway/test/jest-e2e.json",
     "db:generate": "drizzle-kit generate",
     "db:studio": "drizzle-kit studio",
-    "db:migrate": "tsx libs/database/src/migrate.ts"
+    "db:migrate": "tsx libs/database/src/migrate.ts",
+    "db:seed": "tsx libs/database/src/seed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
