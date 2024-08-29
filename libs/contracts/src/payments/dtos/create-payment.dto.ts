@@ -1,4 +1,11 @@
-import { IsInt, IsOptional, IsUUID, Min } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Min,
+} from 'class-validator';
 
 export class CreatePaymentDto {
   @IsUUID()
@@ -15,4 +22,8 @@ export class CreatePaymentDto {
   @IsInt()
   @Min(0)
   payment: number;
+
+  @IsString()
+  @IsNotEmpty()
+  checkoutSessionId: string;
 }

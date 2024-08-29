@@ -3,6 +3,7 @@ import {
   FindOnePaymentMessageDto,
   FindPaymentOptionsDto,
   PaymentsMessagePatterns,
+  StripeCheckoutDto,
   UpdatePaymentDto,
   UpdatePaymentMessageDto,
 } from '@app/contracts/payments';
@@ -48,6 +49,15 @@ export class PaymentsMicroService {
 
   remove(id: string) {
     const source = this.client.send(PaymentsMessagePatterns.DELETE, id);
+
+    return firstValueFrom(source);
+  }
+
+  createCheckoutSession(dto: StripeCheckoutDto) {
+    const source = this.client.send(
+      PaymentsMessagePatterns.CREATE_CHECKOUT_SESSION,
+      dto,
+    );
 
     return firstValueFrom(source);
   }

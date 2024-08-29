@@ -18,7 +18,13 @@ export class DiscountsService {
     const results = await this.db
       .select({
         usageCount: count(paymentSchema.id),
-        ...discountSchema._.columns,
+        id: discountSchema.id,
+        ticketSalesId: discountSchema.ticketSalesId,
+        kind: discountSchema.kind,
+        amount: discountSchema.amount,
+        code: discountSchema.code,
+        maxUsage: discountSchema.maxUsage,
+        expiresAt: discountSchema.expiresAt,
       })
       .from(discountSchema)
       .leftJoin(paymentSchema, eq(discountSchema.id, paymentSchema.discountId))
@@ -43,18 +49,18 @@ export class DiscountsService {
     const discount = await this.findByCode(code, salesId);
 
     if (!discount) {
-      return false;
+      return null;
     }
 
     if (new Date(discount.expiresAt) < new Date()) {
-      return false;
+      return null;
     }
 
     if (discount.usageCount >= discount.maxUsage) {
-      return false;
+      return null;
     }
 
-    return true;
+    return discount;
   }
 
   async create(dto: CreateDiscountDto) {

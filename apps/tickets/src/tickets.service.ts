@@ -126,7 +126,10 @@ export class TicketsService {
   }
 
   async create(dto: CreateTicketDto) {
-    return await this.db.insert(ticketSchema).values(dto).returning();
+    const results = await this.db.insert(ticketSchema).values(dto).returning();
+    const result = results.pop();
+
+    return result ?? null;
   }
 
   async updateOne(id: string, dto: UpdateTicketDto) {
