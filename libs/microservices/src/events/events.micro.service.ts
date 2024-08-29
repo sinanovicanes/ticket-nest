@@ -1,4 +1,4 @@
-import { NatsServices } from '@app/common/nats';
+import { NatsServices } from '@app/microservices';
 import {
   CreateEventDto,
   EventsMessagePatterns,

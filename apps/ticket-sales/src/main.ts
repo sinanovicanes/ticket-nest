@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { TicketSalesModule } from './ticket-sales.module';
-import { NatsFactory, NatsServices } from '@app/common/nats';
+import { NatsFactory, NatsServices } from '@app/microservices';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {

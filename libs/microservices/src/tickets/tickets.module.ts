@@ -1,4 +1,4 @@
-import { NatsModule, NatsServices } from '@app/common/nats';
+import { NatsModule, NatsServices } from '@app/microservices';
 import { Module } from '@nestjs/common';
 import { TicketsMicroService } from './tickets.micro.service';
 
