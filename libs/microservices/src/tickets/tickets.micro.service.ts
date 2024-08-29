@@ -13,7 +13,7 @@ import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class TicketsMicroService {
-  @Inject(NatsServices.TICKET_SALES) private readonly client: ClientProxy;
+  @Inject(NatsServices.TICKETS) private readonly client: ClientProxy;
 
   create(dto: CreateTicketDto) {
     return this.client.send(TicketsMessagePatterns.CREATE, dto);
