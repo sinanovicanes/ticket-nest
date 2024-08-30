@@ -157,17 +157,21 @@ export class TicketSalesService {
         ticketSchema,
         eq(ticketSalesSchema.id, ticketSchema.ticketSalesId),
       )
+      .groupBy(ticketSalesSchema.id, eventSchema.id)
       .where(
         and(
           eq(ticketSalesSchema.id, id),
           gte(eventSchema.date, new Date().toISOString()),
-          lt(ticketSalesSchema.quantity, count(ticketSchema.id)),
         ),
       );
     const ticketSales = results.pop();
 
     if (!ticketSales) {
       throw new RpcException(new NotFoundException('Ticket sales not found'));
+    }
+
+    if (ticketSales.soldCount >= ticketSales.quantity) {
+      throw new RpcException(new NotFoundException('All tickets are sold out'));
     }
 
     return ticketSales;
