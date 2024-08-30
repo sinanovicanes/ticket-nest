@@ -6,4 +6,5 @@ export enum DiscountsMessagePatterns {
   FIND_MANY = 'discount.findMany',
   FIND_BY_CODE = 'discount.findByCode',
   VALIDATE_CODE = 'discount.validateCode',
+  USE_CODE = 'discount.useCode',
 }

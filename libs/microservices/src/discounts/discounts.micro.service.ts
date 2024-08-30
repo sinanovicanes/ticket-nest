@@ -4,6 +4,7 @@ import {
   FindByDiscountCodeMessageDto,
   UpdateDiscountDto,
   UpdateDiscountMessageDto,
+  UseDiscountCodeMessageDto,
   ValidateDiscountCodeMessageDto,
 } from '@app/contracts/discounts';
 import { NatsServices } from '@app/microservices';
@@ -68,6 +69,23 @@ export class DiscountsMicroService {
       code,
       salesId,
     } as ValidateDiscountCodeMessageDto);
+
+    return firstValueFrom(source);
+  }
+
+  useCode(
+    code: string,
+    salesId: string,
+    price: number,
+  ): Promise<[string, number]> {
+    const source = this.client.send<[string, number]>(
+      DiscountsMessagePatterns.USE_CODE,
+      {
+        code,
+        salesId,
+        price,
+      } as UseDiscountCodeMessageDto,
+    );
 
     return firstValueFrom(source);
   }

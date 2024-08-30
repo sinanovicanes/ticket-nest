@@ -6,6 +6,7 @@ import {
   DiscountsMessagePatterns,
   FindByDiscountCodeMessageDto,
   UpdateDiscountMessageDto,
+  UseDiscountCodeMessageDto,
   ValidateDiscountCodeMessageDto,
 } from '@app/contracts/discounts';
 
@@ -48,5 +49,10 @@ export class DiscountsController {
   @MessagePattern(DiscountsMessagePatterns.VALIDATE_CODE)
   validateCode(@Payload() { code, salesId }: FindByDiscountCodeMessageDto) {
     return this.discountsService.validateCode(code, salesId);
+  }
+
+  @MessagePattern(DiscountsMessagePatterns.USE_CODE)
+  useCode(@Payload() { code, salesId, price }: UseDiscountCodeMessageDto) {
+    return this.discountsService.useCode(code, salesId, price);
   }
 }

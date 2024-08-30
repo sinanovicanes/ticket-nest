@@ -1,3 +1,4 @@
+import { DiscountKind } from '@app/database';
 import * as crypto from 'crypto';
 
 export namespace DiscountUtils {
@@ -21,5 +22,20 @@ export namespace DiscountUtils {
     let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
     return decrypted;
+  }
+
+  export function applyDiscount(
+    kind: DiscountKind,
+    price: number,
+    amount: number,
+  ): number {
+    switch (kind) {
+      case DiscountKind.FIXED:
+        return Math.max(0, price - amount);
+      case DiscountKind.PERCENTAGE:
+        return Math.max(price - price * (amount / 100));
+      default:
+        return price;
+    }
   }
 }

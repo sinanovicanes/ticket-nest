@@ -5,9 +5,10 @@ import {
   InjectDB,
   paymentSchema,
 } from '@app/database';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { and, count, eq } from 'drizzle-orm';
 import { DiscountUtils } from './utils';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class DiscountsService {
@@ -61,6 +62,30 @@ export class DiscountsService {
     }
 
     return discount;
+  }
+
+  async useCode(
+    code: string,
+    salesId: string,
+    price: number,
+  ): Promise<[string, number]> {
+    const discount = await this.validateCode(code, salesId);
+
+    if (!discount) {
+      throw new RpcException(
+        new HttpException('Invalid discount code', HttpStatus.NOT_FOUND),
+      );
+    }
+
+    // TODO: Increase usage
+
+    const newPrice = DiscountUtils.applyDiscount(
+      discount.kind,
+      price,
+      discount.amount,
+    );
+
+    return [discount.id, newPrice];
   }
 
   async create(dto: CreateDiscountDto) {
