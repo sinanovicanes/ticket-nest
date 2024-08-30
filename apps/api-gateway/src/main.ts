@@ -1,7 +1,8 @@
+import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { ApiGatewayModule } from './api-gateway.module';
-import { ConfigService } from '@nestjs/config';
-import { ValidationPipe } from '@nestjs/common';
+import { RpcExceptionFilter } from '@app/common/filters';
 
 async function bootstrap() {
   const app = await NestFactory.create(ApiGatewayModule);
@@ -9,6 +10,7 @@ async function bootstrap() {
   const PORT = configService.get<number>('PORT');
 
   app.setGlobalPrefix('api');
+  app.useGlobalFilters(new RpcExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
