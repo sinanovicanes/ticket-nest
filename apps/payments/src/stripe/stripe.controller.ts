@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { StripeService } from './stripe.service';
-import { MessagePattern } from '@nestjs/microservices';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import {
   PaymentsMessagePatterns,
   CreateStripeCheckoutDto,
@@ -11,7 +11,7 @@ export class StripeController {
   constructor(private readonly stripeService: StripeService) {}
 
   @MessagePattern(PaymentsMessagePatterns.CREATE_CHECKOUT_SESSION)
-  async createCheckoutSession(dto: CreateStripeCheckoutDto) {
+  async createCheckoutSession(@Payload() dto: CreateStripeCheckoutDto) {
     return this.stripeService.createCheckoutSession(dto);
   }
 }
