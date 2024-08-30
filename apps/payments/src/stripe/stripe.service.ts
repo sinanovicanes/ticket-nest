@@ -1,20 +1,7 @@
 import { CreateStripeCheckoutDto } from '@app/contracts/payments';
-import {
-  DiscountsMicroService,
-  TicketSalesMicroService,
-  TicketsMicroService,
-} from '@app/microservices';
-import {
-  Inject,
-  Injectable,
-  NotFoundException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { RpcException } from '@nestjs/microservices';
 import { Stripe } from 'stripe';
-import { PaymentsService } from '../payments.service';
-import { DiscountKind } from '@app/database';
 
 @Injectable()
 export class StripeService {
@@ -25,13 +12,11 @@ export class StripeService {
   }
 
   async createCheckoutSession(checkoutDto: CreateStripeCheckoutDto) {
-    const { name, description, unitPrice, quantity, expiresAt, metadata } =
-      checkoutDto;
+    const { name, description, unitPrice, quantity, metadata } = checkoutDto;
 
     const checkoutSession = await this.client.checkout.sessions.create({
       payment_method_types: ['card'],
       metadata: metadata,
-      expires_at: expiresAt,
       line_items: [
         {
           price_data: {
