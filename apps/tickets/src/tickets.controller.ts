@@ -18,6 +18,18 @@ export class TicketsController {
     return this.ticketsService.create(dto);
   }
 
+  @MessagePattern(TicketsMessagePatterns.CREATE_MANY)
+  createMany(@Payload() dtos: CreateTicketDto[]) {
+    return this.ticketsService.createMany(dtos);
+  }
+
+  @MessagePattern(TicketsMessagePatterns.CREATE_DUPLICATES)
+  createDuplicates(
+    @Payload() { dto, quantity }: { dto: CreateTicketDto; quantity: number },
+  ) {
+    return this.ticketsService.createDuplicates(dto, quantity);
+  }
+
   @MessagePattern(TicketsMessagePatterns.FIND_MANY)
   findMany(@Payload() options: FindTicketOptionsDto) {
     return this.ticketsService.findMany(options);

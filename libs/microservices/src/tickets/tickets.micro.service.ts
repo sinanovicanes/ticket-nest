@@ -1,5 +1,6 @@
 import { NatsServices } from '@app/microservices';
 import {
+  CreateTicketDuplicatesMessageDto,
   CreateTicketDto,
   FindOneTicketMessageDto,
   FindTicketOptionsDto,
@@ -18,6 +19,27 @@ export class TicketsMicroService {
 
   create(dto: CreateTicketDto) {
     const source = this.client.send(TicketsMessagePatterns.CREATE, dto);
+
+    return firstValueFrom(source);
+  }
+
+  createMany(dtos: CreateTicketDto[]): Promise<string[]> {
+    const source = this.client.send<string[]>(
+      TicketsMessagePatterns.CREATE_MANY,
+      dtos,
+    );
+
+    return firstValueFrom(source);
+  }
+
+  createDuplicates(dto: CreateTicketDto, quantity: number): Promise<string[]> {
+    const source = this.client.send<string[]>(
+      TicketsMessagePatterns.CREATE_DUPLICATES,
+      {
+        dto,
+        quantity,
+      } as CreateTicketDuplicatesMessageDto,
+    );
 
     return firstValueFrom(source);
   }

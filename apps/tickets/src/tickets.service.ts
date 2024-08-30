@@ -14,6 +14,7 @@ import {
   TicketSelectFieldsDto,
 } from '@app/database';
 import { Injectable } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 import { asc, between, desc, eq, gte, lte } from 'drizzle-orm';
 
 @Injectable()
@@ -129,7 +130,28 @@ export class TicketsService {
     const results = await this.db.insert(ticketSchema).values(dto).returning();
     const result = results.pop();
 
-    return result ?? null;
+    if (!result) {
+      throw new RpcException('Failed to create ticket');
+    }
+
+    return result;
+  }
+
+  async createMany(dtos: CreateTicketDto[]): Promise<string[]> {
+    const results = await this.db
+      .insert(ticketSchema)
+      .values(dtos)
+      .returning({ id: ticketSchema.id });
+
+    return results.map((result) => result.id);
+  }
+
+  async createDuplicates(
+    dto: CreateTicketDto,
+    quantity: number,
+  ): Promise<string[]> {
+    const tickets = Array.from({ length: quantity }, () => dto);
+    return await this.createMany(tickets);
   }
 
   async updateOne(id: string, dto: UpdateTicketDto) {
