@@ -22,11 +22,7 @@ export class CreateStripeCheckoutDto {
   @Min(1)
   quantity: number;
 
-  @IsDate()
-  @IsOptional()
-  expiresAt?: number = Math.floor(Date.now() / 1000) + 30 * 60 * 24;
-
   @IsOptional()
   @IsObject()
-  metadata?: Record<string, any>;
+  metadata?: Record<string, string>;
 }
