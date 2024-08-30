@@ -3,7 +3,7 @@ import {
   FindOnePaymentMessageDto,
   FindPaymentOptionsDto,
   PaymentsMessagePatterns,
-  StripeCheckoutDto,
+  CreateStripeCheckoutDto,
   UpdatePaymentDto,
   UpdatePaymentMessageDto,
 } from '@app/contracts/payments';
@@ -12,6 +12,7 @@ import { NatsServices } from '@app/microservices';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
+import type Stripe from 'stripe';
 
 @Injectable()
 export class PaymentsMicroService {
@@ -53,8 +54,10 @@ export class PaymentsMicroService {
     return firstValueFrom(source);
   }
 
-  createCheckoutSession(dto: StripeCheckoutDto) {
-    const source = this.client.send(
+  createCheckoutSession(
+    dto: CreateStripeCheckoutDto,
+  ): Promise<Stripe.Response<Stripe.Checkout.Session>> {
+    const source = this.client.send<Stripe.Response<Stripe.Checkout.Session>>(
       PaymentsMessagePatterns.CREATE_CHECKOUT_SESSION,
       dto,
     );
