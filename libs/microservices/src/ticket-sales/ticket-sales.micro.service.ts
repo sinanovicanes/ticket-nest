@@ -40,6 +40,15 @@ export class TicketSalesMicroService {
     return firstValueFrom(source);
   }
 
+  findByIdIfAvailable(id: string) {
+    const source = this.client.send(
+      TicketSalesMessagePatterns.FIND_BY_ID_IF_AVAILABLE,
+      id,
+    );
+
+    return firstValueFrom(source);
+  }
+
   update(id: string, dto: UpdateTicketSalesDto) {
     const source = this.client.send(TicketSalesMessagePatterns.UPDATE, {
       id,

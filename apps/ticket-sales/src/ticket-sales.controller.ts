@@ -37,4 +37,9 @@ export class TicketSalesController {
   delete(@Payload() id: string) {
     return this.ticketSalesService.delete(id);
   }
+
+  @MessagePattern(TicketSalesMessagePatterns.FIND_BY_ID_IF_AVAILABLE)
+  findByIdIfAvailable(@Payload() id: string) {
+    return this.ticketSalesService.findByIdIfAvailable(id);
+  }
 }

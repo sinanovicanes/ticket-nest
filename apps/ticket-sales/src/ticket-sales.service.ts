@@ -11,9 +11,23 @@ import {
   ticketSalesSchema,
   locationSchema,
   TicketSalesSelectFieldsDto,
+  ticketSchema,
 } from '@app/database';
-import { Injectable } from '@nestjs/common';
-import { asc, between, desc, eq, gte, ilike, lte, or } from 'drizzle-orm';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
+import {
+  and,
+  asc,
+  between,
+  count,
+  desc,
+  eq,
+  gte,
+  ilike,
+  lt,
+  lte,
+  or,
+} from 'drizzle-orm';
 
 @Injectable()
 export class TicketSalesService {
@@ -121,6 +135,42 @@ export class TicketSalesService {
     dbQuery.orderBy(...orderByColumns);
 
     return await dbQuery;
+  }
+
+  async findByIdIfAvailable(id: string) {
+    const results = await this.db
+      .select({
+        id: ticketSalesSchema.id,
+        price: ticketSalesSchema.price,
+        quantity: ticketSalesSchema.quantity,
+        soldCount: count(ticketSchema.id),
+        name: ticketSalesSchema.name,
+        event: {
+          id: eventSchema.id,
+          date: eventSchema.date,
+          name: eventSchema.name,
+        },
+      })
+      .from(ticketSalesSchema)
+      .leftJoin(eventSchema, eq(ticketSalesSchema.eventId, eventSchema.id))
+      .leftJoin(
+        ticketSchema,
+        eq(ticketSalesSchema.id, ticketSchema.ticketSalesId),
+      )
+      .where(
+        and(
+          eq(ticketSalesSchema.id, id),
+          gte(eventSchema.date, new Date().toISOString()),
+          lt(ticketSalesSchema.quantity, count(ticketSchema.id)),
+        ),
+      );
+    const ticketSales = results.pop();
+
+    if (!ticketSales) {
+      throw new RpcException(new NotFoundException('Ticket sales not found'));
+    }
+
+    return ticketSales;
   }
 
   async create(dto: CreateTicketSalesDto) {
