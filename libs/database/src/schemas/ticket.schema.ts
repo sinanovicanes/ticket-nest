@@ -1,11 +1,11 @@
 import { relations } from 'drizzle-orm';
-import { integer, pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
+import { pgTable, uuid } from 'drizzle-orm/pg-core';
+import { TicketStatus } from '../enums';
 import { createPgTimestamps } from '../utils';
 import { ticketStatus } from './enums';
 import { eventSchema } from './event.schema';
 import { paymentSchema } from './payment.schema';
 import { ticketSalesSchema } from './ticket-sales.schema';
-import { TicketStatus } from '../enums';
 
 export const ticketSchema = pgTable('tickets', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -15,8 +15,8 @@ export const ticketSchema = pgTable('tickets', {
   ticketSalesId: uuid('ticket_sales_id')
     .notNull()
     .references(() => ticketSalesSchema.id),
-  ownerEmail: varchar('owner_email', { length: 255 }).notNull(),
-  status: ticketStatus('status').notNull().default(TicketStatus.RESERVED),
+  paymentId: uuid('payment_id').references(() => paymentSchema.id),
+  status: ticketStatus('status').notNull().default(TicketStatus.ACTIVE),
   ...createPgTimestamps(),
 });
 
@@ -30,7 +30,7 @@ export const ticketRelations = relations(ticketSchema, ({ one }) => ({
     references: [ticketSalesSchema.id],
   }),
   payment: one(paymentSchema, {
-    fields: [ticketSchema.id],
-    references: [paymentSchema.ticketId],
+    fields: [ticketSchema.paymentId],
+    references: [paymentSchema.id],
   }),
 }));

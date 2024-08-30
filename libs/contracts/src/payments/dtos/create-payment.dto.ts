@@ -1,4 +1,5 @@
 import {
+  IsEmail,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -8,22 +9,22 @@ import {
 } from 'class-validator';
 
 export class CreatePaymentDto {
-  @IsUUID()
-  ticketId: string;
+  @IsString()
+  @IsNotEmpty()
+  checkoutSessionId: string;
+
+  @IsEmail()
+  email: string;
+
+  @IsInt()
+  @Min(0)
+  total: number;
+
+  @IsInt()
+  @Min(1)
+  ticketCount: number;
 
   @IsOptional()
   @IsUUID()
   discountId?: string;
-
-  @IsInt()
-  @Min(0)
-  defaultPrice: number;
-
-  @IsInt()
-  @Min(0)
-  payment: number;
-
-  @IsString()
-  @IsNotEmpty()
-  checkoutSessionId: string;
 }

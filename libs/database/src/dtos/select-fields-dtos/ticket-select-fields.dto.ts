@@ -4,21 +4,28 @@ import { Transform, Type } from 'class-transformer';
 import { IsOptional, ValidateNested } from 'class-validator';
 import { TicketSalesSelectFieldsDto } from './ticket-sales-select-fields.dto';
 import { EventSelectFieldsDto } from './event-select-fields.dto';
+import { PaymentSelectFieldsDto } from './payment-select-fields.dto';
 
 export class TicketSelectFieldsDto
   implements
-    Omit<TableFields<typeof ticketSchema>, 'eventId' | 'ticketSalesId'>
+    Partial<
+      Omit<
+        TableFields<typeof ticketSchema>,
+        'eventId' | 'ticketSalesId' | 'paymentId'
+      >
+    >
 {
   @IsOptional()
-  id: boolean;
+  id?: boolean;
+
   @IsOptional()
-  ownerEmail: boolean;
+  status?: boolean;
+
   @IsOptional()
-  status: boolean;
+  createdAt?: boolean;
+
   @IsOptional()
-  createdAt: boolean;
-  @IsOptional()
-  updatedAt: boolean;
+  updatedAt?: boolean;
 
   @IsOptional()
   @ValidateNested()
@@ -35,6 +42,14 @@ export class TicketSelectFieldsDto
     value === true ? new EventSelectFieldsDto() : value,
   )
   event?: EventSelectFieldsDto;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => PaymentSelectFieldsDto)
+  @Transform(({ value }) =>
+    value === true ? new PaymentSelectFieldsDto() : value,
+  )
+  payment?: PaymentSelectFieldsDto;
 
   constructor(partial?: Partial<TicketSelectFieldsDto>) {
     if (partial) {

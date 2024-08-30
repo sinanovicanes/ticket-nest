@@ -1,6 +1,11 @@
 import { eq } from 'drizzle-orm';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { eventSchema, ticketSalesSchema, ticketSchema } from '../schemas';
+import {
+  eventSchema,
+  paymentSchema,
+  ticketSalesSchema,
+  ticketSchema,
+} from '../schemas';
 import tickets from './data/tickets.json';
 
 export default async function seed(db: NodePgDatabase<Record<string, never>>) {
@@ -26,10 +31,21 @@ export default async function seed(db: NodePgDatabase<Record<string, never>>) {
         throw new Error(`Ticket sales not found: ${ticket.ticketSales}`);
       }
 
+      const payments = await db
+        .select({ id: paymentSchema.id })
+        .from(paymentSchema)
+        .where(eq(paymentSchema.checkoutSessionId, ticket.paymentSessionId));
+      const payment = payments.pop();
+
+      if (!payment) {
+        throw new Error(`Payment not found: ${ticket.paymentSessionId}`);
+      }
+
       return {
         ...ticket,
         eventId: event.id,
         ticketSalesId: sales.id,
+        paymentId: payment.id,
       };
     }),
   );

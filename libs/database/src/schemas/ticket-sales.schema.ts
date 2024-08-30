@@ -13,6 +13,7 @@ export const ticketSalesSchema = pgTable('ticket_sales', {
   name: varchar('name', { length: 255 }).notNull(),
   description: varchar('description', { length: 2000 }).notNull(),
   quantity: integer('quantity').notNull(),
+  sold: integer('sold').notNull(),
   price: integer('price').notNull(),
   ...createPgTimestamps(),
 });

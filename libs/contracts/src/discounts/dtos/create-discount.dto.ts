@@ -23,6 +23,10 @@ export class CreateDiscountDto {
   @Min(1)
   maxUsage: number;
 
+  @IsInt()
+  @Min(0)
+  used: number = 0;
+
   @IsDateString()
   expiresAt: string;
 

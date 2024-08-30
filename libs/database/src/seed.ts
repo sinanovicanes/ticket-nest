@@ -47,6 +47,7 @@ async function seed() {
   await seeds.locations(db);
   await seeds.events(db);
   await seeds.ticketSales(db);
+  await seeds.payments(db);
   await seeds.tickets(db);
 
   console.log('Tables seeded.');

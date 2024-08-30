@@ -3,24 +3,22 @@ import { integer, pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
 import { createPgTimestamps } from '../utils';
 import { discountSchema } from './discount.schema';
 import { ticketSchema } from './ticket.schema';
+import { paymentStatus } from './enums';
+import { PaymentStatus } from '../enums';
 
 export const paymentSchema = pgTable('payments', {
   id: uuid('id').primaryKey().defaultRandom(),
-  ticketId: uuid('ticket_id')
-    .notNull()
-    .references(() => ticketSchema.id),
-  defaultPrice: integer('default_price').notNull(),
   discountId: uuid('discount_id').references(() => discountSchema.id),
-  payment: integer('payment').notNull(),
+  total: integer('total').notNull(),
   checkoutSessionId: varchar('checkout_session_id').notNull(),
+  email: varchar('owner_email').notNull(),
+  status: paymentStatus('status').notNull().default(PaymentStatus.PENDING),
+  ticketCount: integer('ticket_count').notNull(),
   ...createPgTimestamps(),
 });
 
 export const paymentRelations = relations(paymentSchema, ({ one, many }) => ({
-  ticket: one(ticketSchema, {
-    fields: [paymentSchema.ticketId],
-    references: [ticketSchema.id],
-  }),
+  ticket: many(ticketSchema),
   discount: one(discountSchema, {
     fields: [paymentSchema.id],
     references: [discountSchema.id],

@@ -55,9 +55,7 @@ export class CheckoutService {
 
     await this.paymentsMicroService.create({
       checkoutSessionId: checkoutSession.id,
-      defaultPrice: ticketSales.price,
-      payment: checkoutSession.amount_total,
-      ticketId: ticketIds[0],
+      total: checkoutSession.amount_total,
       discountId,
     });
 

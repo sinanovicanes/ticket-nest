@@ -11,18 +11,27 @@ import {
 export class CreateTicketSalesDto {
   @IsUUID()
   eventId: string;
+
   @IsString()
   @IsNotEmpty()
   @Length(3, 255)
   name: string;
+
   @IsString()
   @IsNotEmpty()
   @Length(3, 2000)
   description: string;
+
   @IsInt()
   @Min(1)
   @Max(1000000)
   quantity: number;
+
+  @IsInt()
+  @Min(0)
+  @Max(1000000)
+  sold: number = 0;
+
   @IsInt()
   @Min(1)
   @Max(1000000)

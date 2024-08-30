@@ -19,6 +19,7 @@ export const discountSchema = pgTable('discounts', {
   kind: discountKind('kind').notNull(),
   amount: integer('amount').notNull(),
   code: varchar('code', { length: 255 }).notNull(),
+  used: integer('used').notNull(),
   maxUsage: integer('max_usage').notNull(),
   expiresAt: timestamp('expires_at', { mode: 'string' }),
   ...createPgTimestamps(),

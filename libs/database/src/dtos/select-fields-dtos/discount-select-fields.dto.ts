@@ -5,24 +5,34 @@ import { IsOptional, ValidateNested } from 'class-validator';
 import { TicketSalesSelectFieldsDto } from './ticket-sales-select-fields.dto';
 
 export class DiscountSelectFieldsDto
-  implements Omit<TableFields<typeof discountSchema>, 'ticketSalesId'>
+  implements Partial<Omit<TableFields<typeof discountSchema>, 'ticketSalesId'>>
 {
   @IsOptional()
-  id: boolean;
+  id?: boolean;
+
   @IsOptional()
-  kind: boolean;
+  kind?: boolean;
+
   @IsOptional()
-  amount: boolean;
+  amount?: boolean;
+
   @IsOptional()
-  code: boolean;
+  code?: boolean;
+
   @IsOptional()
-  maxUsage: boolean;
+  used?: boolean;
+
   @IsOptional()
-  expiresAt: boolean;
+  maxUsage?: boolean;
+
   @IsOptional()
-  createdAt: boolean;
+  expiresAt?: boolean;
+
   @IsOptional()
-  updatedAt: boolean;
+  createdAt?: boolean;
+
+  @IsOptional()
+  updatedAt?: boolean;
 
   @IsOptional()
   @ValidateNested()

@@ -14,7 +14,8 @@ import {
   ticketSalesSchema,
   ticketSchema,
 } from '@app/database';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
 import { asc, between, desc, eq, gte, lte } from 'drizzle-orm';
 
 @Injectable()
@@ -38,31 +39,14 @@ export class PaymentsService {
       .from(paymentSchema)
       .where(eq(paymentSchema.id, id));
 
-    if (selectFields.ticket) {
-      query.leftJoin(ticketSchema, eq(paymentSchema.ticketId, ticketSchema.id));
+    const results = await query;
+    const payment = results.pop();
 
-      if (selectFields.ticket.event) {
-        query.leftJoin(eventSchema, eq(ticketSchema.eventId, eventSchema.id));
-
-        if (selectFields.ticket.event.location) {
-          query.leftJoin(
-            locationSchema,
-            eq(eventSchema.locationId, locationSchema.id),
-          );
-        }
-      }
-
-      if (selectFields.ticket.ticketSales) {
-        query.leftJoin(
-          ticketSalesSchema,
-          eq(ticketSchema.ticketSalesId, ticketSalesSchema.id),
-        );
-      }
+    if (!payment) {
+      throw new RpcException(new NotFoundException('Payment not found'));
     }
 
-    const results = await query;
-
-    return results.pop() ?? null;
+    return payment;
   }
 
   async findMany(options: FindPaymentOptionsDto) {
@@ -110,37 +94,12 @@ export class PaymentsService {
       dbQuery.where(eq(ticketSalesSchema.id, salesId));
     }
 
-    if (selectFields.ticket) {
-      dbQuery.leftJoin(
-        ticketSchema,
-        eq(paymentSchema.ticketId, ticketSchema.id),
-      );
-
-      if (selectFields.ticket.event) {
-        dbQuery.leftJoin(eventSchema, eq(ticketSchema.eventId, eventSchema.id));
-
-        if (selectFields.ticket.event.location) {
-          dbQuery.leftJoin(
-            locationSchema,
-            eq(eventSchema.locationId, locationSchema.id),
-          );
-        }
-      }
-
-      if (selectFields.ticket.ticketSales) {
-        dbQuery.leftJoin(
-          ticketSalesSchema,
-          eq(ticketSchema.ticketSalesId, ticketSalesSchema.id),
-        );
-      }
-    }
-
     if (minPayment && maxPayment) {
-      dbQuery.where(between(paymentSchema.payment, minPayment, maxPayment));
+      dbQuery.where(between(paymentSchema.total, minPayment, maxPayment));
     } else if (minPayment) {
-      dbQuery.where(gte(paymentSchema.payment, minPayment));
+      dbQuery.where(gte(paymentSchema.total, minPayment));
     } else if (maxPayment) {
-      dbQuery.where(lte(paymentSchema.payment, maxPayment));
+      dbQuery.where(lte(paymentSchema.total, maxPayment));
     }
 
     if (startDate && endDate) {
