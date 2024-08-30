@@ -1,4 +1,3 @@
-import { NatsServices } from '@app/microservices';
 import {
   CreateTicketSalesDto,
   FindOneTicketSalesMessageDto,
@@ -9,9 +8,10 @@ import {
   UpdateTicketSalesMessageDto,
 } from '@app/contracts/ticket-sales';
 import { TicketSalesSelectFieldsDto } from '@app/database';
+import { NatsServices } from '@app/microservices';
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy, RpcException } from '@nestjs/microservices';
-import { catchError, firstValueFrom, throwError, timeout } from 'rxjs';
+import { ClientProxy } from '@nestjs/microservices';
+import { firstValueFrom, timeout } from 'rxjs';
 
 @Injectable()
 export class TicketSalesMicroService {
@@ -20,10 +20,7 @@ export class TicketSalesMicroService {
   create(dto: CreateTicketSalesDto) {
     const source = this.client
       .send(TicketSalesMessagePatterns.CREATE, dto)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -31,10 +28,7 @@ export class TicketSalesMicroService {
   findMany(options: FindTicketSalesOptionsDto) {
     const source = this.client
       .send(TicketSalesMessagePatterns.FIND_MANY, options)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -45,10 +39,7 @@ export class TicketSalesMicroService {
         id,
         selectFields,
       } as FindOneTicketSalesMessageDto)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -56,10 +47,7 @@ export class TicketSalesMicroService {
   findByIdIfAvailable(id: string) {
     const source = this.client
       .send(TicketSalesMessagePatterns.FIND_BY_ID_IF_AVAILABLE, id)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -70,10 +58,7 @@ export class TicketSalesMicroService {
         id,
         quantity,
       } as ReserveTicketsMessageDto)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -84,19 +69,15 @@ export class TicketSalesMicroService {
         id,
         dto,
       } as UpdateTicketSalesMessageDto)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
 
   remove(id: string) {
-    const source = this.client.send(TicketSalesMessagePatterns.DELETE, id).pipe(
-      timeout(5000),
-      catchError((e) => throwError(() => new RpcException(e))),
-    );
+    const source = this.client
+      .send(TicketSalesMessagePatterns.DELETE, id)
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }

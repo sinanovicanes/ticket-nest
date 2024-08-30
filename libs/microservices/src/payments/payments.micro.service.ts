@@ -19,10 +19,9 @@ export class PaymentsMicroService {
   @Inject(NatsServices.PAYMENTS) private readonly client: ClientProxy;
 
   create(dto: CreatePaymentDto) {
-    const source = this.client.send(PaymentsMessagePatterns.CREATE, dto).pipe(
-      timeout(5000),
-      catchError((e) => throwError(() => new RpcException(e))),
-    );
+    const source = this.client
+      .send(PaymentsMessagePatterns.CREATE, dto)
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -30,10 +29,7 @@ export class PaymentsMicroService {
   findMany(options: FindPaymentOptionsDto) {
     const source = this.client
       .send(PaymentsMessagePatterns.FIND_MANY, options)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -44,10 +40,7 @@ export class PaymentsMicroService {
         id,
         selectFields,
       } as FindOnePaymentMessageDto)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -58,19 +51,15 @@ export class PaymentsMicroService {
         id,
         dto,
       } as UpdatePaymentMessageDto)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
 
   remove(id: string) {
-    const source = this.client.send(PaymentsMessagePatterns.DELETE, id).pipe(
-      timeout(5000),
-      catchError((e) => throwError(() => new RpcException(e))),
-    );
+    const source = this.client
+      .send(PaymentsMessagePatterns.DELETE, id)
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -82,10 +71,7 @@ export class PaymentsMicroService {
       .send<
         Stripe.Response<Stripe.Checkout.Session>
       >(PaymentsMessagePatterns.CREATE_CHECKOUT_SESSION, dto)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }

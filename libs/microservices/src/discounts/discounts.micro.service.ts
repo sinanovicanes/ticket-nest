@@ -17,10 +17,9 @@ export class DiscountsMicroService {
   @Inject(NatsServices.DISCOUNTS) private readonly client: ClientProxy;
 
   create(dto: CreateDiscountDto) {
-    const source = this.client.send(DiscountsMessagePatterns.CREATE, dto).pipe(
-      timeout(5000),
-      catchError((e) => throwError(() => new RpcException(e))),
-    );
+    const source = this.client
+      .send(DiscountsMessagePatterns.CREATE, dto)
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -28,10 +27,7 @@ export class DiscountsMicroService {
   findMany(options: any) {
     const source = this.client
       .send(DiscountsMessagePatterns.FIND_MANY, options)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -42,10 +38,7 @@ export class DiscountsMicroService {
         id,
         selectFields,
       } as any)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -56,19 +49,15 @@ export class DiscountsMicroService {
         id,
         dto,
       } as UpdateDiscountMessageDto)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
 
   remove(id: string) {
-    const source = this.client.send(DiscountsMessagePatterns.DELETE, id).pipe(
-      timeout(5000),
-      catchError((e) => throwError(() => new RpcException(e))),
-    );
+    const source = this.client
+      .send(DiscountsMessagePatterns.DELETE, id)
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -79,10 +68,7 @@ export class DiscountsMicroService {
         code,
         salesId,
       } as FindByDiscountCodeMessageDto)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -93,10 +79,7 @@ export class DiscountsMicroService {
         code,
         salesId,
       } as ValidateDiscountCodeMessageDto)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -112,10 +95,7 @@ export class DiscountsMicroService {
         salesId,
         price,
       } as UseDiscountCodeMessageDto)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }

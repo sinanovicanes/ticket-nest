@@ -18,10 +18,9 @@ export class TicketsMicroService {
   @Inject(NatsServices.TICKETS) private readonly client: ClientProxy;
 
   create(dto: CreateTicketDto) {
-    const source = this.client.send(TicketsMessagePatterns.CREATE, dto).pipe(
-      timeout(5000),
-      catchError((e) => throwError(() => new RpcException(e))),
-    );
+    const source = this.client
+      .send(TicketsMessagePatterns.CREATE, dto)
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -29,10 +28,7 @@ export class TicketsMicroService {
   createMany(dtos: CreateTicketDto[]): Promise<string[]> {
     const source = this.client
       .send<string[]>(TicketsMessagePatterns.CREATE_MANY, dtos)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -43,10 +39,7 @@ export class TicketsMicroService {
         dto,
         quantity,
       } as CreateTicketDuplicatesMessageDto)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -54,10 +47,7 @@ export class TicketsMicroService {
   findMany(options: FindTicketOptionsDto) {
     const source = this.client
       .send(TicketsMessagePatterns.FIND_MANY, options)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -68,10 +58,7 @@ export class TicketsMicroService {
         id,
         selectFields,
       } as FindOneTicketMessageDto)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -82,19 +69,15 @@ export class TicketsMicroService {
         id,
         dto,
       } as UpdateTicketMessageDto)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
 
   remove(id: string) {
-    const source = this.client.send(TicketsMessagePatterns.DELETE, id).pipe(
-      timeout(5000),
-      catchError((e) => throwError(() => new RpcException(e))),
-    );
+    const source = this.client
+      .send(TicketsMessagePatterns.DELETE, id)
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }

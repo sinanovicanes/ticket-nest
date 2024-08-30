@@ -15,10 +15,9 @@ export class EventsMicroService {
   @Inject(NatsServices.EVENTS) private readonly client: ClientProxy;
 
   create(dto: CreateEventDto) {
-    const source = this.client.send(EventsMessagePatterns.CREATE, dto).pipe(
-      timeout(5000),
-      catchError((e) => throwError(() => new RpcException(e))),
-    );
+    const source = this.client
+      .send(EventsMessagePatterns.CREATE, dto)
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -26,19 +25,15 @@ export class EventsMicroService {
   findMany(options: FindEventsOptionsDto) {
     const source = this.client
       .send(EventsMessagePatterns.FIND_MANY, options)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
 
   findOne(id: string) {
-    const source = this.client.send(EventsMessagePatterns.FIND_ONE, id).pipe(
-      timeout(5000),
-      catchError((e) => throwError(() => new RpcException(e))),
-    );
+    const source = this.client
+      .send(EventsMessagePatterns.FIND_ONE, id)
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
@@ -49,19 +44,15 @@ export class EventsMicroService {
         id,
         dto,
       } as UpdateEventMessageDto)
-      .pipe(
-        timeout(5000),
-        catchError((e) => throwError(() => new RpcException(e))),
-      );
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
 
   remove(id: string) {
-    const source = this.client.send(EventsMessagePatterns.DELETE, id).pipe(
-      timeout(5000),
-      catchError((e) => throwError(() => new RpcException(e))),
-    );
+    const source = this.client
+      .send(EventsMessagePatterns.DELETE, id)
+      .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }

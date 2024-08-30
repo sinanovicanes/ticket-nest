@@ -1,9 +1,17 @@
 import {
-  ClientProviderOptions,
+  ClientNats,
+  ClientsProviderAsyncOptions,
   NatsOptions,
+  RpcException,
   Transport,
 } from '@nestjs/microservices';
 import { NatsServices } from '../enums';
+
+class ErrorHandlingProxy extends ClientNats {
+  serializeError(err: Error) {
+    return new RpcException(err);
+  }
+}
 
 export class NatsFactory {
   static createOptions(service: NatsServices): NatsOptions {
@@ -16,10 +24,15 @@ export class NatsFactory {
     };
   }
 
-  static createClientProvider(service: NatsServices): ClientProviderOptions {
+  static createClientProvider(
+    service: NatsServices,
+  ): ClientsProviderAsyncOptions {
     return {
       name: service,
-      ...NatsFactory.createOptions(service),
+      useFactory: () => ({
+        ...NatsFactory.createOptions(service),
+        customClass: ErrorHandlingProxy,
+      }),
     };
   }
 }
