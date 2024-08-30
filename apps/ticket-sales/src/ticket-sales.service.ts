@@ -7,12 +7,13 @@ import {
   Database,
   eventSchema,
   InjectDB,
+  locationSchema,
   SelectFieldsFactory,
   ticketSalesSchema,
-  locationSchema,
   TicketSalesSelectFieldsDto,
   ticketSchema,
 } from '@app/database';
+import { increment } from '@app/database/utils';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import {
@@ -24,7 +25,6 @@ import {
   eq,
   gte,
   ilike,
-  lt,
   lte,
   or,
 } from 'drizzle-orm';
@@ -137,13 +137,30 @@ export class TicketSalesService {
     return await dbQuery;
   }
 
+  async reserveTickets(id: string, quantity: number) {
+    const results = await this.db
+      .update(ticketSalesSchema)
+      .set({
+        sold: increment(ticketSalesSchema.sold, quantity),
+      })
+      .where(eq(ticketSalesSchema.id, id))
+      .returning({ sold: ticketSalesSchema.sold });
+
+    const result = results.pop();
+
+    if (!result) {
+      throw new RpcException(new NotFoundException('Ticket sales not found'));
+    }
+
+    return result;
+  }
+
   async findByIdIfAvailable(id: string) {
     const results = await this.db
       .select({
         id: ticketSalesSchema.id,
         price: ticketSalesSchema.price,
         quantity: ticketSalesSchema.quantity,
-        soldCount: count(ticketSchema.id),
         name: ticketSalesSchema.name,
         event: {
           id: eventSchema.id,
@@ -168,10 +185,6 @@ export class TicketSalesService {
 
     if (!ticketSales) {
       throw new RpcException(new NotFoundException('Ticket sales not found'));
-    }
-
-    if (ticketSales.soldCount >= ticketSales.quantity) {
-      throw new RpcException(new NotFoundException('All tickets are sold out'));
     }
 
     return ticketSales;

@@ -3,6 +3,7 @@ import {
   CreateTicketSalesDto,
   FindOneTicketSalesMessageDto,
   FindTicketSalesOptionsDto,
+  ReserveTicketsMessageDto,
   TicketSalesMessagePatterns,
   UpdateTicketSalesDto,
   UpdateTicketSalesMessageDto,
@@ -55,6 +56,20 @@ export class TicketSalesMicroService {
   findByIdIfAvailable(id: string) {
     const source = this.client
       .send(TicketSalesMessagePatterns.FIND_BY_ID_IF_AVAILABLE, id)
+      .pipe(
+        timeout(5000),
+        catchError((e) => throwError(() => new RpcException(e))),
+      );
+
+    return firstValueFrom(source);
+  }
+
+  reserveTickets(id: string, quantity: number) {
+    const source = this.client
+      .send(TicketSalesMessagePatterns.RESERVE_TICKETS, {
+        id,
+        quantity,
+      } as ReserveTicketsMessageDto)
       .pipe(
         timeout(5000),
         catchError((e) => throwError(() => new RpcException(e))),

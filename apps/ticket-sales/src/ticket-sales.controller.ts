@@ -2,6 +2,7 @@ import {
   CreateTicketSalesDto,
   FindOneTicketSalesMessageDto,
   FindTicketSalesOptionsDto,
+  ReserveTicketsMessageDto,
   TicketSalesMessagePatterns,
   UpdateTicketSalesMessageDto,
 } from '@app/contracts/ticket-sales';
@@ -41,5 +42,22 @@ export class TicketSalesController {
   @MessagePattern(TicketSalesMessagePatterns.FIND_BY_ID_IF_AVAILABLE)
   findByIdIfAvailable(@Payload() id: string) {
     return this.ticketSalesService.findByIdIfAvailable(id);
+  }
+
+  @MessagePattern(TicketSalesMessagePatterns.RESERVE_TICKETS)
+  async reserveTicket(
+    @Payload()
+    { id, quantity }: ReserveTicketsMessageDto,
+  ) {
+    const ticketSales = await this.findByIdIfAvailable(id);
+    const reserveResults = await this.ticketSalesService.reserveTickets(
+      id,
+      quantity,
+    );
+
+    return {
+      ...ticketSales,
+      sold: reserveResults.sold,
+    };
   }
 }
