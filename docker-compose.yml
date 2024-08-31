@@ -15,6 +15,7 @@ services:
       - payments
       - ticket-sales
       - tickets
+      - email
     volumes:
       - .:/app
       - /app/node_modules
@@ -99,6 +100,21 @@ services:
       - nats
       - events
       - ticket-sales
+    volumes:
+      - .:/app
+      - /app/node_modules
+  email:
+    build:
+      context: .
+      dockerfile: ./apps/email/Dockerfile
+      target: development
+    command: npm run start:dev email
+    env_file:
+      - .env
+      - ./apps/email/.env
+    depends_on:
+      - db
+      - nats
     volumes:
       - .:/app
       - /app/node_modules
