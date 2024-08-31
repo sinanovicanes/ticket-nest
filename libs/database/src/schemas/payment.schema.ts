@@ -9,7 +9,7 @@ import { ticketSalesSchema } from './ticket-sales.schema';
 
 export const paymentSchema = pgTable('payments', {
   id: uuid('id').primaryKey().defaultRandom(),
-  checkoutSessionId: varchar('checkout_session_id').notNull(),
+  checkoutSessionId: varchar('checkout_session_id').notNull().unique(),
   ticketSalesId: uuid('ticket_sales_id')
     .notNull()
     .references(() => ticketSalesSchema.id),

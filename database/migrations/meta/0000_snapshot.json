@@ -1,5 +1,5 @@
 {
-  "id": "5e528bc7-57e9-471f-850b-da706985aaa8",
+  "id": "15975adb-1638-4292-a737-31f8b565aa83",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -419,7 +419,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "payments_checkout_session_id_unique": {
+          "name": "payments_checkout_session_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "checkout_session_id"
+          ]
+        }
+      }
     },
     "public.ticket_sales": {
       "name": "ticket_sales",

@@ -70,7 +70,8 @@ CREATE TABLE IF NOT EXISTS "payments" (
 	"status" "payment_status" DEFAULT 'PENDING' NOT NULL,
 	"ticket_count" integer NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "payments_checkout_session_id_unique" UNIQUE("checkout_session_id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "ticket_sales" (
