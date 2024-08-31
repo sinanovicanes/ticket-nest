@@ -13,7 +13,6 @@ export class StripeWebhookService {
   constructor(private readonly eventEmitter: EventEmitter2) {}
 
   async handleEvent(event: Stripe.Event) {
-    console.log('HERE', event.type);
     switch (event.type) {
       case 'checkout.session.completed':
         const session = event.data.object;

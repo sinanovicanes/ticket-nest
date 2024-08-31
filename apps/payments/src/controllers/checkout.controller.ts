@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import {
   CheckoutSessionCompletedEvent,
@@ -8,17 +8,33 @@ import { CheckoutService } from '../services/checkout.service';
 
 @Controller()
 export class CheckoutController {
+  private readonly logger = new Logger(CheckoutController.name);
+
   constructor(private readonly checkoutService: CheckoutService) {}
 
   @OnEvent(CheckoutSessionCompletedEvent.name, { async: true })
-  handleCheckoutSessionCompletedEvent({
+  async handleCheckoutSessionCompletedEvent({
     session,
   }: CheckoutSessionCompletedEvent) {
-    this.checkoutService.onCheckoutSessionCompleted(session);
+    try {
+      await this.checkoutService.onCheckoutSessionCompleted(session);
+    } catch (e) {
+      this.logger.error(
+        `Failed to handle checkout session completed event: ${e}`,
+      );
+    }
   }
 
   @OnEvent(CheckoutSessionExpiredEvent.name, { async: true })
-  handleCheckoutSessionExpiredEvent({ session }: CheckoutSessionExpiredEvent) {
-    this.checkoutService.onCheckoutSessionExpired(session);
+  async handleCheckoutSessionExpiredEvent({
+    session,
+  }: CheckoutSessionExpiredEvent) {
+    try {
+      await this.checkoutService.onCheckoutSessionExpired(session);
+    } catch (e) {
+      this.logger.error(
+        `Failed to handle checkout session expired event: ${e}`,
+      );
+    }
   }
 }
