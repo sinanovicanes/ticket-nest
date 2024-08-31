@@ -10,10 +10,14 @@ import {
 import { Response } from 'express';
 import { CreateCheckoutDto } from './dtos';
 import { StripeService } from './stripe.service';
+import { StripeWebhookService } from './stripe-webhook.service';
 
 @Controller('stripe')
 export class StripeController {
-  constructor(private readonly stripeService: StripeService) {}
+  constructor(
+    private readonly stripeService: StripeService,
+    private readonly stripeWebhookService: StripeWebhookService,
+  ) {}
 
   @Post('webhook')
   async handleWebhook(
@@ -25,7 +29,7 @@ export class StripeController {
       throw new ForbiddenException();
     }
 
-    await this.stripeService.handleWebhook(signature, payload);
+    await this.stripeWebhookService.handleRequest(signature, payload);
 
     // Return a response to acknowledge receipt of the event
     response.status(200).json({ received: true });

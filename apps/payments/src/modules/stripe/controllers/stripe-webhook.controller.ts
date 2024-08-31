@@ -1,19 +1,15 @@
-import {
-  PaymentsMessagePatterns,
-  StripeWebhookMessageDto,
-} from '@app/contracts/payments';
+import { PaymentsEventPatterns } from '@app/contracts/payments';
 import { Controller } from '@nestjs/common';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { EventPattern, Payload } from '@nestjs/microservices';
+import type Stripe from 'stripe';
 import { StripeWebhookService } from '../services/stripe-webhook.service';
 
 @Controller()
 export class StripeWebhookController {
   constructor(private readonly stripeWebhookService: StripeWebhookService) {}
 
-  @MessagePattern(PaymentsMessagePatterns.STRIPE_WEBHOOK)
-  handleStripeWebhook(
-    @Payload() { signature, payload }: StripeWebhookMessageDto,
-  ) {
-    return this.stripeWebhookService.handleStripeWebhook(signature, payload);
+  @EventPattern(PaymentsEventPatterns.STRIPE_WEBHOOK_EVENT)
+  handleStripeWebhookEvent(@Payload() event: Stripe.Event) {
+    return this.stripeWebhookService.handleEvent(event);
   }
 }

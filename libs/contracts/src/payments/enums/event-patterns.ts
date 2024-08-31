@@ -7,4 +7,5 @@ export enum PaymentsEventPatterns {
   CHECKOUT_SESSION_EXPIRED = 'payment.stripe.checkout.sessionExpired',
   PAYMENT_COMPLETED = 'payment.stripe.paymentCompleted',
   PAYMENT_FAILED = 'payment.stripe.paymentFailed',
+  STRIPE_WEBHOOK_EVENT = 'payments.stripe.webhook.event',
 }

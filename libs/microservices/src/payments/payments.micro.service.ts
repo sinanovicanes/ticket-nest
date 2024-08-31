@@ -3,6 +3,7 @@ import {
   CreateStripeCheckoutDto,
   FindOnePaymentMessageDto,
   FindPaymentOptionsDto,
+  PaymentsEventPatterns,
   PaymentsMessagePatterns,
   StripeWebhookMessageDto,
   UpdatePaymentDto,
@@ -77,12 +78,9 @@ export class PaymentsMicroService {
     return firstValueFrom(source);
   }
 
-  stripeWebhook(signature: string, payload: Buffer) {
+  emitStripeWebhookEvent(event: Stripe.Event) {
     const source = this.client
-      .send(PaymentsMessagePatterns.STRIPE_WEBHOOK, {
-        signature,
-        payload,
-      } as StripeWebhookMessageDto)
+      .emit(PaymentsEventPatterns.STRIPE_WEBHOOK_EVENT, event)
       .pipe(timeout(5000));
 
     return firstValueFrom(source);

@@ -5,5 +5,4 @@ export enum PaymentsMessagePatterns {
   FIND_MANY = 'payments.findMany',
   FIND_ONE = 'payments.findOne',
   CREATE_CHECKOUT_SESSION = 'payments.stripe.checkout.createSession',
-  STRIPE_WEBHOOK = 'payments.stripe.webhook',
 }
