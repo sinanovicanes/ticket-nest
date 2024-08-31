@@ -1,5 +1,5 @@
 {
-  "id": "7dd85117-38cc-4f17-a714-99250cfff035",
+  "id": "5e528bc7-57e9-471f-850b-da706985aaa8",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -330,6 +330,18 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
+        "checkout_session_id": {
+          "name": "checkout_session_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ticket_sales_id": {
+          "name": "ticket_sales_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
         "discount_id": {
           "name": "discount_id",
           "type": "uuid",
@@ -339,12 +351,6 @@
         "total": {
           "name": "total",
           "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "checkout_session_id": {
-          "name": "checkout_session_id",
-          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
@@ -385,6 +391,19 @@
       },
       "indexes": {},
       "foreignKeys": {
+        "payments_ticket_sales_id_ticket_sales_id_fk": {
+          "name": "payments_ticket_sales_id_ticket_sales_id_fk",
+          "tableFrom": "payments",
+          "tableTo": "ticket_sales",
+          "columnsFrom": [
+            "ticket_sales_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
         "payments_discount_id_discounts_id_fk": {
           "name": "payments_discount_id_discounts_id_fk",
           "tableFrom": "payments",

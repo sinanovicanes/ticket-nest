@@ -13,6 +13,9 @@ export class CreatePaymentDto {
   @IsNotEmpty()
   checkoutSessionId: string;
 
+  @IsUUID()
+  ticketSalesId: string;
+
   @IsEmail()
   email: string;
 

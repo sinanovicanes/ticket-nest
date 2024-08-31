@@ -62,9 +62,10 @@ CREATE TABLE IF NOT EXISTS "locations" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "payments" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"checkout_session_id" varchar NOT NULL,
+	"ticket_sales_id" uuid NOT NULL,
 	"discount_id" uuid,
 	"total" integer NOT NULL,
-	"checkout_session_id" varchar NOT NULL,
 	"owner_email" varchar NOT NULL,
 	"status" "payment_status" DEFAULT 'PENDING' NOT NULL,
 	"ticket_count" integer NOT NULL,
@@ -110,6 +111,12 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "discounts" ADD CONSTRAINT "discounts_ticket_sales_id_ticket_sales_id_fk" FOREIGN KEY ("ticket_sales_id") REFERENCES "public"."ticket_sales"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "payments" ADD CONSTRAINT "payments_ticket_sales_id_ticket_sales_id_fk" FOREIGN KEY ("ticket_sales_id") REFERENCES "public"."ticket_sales"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

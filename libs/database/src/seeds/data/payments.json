@@ -2,6 +2,7 @@
   {
     "total": 10000,
     "checkoutSessionId": "cs_test_a1",
+    "ticketSales": "Ticket 1",
     "status": "PAID",
     "ticketCount": 1,
     "email": "test@test.com"
@@ -9,6 +10,7 @@
   {
     "total": 20000,
     "checkoutSessionId": "cs_test_a2",
+    "ticketSales": "Ticket 3",
     "status": "PAID",
     "ticketCount": 2,
     "email": "test@test2.com"
@@ -16,6 +18,7 @@
   {
     "total": 25000,
     "checkoutSessionId": "cs_test_a3",
+    "ticketSales": "Ticket 1",
     "status": "PAID",
     "ticketCount": 1,
     "email": "test@test3.com"
@@ -23,6 +26,7 @@
   {
     "total": 505050,
     "checkoutSessionId": "cs_test_a4",
+    "ticketSales": "Ticket 2",
     "status": "PAID",
     "ticketCount": 3,
     "email": "test@test.com"
@@ -30,6 +34,7 @@
   {
     "total": 505050,
     "checkoutSessionId": "cs_test_a5",
+    "ticketSales": "Ticket 2",
     "status": "PENDING",
     "ticketCount": 1,
     "email": "test@test.com"

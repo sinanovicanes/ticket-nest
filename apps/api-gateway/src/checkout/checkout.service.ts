@@ -31,6 +31,7 @@ export class CheckoutService {
     await this.paymentsMicroService.create({
       checkoutSessionId: checkoutSession.id,
       email,
+      ticketSalesId,
       total: checkoutSession.amount_total,
       ticketCount: quantity,
     });
