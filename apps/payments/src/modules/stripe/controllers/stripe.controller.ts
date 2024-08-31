@@ -4,7 +4,7 @@ import {
 } from '@app/contracts/payments';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { PaymentsService } from '../../payments.service';
+import { PaymentsService } from '../../../services/payments.service';
 import { StripeService } from '../services/stripe.service';
 
 @Controller()

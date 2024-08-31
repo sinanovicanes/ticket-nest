@@ -1,15 +1,23 @@
 import { Stripe } from 'stripe';
-import { InjectStripe } from '../../providers';
+import { InjectStripe } from '../../../providers';
 import { RpcException } from '@nestjs/microservices';
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import {
+  CheckoutSessionCompletedEvent,
+  CheckoutSessionExpiredEvent,
+} from '../../../events';
 
 @Injectable()
 export class StripeWebhookService {
   @InjectStripe() private readonly client: Stripe;
   private readonly logger: Logger = new Logger(StripeWebhookService.name);
 
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
   validateSignature(signature: string, payload: any): Stripe.Event {
     try {
@@ -29,18 +37,24 @@ export class StripeWebhookService {
     switch (event.type) {
       case 'checkout.session.completed':
         const session = event.data.object;
-        this.logger.log(`Payment was successful: ${session.id}`);
+        this.logger.log(`Checkout session completed: ${session.id}`);
+
+        await this.eventEmitter.emitAsync(
+          CheckoutSessionCompletedEvent.name,
+          new CheckoutSessionCompletedEvent(session),
+        );
         break;
-      case 'checkout.session.async_payment_succeeded':
-        const asyncSession = event.data.object;
-        this.logger.log(`Payment was successful: ${asyncSession.id}`);
-        break;
-      case 'checkout.session.async_payment_failed':
-        const failedSession = event.data.object;
-        this.logger.log(`Payment failed: ${failedSession.id}`);
+      case 'checkout.session.expired':
+        const expiredSession = event.data.object;
+        this.logger.log(`Checkout session expired: ${expiredSession.id}`);
+
+        await this.eventEmitter.emitAsync(
+          CheckoutSessionExpiredEvent.name,
+          new CheckoutSessionExpiredEvent(expiredSession),
+        );
         break;
       default:
-        this.logger.log(`Unhandled event type: ${event.type}`);
+        this.logger.warn(`Unhandled event type: ${event.type}`);
         break;
     }
   }

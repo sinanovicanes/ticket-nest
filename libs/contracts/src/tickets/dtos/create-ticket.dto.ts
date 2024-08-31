@@ -6,8 +6,4 @@ export class CreateTicketDto {
 
   @IsUUID()
   ticketSalesId: string;
-
-  @IsString()
-  @IsEmail()
-  ownerEmail: string;
 }

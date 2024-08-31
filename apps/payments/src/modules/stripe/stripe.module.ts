@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { StripeProvider } from '../providers';
+import { StripeProvider } from '../../providers';
 import { StripeWebhookController } from './controllers/stripe-webhook.controller';
 import { StripeController } from './controllers/stripe.controller';
 import { StripeWebhookService } from './services/stripe-webhook.service';

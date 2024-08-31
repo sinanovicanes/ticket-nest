@@ -1,5 +1,7 @@
+import { PaymentStatus } from '@app/database';
 import {
   IsEmail,
+  IsEnum,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -22,6 +24,9 @@ export class CreatePaymentDto {
   @IsInt()
   @Min(0)
   total: number;
+
+  @IsEnum(PaymentStatus)
+  status?: PaymentStatus;
 
   @IsInt()
   @Min(1)

@@ -135,6 +135,24 @@ export class PaymentsService {
     return results.pop() ?? null;
   }
 
+  async updateOneByCheckoutSessionId(
+    checkoutSessionId: string,
+    dto: UpdatePaymentDto,
+  ) {
+    const results = await this.db
+      .update(paymentSchema)
+      .set(dto)
+      .where(eq(paymentSchema.checkoutSessionId, checkoutSessionId))
+      .returning();
+    const result = results.pop();
+
+    if (!result) {
+      throw new RpcException(new NotFoundException('Payment not found'));
+    }
+
+    return result;
+  }
+
   async delete(id: string) {
     const results = await this.db
       .delete(paymentSchema)
