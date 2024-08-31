@@ -1,17 +1,17 @@
 import {
   CreatePaymentDto,
+  CreateStripeCheckoutDto,
   FindOnePaymentMessageDto,
   FindPaymentOptionsDto,
   PaymentsMessagePatterns,
-  CreateStripeCheckoutDto,
   UpdatePaymentDto,
   UpdatePaymentMessageDto,
 } from '@app/contracts/payments';
 import { PaymentSelectFieldsDto } from '@app/database';
 import { NatsServices } from '@app/microservices';
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy, RpcException } from '@nestjs/microservices';
-import { catchError, firstValueFrom, throwError, timeout } from 'rxjs';
+import { ClientProxy } from '@nestjs/microservices';
+import { firstValueFrom, timeout } from 'rxjs';
 import type Stripe from 'stripe';
 
 @Injectable()

@@ -7,3 +7,4 @@ export * from './find-ticket-sales-query.dto';
 export * from './find-one-ticket-sales-message.dto';
 
 export * from './reserve-tickets-message.dto';
+export * from './release-tickets-message.dto';

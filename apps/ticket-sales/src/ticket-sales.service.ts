@@ -13,21 +13,10 @@ import {
   TicketSalesSelectFieldsDto,
   ticketSchema,
 } from '@app/database';
-import { increment } from '@app/database/utils';
+import { decrement, increment } from '@app/database/utils';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
-import {
-  and,
-  asc,
-  between,
-  count,
-  desc,
-  eq,
-  gte,
-  ilike,
-  lte,
-  or,
-} from 'drizzle-orm';
+import { and, asc, between, desc, eq, gte, ilike, lte, or } from 'drizzle-orm';
 
 @Injectable()
 export class TicketSalesService {
@@ -142,6 +131,24 @@ export class TicketSalesService {
       .update(ticketSalesSchema)
       .set({
         sold: increment(ticketSalesSchema.sold, quantity),
+      })
+      .where(eq(ticketSalesSchema.id, id))
+      .returning({ sold: ticketSalesSchema.sold });
+
+    const result = results.pop();
+
+    if (!result) {
+      throw new RpcException(new NotFoundException('Ticket sales not found'));
+    }
+
+    return result;
+  }
+
+  async releaseTickets(id: string, quantity: number) {
+    const results = await this.db
+      .update(ticketSalesSchema)
+      .set({
+        sold: decrement(ticketSalesSchema.sold, quantity),
       })
       .where(eq(ticketSalesSchema.id, id))
       .returning({ sold: ticketSalesSchema.sold });

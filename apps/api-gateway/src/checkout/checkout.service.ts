@@ -20,22 +20,27 @@ export class CheckoutService {
     );
 
     const unitPrice = ticketSales.price;
-    const checkoutSession =
-      await this.paymentsMicroService.createCheckoutSession({
-        name: `${ticketSales.event.name} | ${ticketSales.name}`,
-        description: ticketSales.description,
-        unitPrice,
+
+    try {
+      const checkoutSession =
+        await this.paymentsMicroService.createCheckoutSession({
+          name: `${ticketSales.event.name} | ${ticketSales.name}`,
+          description: ticketSales.description,
+          unitPrice,
+          quantity,
+          metadata: {
+            ticketSalesId,
+            email,
+          },
+        });
+
+      return checkoutSession;
+    } catch (e) {
+      await this.ticketSalesMicroService.releaseTickets(
+        ticketSalesId,
         quantity,
-      });
-
-    await this.paymentsMicroService.create({
-      checkoutSessionId: checkoutSession.id,
-      email,
-      ticketSalesId,
-      total: checkoutSession.amount_total,
-      ticketCount: quantity,
-    });
-
-    return checkoutSession;
+      );
+      throw e;
+    }
   }
 }

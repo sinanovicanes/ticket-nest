@@ -2,6 +2,7 @@ import {
   CreateTicketSalesDto,
   FindOneTicketSalesMessageDto,
   FindTicketSalesOptionsDto,
+  ReleaseTicketsMessageDto,
   ReserveTicketsMessageDto,
   TicketSalesMessagePatterns,
   UpdateTicketSalesDto,
@@ -58,6 +59,17 @@ export class TicketSalesMicroService {
         id,
         quantity,
       } as ReserveTicketsMessageDto)
+      .pipe(timeout(5000));
+
+    return firstValueFrom(source);
+  }
+
+  releaseTickets(id: string, quantity: number) {
+    const source = this.client
+      .send(TicketSalesMessagePatterns.RELEASE_TICKETS, {
+        id,
+        quantity,
+      } as ReleaseTicketsMessageDto)
       .pipe(timeout(5000));
 
     return firstValueFrom(source);

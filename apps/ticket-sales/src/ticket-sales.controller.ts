@@ -2,6 +2,7 @@ import {
   CreateTicketSalesDto,
   FindOneTicketSalesMessageDto,
   FindTicketSalesOptionsDto,
+  ReleaseTicketsMessageDto,
   ReserveTicketsMessageDto,
   TicketSalesMessagePatterns,
   UpdateTicketSalesMessageDto,
@@ -59,5 +60,13 @@ export class TicketSalesController {
       ...ticketSales,
       sold: reserveResults.sold,
     };
+  }
+
+  @MessagePattern(TicketSalesMessagePatterns.RELEASE_TICKETS)
+  releaseTickets(
+    @Payload()
+    { id, quantity }: ReleaseTicketsMessageDto,
+  ) {
+    return this.ticketSalesService.releaseTickets(id, quantity);
   }
 }
