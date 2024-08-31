@@ -4,6 +4,7 @@ import {
   FindOnePaymentMessageDto,
   FindPaymentOptionsDto,
   PaymentsMessagePatterns,
+  StripeWebhookMessageDto,
   UpdatePaymentDto,
   UpdatePaymentMessageDto,
 } from '@app/contracts/payments';
@@ -71,6 +72,17 @@ export class PaymentsMicroService {
       .send<
         Stripe.Response<Stripe.Checkout.Session>
       >(PaymentsMessagePatterns.CREATE_CHECKOUT_SESSION, dto)
+      .pipe(timeout(5000));
+
+    return firstValueFrom(source);
+  }
+
+  stripeWebhook(signature: string, payload: any) {
+    const source = this.client
+      .send(PaymentsMessagePatterns.STRIPE_WEBHOOK, {
+        signature,
+        payload,
+      } as StripeWebhookMessageDto)
       .pipe(timeout(5000));
 
     return firstValueFrom(source);

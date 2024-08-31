@@ -12,6 +12,10 @@ export class CheckoutService {
     private readonly ticketSalesMicroService: TicketSalesMicroService,
   ) {}
 
+  async stripeWebhook(signature: string, payload: any) {
+    return this.paymentsMicroService.stripeWebhook(signature, payload);
+  }
+
   async create(checkoutDto: CreateCheckoutDto) {
     const { ticketSalesId, email, quantity } = checkoutDto;
     const ticketSales = await this.ticketSalesMicroService.reserveTickets(

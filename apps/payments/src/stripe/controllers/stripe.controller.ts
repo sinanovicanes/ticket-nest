@@ -1,11 +1,11 @@
-import { Controller } from '@nestjs/common';
-import { StripeService } from './stripe.service';
-import { MessagePattern, Payload } from '@nestjs/microservices';
 import {
-  PaymentsMessagePatterns,
   CreateStripeCheckoutDto,
+  PaymentsMessagePatterns,
 } from '@app/contracts/payments';
-import { PaymentsService } from '../payments.service';
+import { Controller } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { PaymentsService } from '../../payments.service';
+import { StripeService } from '../services/stripe.service';
 
 @Controller()
 export class StripeController {

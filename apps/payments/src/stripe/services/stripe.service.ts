@@ -2,14 +2,13 @@ import { CreateStripeCheckoutDto } from '@app/contracts/payments';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Stripe } from 'stripe';
+import { InjectStripe } from '../../providers';
 
 @Injectable()
 export class StripeService {
-  private readonly client: Stripe;
+  @InjectStripe() private readonly client: Stripe;
 
-  constructor(private readonly configService: ConfigService) {
-    this.client = new Stripe(configService.get('STRIPE_SECRET'));
-  }
+  constructor(private readonly configService: ConfigService) {}
 
   async createCheckoutSession(checkoutDto: CreateStripeCheckoutDto) {
     const { name, description, unitPrice, quantity, metadata } = checkoutDto;
@@ -31,8 +30,8 @@ export class StripeService {
         },
       ],
       mode: 'payment',
-      success_url: 'https://example.com/success',
-      cancel_url: 'https://example.com/cancel',
+      success_url: this.configService.get('STRIPE_SUCCESS_URL'),
+      cancel_url: this.configService.get('STRIPE_CANCEL_URL'),
     });
 
     return checkoutSession;
