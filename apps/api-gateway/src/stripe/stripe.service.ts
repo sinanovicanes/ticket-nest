@@ -6,17 +6,17 @@ import { Injectable } from '@nestjs/common';
 import { CreateCheckoutDto } from './dtos';
 
 @Injectable()
-export class CheckoutService {
+export class StripeService {
   constructor(
     private readonly paymentsMicroService: PaymentsMicroService,
     private readonly ticketSalesMicroService: TicketSalesMicroService,
   ) {}
 
-  async stripeWebhook(signature: string, payload: Buffer) {
+  async handleWebhook(signature: string, payload: Buffer) {
     return this.paymentsMicroService.stripeWebhook(signature, payload);
   }
 
-  async create(checkoutDto: CreateCheckoutDto) {
+  async createCheckoutSession(checkoutDto: CreateCheckoutDto) {
     const { ticketSalesId, email, quantity } = checkoutDto;
     const ticketSales = await this.ticketSalesMicroService.reserveTickets(
       ticketSalesId,

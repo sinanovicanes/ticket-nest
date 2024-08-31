@@ -3,12 +3,12 @@ import {
   TicketSalesMicroServiceModule,
 } from '@app/microservices';
 import { Module } from '@nestjs/common';
-import { CheckoutController } from './checkout.controller';
-import { CheckoutService } from './checkout.service';
+import { StripeController } from './stripe.controller';
+import { StripeService } from './stripe.service';
 
 @Module({
   imports: [PaymentsMicroServiceModule, TicketSalesMicroServiceModule],
-  controllers: [CheckoutController],
-  providers: [CheckoutService],
+  controllers: [StripeController],
+  providers: [StripeService],
 })
-export class CheckoutModule {}
+export class StripeModule {}
