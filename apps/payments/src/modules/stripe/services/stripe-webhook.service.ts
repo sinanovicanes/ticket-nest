@@ -1,9 +1,9 @@
-import { Stripe } from 'stripe';
-import { InjectStripe } from '../../../providers';
-import { RpcException } from '@nestjs/microservices';
+import { InjectStripe } from '@app/common/providers';
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { RpcException } from '@nestjs/microservices';
+import { Stripe } from 'stripe';
 import {
   CheckoutSessionCompletedEvent,
   CheckoutSessionExpiredEvent,

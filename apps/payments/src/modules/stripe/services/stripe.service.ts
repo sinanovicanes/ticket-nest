@@ -1,8 +1,8 @@
+import { InjectStripe } from '@app/common/providers';
 import { CreateStripeCheckoutDto } from '@app/contracts/payments';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Stripe } from 'stripe';
-import { InjectStripe } from '../../../providers';
 
 @Injectable()
 export class StripeService {

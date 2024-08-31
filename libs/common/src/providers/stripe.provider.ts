@@ -10,6 +10,6 @@ export const StripeProvider: Provider = {
   inject: [ConfigService],
   useExisting: ConfigService,
   useFactory: (configService: ConfigService) => {
-    return new Stripe(configService.get('STRIPE_SECRET'));
+    return new Stripe(configService.getOrThrow<string>('STRIPE_SECRET'));
   },
 };
