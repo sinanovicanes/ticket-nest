@@ -19,7 +19,7 @@ export class StripeWebhookService {
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  validateSignature(signature: string, payload: any): Stripe.Event {
+  validateSignature(signature: string, payload: Buffer): Stripe.Event {
     try {
       return this.client.webhooks.constructEvent(
         payload,
@@ -31,7 +31,7 @@ export class StripeWebhookService {
     }
   }
 
-  async handleStripeWebhook(signature: string, payload: any) {
+  async handleStripeWebhook(signature: string, payload: Buffer) {
     const event = this.validateSignature(signature, payload);
 
     switch (event.type) {

@@ -77,7 +77,7 @@ export class PaymentsMicroService {
     return firstValueFrom(source);
   }
 
-  stripeWebhook(signature: string, payload: any) {
+  stripeWebhook(signature: string, payload: Buffer) {
     const source = this.client
       .send(PaymentsMessagePatterns.STRIPE_WEBHOOK, {
         signature,

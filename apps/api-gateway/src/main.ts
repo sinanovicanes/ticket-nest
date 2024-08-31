@@ -5,7 +5,10 @@ import { ApiGatewayModule } from './api-gateway.module';
 import { RpcExceptionFilter } from '@app/common/filters';
 
 async function bootstrap() {
-  const app = await NestFactory.create(ApiGatewayModule);
+  const app = await NestFactory.create(ApiGatewayModule, {
+    rawBody: true,
+  });
+
   const configService = app.get(ConfigService);
   const PORT = configService.get<number>('PORT');
 

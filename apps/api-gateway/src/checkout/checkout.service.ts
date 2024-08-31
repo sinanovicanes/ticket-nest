@@ -12,7 +12,7 @@ export class CheckoutService {
     private readonly ticketSalesMicroService: TicketSalesMicroService,
   ) {}
 
-  async stripeWebhook(signature: string, payload: any) {
+  async stripeWebhook(signature: string, payload: Buffer) {
     return this.paymentsMicroService.stripeWebhook(signature, payload);
   }
 

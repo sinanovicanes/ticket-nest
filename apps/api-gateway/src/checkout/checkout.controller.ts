@@ -4,6 +4,7 @@ import {
   ForbiddenException,
   Headers,
   Post,
+  RawBody,
   Res,
 } from '@nestjs/common';
 import { Response } from 'express';
@@ -17,13 +18,13 @@ export class CheckoutController {
   @Post('stripe/webhook')
   async stripeWebhook(
     @Headers('stripe-signature') signature: string,
-    @Body() body: any,
+    @RawBody() payload: Buffer,
   ) {
     if (!signature) {
       throw new ForbiddenException();
     }
 
-    return this.checkoutService.stripeWebhook(signature, body);
+    return this.checkoutService.stripeWebhook(signature, payload);
   }
 
   @Post()

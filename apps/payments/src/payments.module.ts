@@ -8,6 +8,7 @@ import { PaymentsController } from './controllers/payments.controller';
 import { StripeModule } from './modules/stripe/stripe.module';
 import { CheckoutService } from './services/checkout.service';
 import { PaymentsService } from './services/payments.service';
+import { NatsModule } from '@app/microservices';
 
 @Global()
 @Module({
@@ -22,6 +23,7 @@ import { PaymentsService } from './services/payments.service';
     EventEmitterModule.forRoot({
       global: true,
     }),
+    NatsModule,
   ],
   controllers: [PaymentsController, CheckoutController],
   providers: [PaymentsService, CheckoutService],

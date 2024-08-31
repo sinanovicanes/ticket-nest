@@ -1,14 +1,13 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { PaymentsService } from './payments.service';
-import type Stripe from 'stripe';
-import { PaymentStatus } from '@app/database';
-import { ClientProxy } from '@nestjs/microservices';
-import { NatsServices } from '@app/microservices';
 import { PaymentsEventPatterns } from '@app/contracts/payments';
+import { PaymentStatus } from '@app/database';
+import { Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import type Stripe from 'stripe';
+import { PaymentsService } from '../services/payments.service';
 
 @Injectable()
 export class CheckoutService {
-  @Inject(NatsServices.PAYMENTS) private readonly paymentClient: ClientProxy;
+  private readonly natsClient: ClientProxy;
 
   constructor(private readonly paymentsService: PaymentsService) {}
 
@@ -22,10 +21,7 @@ export class CheckoutService {
           },
         );
 
-        this.paymentClient.emit(
-          PaymentsEventPatterns.PAYMENT_COMPLETED,
-          payment,
-        );
+        this.natsClient.emit(PaymentsEventPatterns.PAYMENT_COMPLETED, payment);
         break;
       case 'unpaid':
         const unpaidPayment =
@@ -33,7 +29,7 @@ export class CheckoutService {
             status: PaymentStatus.FAILED,
           });
 
-        this.paymentClient.emit(
+        this.natsClient.emit(
           PaymentsEventPatterns.PAYMENT_FAILED,
           unpaidPayment,
         );
@@ -47,7 +43,7 @@ export class CheckoutService {
         status: PaymentStatus.FAILED,
       });
 
-    this.paymentClient.emit(
+    this.natsClient.emit(
       PaymentsEventPatterns.CHECKOUT_SESSION_EXPIRED,
       expiredPayment,
     );

@@ -1,8 +1,8 @@
-import { IsObject, IsString } from 'class-validator';
+import { IsDefined, IsString } from 'class-validator';
 export class StripeWebhookMessageDto {
   @IsString()
   signature: string;
 
-  @IsObject()
-  payload: any;
+  @IsDefined()
+  payload: Buffer;
 }

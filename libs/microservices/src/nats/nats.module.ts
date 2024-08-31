@@ -3,7 +3,10 @@ import { ClientsModule } from '@nestjs/microservices';
 import { NatsServices } from './enums';
 import { NatsFactory } from './factories';
 
-@Module({})
+@Module({
+  imports: [ClientsModule],
+  exports: [ClientsModule],
+})
 export class NatsModule {
   static register(...services: NatsServices[]): DynamicModule {
     return {
