@@ -1,4 +1,4 @@
-import { relations } from 'drizzle-orm';
+import { InferSelectModel, relations } from 'drizzle-orm';
 import { pgTable, uuid } from 'drizzle-orm/pg-core';
 import { TicketStatus } from '../enums';
 import { createPgTimestamps } from '../utils';
@@ -7,6 +7,7 @@ import { eventSchema } from './event.schema';
 import { paymentSchema } from './payment.schema';
 import { ticketSalesSchema } from './ticket-sales.schema';
 
+export type Ticket = InferSelectModel<typeof ticketSchema>;
 export const ticketSchema = pgTable('tickets', {
   id: uuid('id').primaryKey().defaultRandom(),
   eventId: uuid('event_id')

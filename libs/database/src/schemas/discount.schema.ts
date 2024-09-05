@@ -1,4 +1,4 @@
-import { relations } from 'drizzle-orm';
+import { InferSelectModel, relations } from 'drizzle-orm';
 import {
   integer,
   pgTable,
@@ -11,6 +11,7 @@ import { discountKind } from './enums';
 import { paymentSchema } from './payment.schema';
 import { ticketSalesSchema } from './ticket-sales.schema';
 
+export type Discount = InferSelectModel<typeof discountSchema>;
 export const discountSchema = pgTable('discounts', {
   id: uuid('id').primaryKey().defaultRandom(),
   ticketSalesId: uuid('ticket_sales_id')

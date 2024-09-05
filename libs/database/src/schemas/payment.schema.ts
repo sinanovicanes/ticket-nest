@@ -1,4 +1,4 @@
-import { relations } from 'drizzle-orm';
+import { InferSelectModel, relations } from 'drizzle-orm';
 import { integer, pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
 import { createPgTimestamps } from '../utils';
 import { discountSchema } from './discount.schema';
@@ -7,6 +7,7 @@ import { paymentStatus } from './enums';
 import { PaymentStatus } from '../enums';
 import { ticketSalesSchema } from './ticket-sales.schema';
 
+export type Payment = InferSelectModel<typeof paymentSchema>;
 export const paymentSchema = pgTable('payments', {
   id: uuid('id').primaryKey().defaultRandom(),
   checkoutSessionId: varchar('checkout_session_id').notNull().unique(),

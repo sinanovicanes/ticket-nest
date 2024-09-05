@@ -1,8 +1,9 @@
-import { relations } from 'drizzle-orm';
+import { InferSelectModel, relations } from 'drizzle-orm';
 import { pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
 import { createPgTimestamps } from '../utils';
 import { eventSchema } from './event.schema';
 
+export type Location = InferSelectModel<typeof locationSchema>;
 export const locationSchema = pgTable('locations', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 255 }).notNull(),
