@@ -6,6 +6,7 @@ import { StripeModule } from './stripe/stripe.module';
 import { validate } from './config/validation';
 import { EventsModule } from './events/events.module';
 import { TicketSalesModule } from './ticket-sales/ticket-sales.module';
+import { LocationsModule } from './locations/locations.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { TicketSalesModule } from './ticket-sales/ticket-sales.module';
     EventsModule,
     TicketSalesModule,
     StripeModule,
+    LocationsModule,
   ],
   controllers: [ApiGatewayController],
   providers: [ApiGatewayService],
