@@ -21,6 +21,21 @@ services:
       - /app/node_modules
     ports:
       - 3000:3000
+  locations:
+    build:
+      context: .
+      dockerfile: ./apps/locations/Dockerfile
+      target: development
+    command: npm run start:dev locations
+    env_file:
+      - .env
+      - ./apps/locations/.env
+    depends_on:
+      - db
+      - nats
+    volumes:
+      - .:/app
+      - /app/node_modules
   events:
     build:
       context: .
