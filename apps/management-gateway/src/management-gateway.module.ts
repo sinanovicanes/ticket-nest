@@ -8,6 +8,9 @@ import { EventsModule } from './events/events.module';
 import { TicketSalesModule } from './ticket-sales/ticket-sales.module';
 import { TicketsModule } from './tickets/tickets.module';
 import { PaymentsModule } from './payments/payments.module';
+import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtGuard } from './auth/guards/jwt.guard';
 
 @Module({
   imports: [
@@ -21,8 +24,15 @@ import { PaymentsModule } from './payments/payments.module';
     TicketSalesModule,
     TicketsModule,
     PaymentsModule,
+    AuthModule,
   ],
   controllers: [ManagementGatewayController],
-  providers: [ManagementGatewayService],
+  providers: [
+    ManagementGatewayService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtGuard,
+    },
+  ],
 })
 export class ManagementGatewayModule {}

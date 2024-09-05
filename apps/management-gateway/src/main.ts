@@ -3,12 +3,14 @@ import { ManagementGatewayModule } from './management-gateway.module';
 import { ConfigService } from '@nestjs/config';
 import { RpcExceptionFilter } from '@app/common/filters';
 import { ValidationPipe } from '@nestjs/common';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(ManagementGatewayModule);
   const configService = app.get(ConfigService);
   const PORT = configService.get<number>('PORT');
 
+  app.use(cookieParser());
   app.setGlobalPrefix('management');
   app.useGlobalFilters(new RpcExceptionFilter());
   app.useGlobalPipes(
