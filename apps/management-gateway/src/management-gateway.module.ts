@@ -11,6 +11,7 @@ import { PaymentsModule } from './payments/payments.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtGuard } from './auth/guards/jwt.guard';
+import { DatabaseModule } from '@app/database';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { JwtGuard } from './auth/guards/jwt.guard';
       envFilePath: ['.env', 'apps/api-gateway/.env'],
       validate,
     }),
+    DatabaseModule,
     LocationsModule,
     EventsModule,
     TicketSalesModule,
