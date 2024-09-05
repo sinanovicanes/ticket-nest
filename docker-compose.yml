@@ -1,4 +1,27 @@
 services:
+  management-gateway:
+    build:
+      context: .
+      dockerfile: ./apps/management-gateway/Dockerfile
+      target: development
+    command: npm run start:dev management-gateway
+    env_file:
+      - .env
+      - ./apps/management-gateway/.env
+    depends_on:
+      - db
+      - nats
+      - locations
+      - events
+      - payments
+      - ticket-sales
+      - tickets
+      - email
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - 3001:3001
   api-gateway:
     build:
       context: .
@@ -11,6 +34,7 @@ services:
     depends_on:
       - db
       - nats
+      - locations
       - events
       - payments
       - ticket-sales
