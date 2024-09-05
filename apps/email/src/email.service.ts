@@ -1,9 +1,9 @@
+import { EmailTemplates } from '@app/contracts/email';
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { createTransport, Transporter } from 'nodemailer';
+import { Transporter } from 'nodemailer';
 import { MailOptions } from 'nodemailer/lib/json-transport';
 import { HandlebarsAdapter } from './adapters';
-import { EmailTemplates } from '@app/contracts/email';
+import { InjectMailTransporter } from './providers/transporter.provider';
 
 interface IMailOptions extends MailOptions {
   template?: EmailTemplates;
@@ -12,23 +12,9 @@ interface IMailOptions extends MailOptions {
 
 @Injectable()
 export class EmailService {
-  private transporter: Transporter;
-
-  constructor(private readonly configService: ConfigService) {
-    this.transporter = createTransport(
-      {
-        host: configService.get<string>('EMAIL_HOST'),
-        port: configService.get<number>('EMAIL_PORT'),
-        auth: {
-          user: configService.get<string>('EMAIL_USER'),
-          pass: configService.get<string>('EMAIL_PASS'),
-        },
-      },
-      {
-        from: configService.get<string>('EMAIL_FROM'),
-      },
-    );
-
+  constructor(
+    @InjectMailTransporter() private readonly transporter: Transporter,
+  ) {
     this.setAdapter(new HandlebarsAdapter());
   }
 
