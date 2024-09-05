@@ -3,6 +3,7 @@ import { LocationsService } from './locations.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import {
   CreateLocationDto,
+  FindLocationsOptionsDto,
   LocationMessagePatterns,
   UpdateLocationDto,
   UpdateLocationMessageDto,
@@ -18,8 +19,8 @@ export class LocationsController {
   }
 
   @MessagePattern(LocationMessagePatterns.FIND_MANY)
-  findMany() {
-    return this.locationsService.findMany();
+  findMany(@Payload() options: FindLocationsOptionsDto) {
+    return this.locationsService.findMany(options);
   }
 
   @MessagePattern(LocationMessagePatterns.FIND_ONE)

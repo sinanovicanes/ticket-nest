@@ -1,5 +1,6 @@
 import {
   CreateLocationDto,
+  FindLocationsOptionsDto,
   LocationMessagePatterns,
   UpdateLocationDto,
   UpdateLocationMessageDto,
@@ -22,9 +23,9 @@ export class LocationsMicroService {
     return firstValueFrom(source);
   }
 
-  findMany(): Promise<Location[]> {
+  findMany(options: FindLocationsOptionsDto): Promise<Location[]> {
     const source = this.client
-      .send(LocationMessagePatterns.FIND_MANY, {})
+      .send(LocationMessagePatterns.FIND_MANY, options)
       .pipe(timeout(5000));
 
     return firstValueFrom(source);

@@ -1,12 +1,14 @@
 import {
   CreateLocationDto,
+  FindLocationsOptionsDto,
   LocationNotFoundException,
   UpdateLocationDto,
 } from '@app/contracts/locations';
 import { Database, InjectDB, Location, locationSchema } from '@app/database';
+import { getOffset } from '@app/database/utils';
 import { Injectable } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
-import { eq } from 'drizzle-orm';
+import { asc, desc, eq, ilike, or } from 'drizzle-orm';
 
 @Injectable()
 export class LocationsService {
@@ -26,10 +28,32 @@ export class LocationsService {
     return result;
   }
 
-  async findMany(): Promise<Location[]> {
-    const results = await this.db.select().from(locationSchema);
+  async findMany(options: FindLocationsOptionsDto): Promise<Location[]> {
+    const { page, limit, order, orderByFields, searchFields, search } = options;
+    const offset = getOffset(page, limit);
+    const query = this.db
+      .select()
+      .from(locationSchema)
+      .offset(offset)
+      .limit(limit);
 
-    return results;
+    if (search) {
+      const searchConditions = searchFields.map((field) =>
+        ilike(locationSchema[field], `%${search}%`),
+      );
+
+      query.where(or(...searchConditions));
+    }
+
+    const orderByColumns = orderByFields.map((orderBy) =>
+      order == 'ASC'
+        ? asc(locationSchema[orderBy])
+        : desc(locationSchema[orderBy]),
+    );
+
+    query.orderBy(...orderByColumns);
+
+    return await query;
   }
 
   async createOne(location: CreateLocationDto): Promise<Location> {
