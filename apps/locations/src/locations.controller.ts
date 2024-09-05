@@ -1,9 +1,9 @@
 import { Controller } from '@nestjs/common';
 import { LocationsService } from './locations.service';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { LocationMessagePatterns } from '@app/contracts/locations/enums/message-patterns';
 import {
   CreateLocationDto,
+  LocationMessagePatterns,
   UpdateLocationDto,
   UpdateLocationMessageDto,
 } from '@app/contracts/locations';
