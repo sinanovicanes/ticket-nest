@@ -2,7 +2,7 @@ import {
   CreatePaymentDto,
   CreateStripeCheckoutDto,
   FindOnePaymentMessageDto,
-  FindPaymentOptionsDto,
+  FindPaymentsOptionsDto,
   PaymentsEventPatterns,
   PaymentsMessagePatterns,
   StripeWebhookMessageDto,
@@ -28,7 +28,7 @@ export class PaymentsMicroService {
     return firstValueFrom(source);
   }
 
-  findMany(options: FindPaymentOptionsDto) {
+  findMany(options: FindPaymentsOptionsDto) {
     const source = this.client
       .send(PaymentsMessagePatterns.FIND_MANY, options)
       .pipe(timeout(5000));

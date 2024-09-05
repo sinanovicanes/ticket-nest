@@ -4,7 +4,7 @@ import { PaymentsService } from '../services/payments.service';
 import {
   CreatePaymentDto,
   FindOnePaymentMessageDto,
-  FindPaymentOptionsDto,
+  FindPaymentsOptionsDto,
   PaymentsMessagePatterns,
   UpdatePaymentMessageDto,
 } from '@app/contracts/payments';
@@ -19,7 +19,7 @@ export class PaymentsController {
   }
 
   @MessagePattern(PaymentsMessagePatterns.FIND_MANY)
-  findMany(@Payload() options: FindPaymentOptionsDto) {
+  findMany(@Payload() options: FindPaymentsOptionsDto) {
     return this.paymentsService.findMany(options);
   }
 

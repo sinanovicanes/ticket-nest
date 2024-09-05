@@ -1,6 +1,6 @@
 import {
   CreatePaymentDto,
-  FindPaymentOptionsDto,
+  FindPaymentsOptionsDto,
   UpdatePaymentDto,
 } from '@app/contracts/payments';
 import {
@@ -49,7 +49,7 @@ export class PaymentsService {
     return payment;
   }
 
-  async findMany(options: FindPaymentOptionsDto) {
+  async findMany(options: FindPaymentsOptionsDto) {
     const {
       page,
       limit,

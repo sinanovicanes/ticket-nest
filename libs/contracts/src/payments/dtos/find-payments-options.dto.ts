@@ -27,7 +27,7 @@ enum OrderByFields {
   updatedAt = 'updatedAt',
 }
 
-export class FindPaymentOptionsDto {
+export class FindPaymentsOptionsDto {
   @IsOptional()
   @Type(() => Number)
   @IsInt()
