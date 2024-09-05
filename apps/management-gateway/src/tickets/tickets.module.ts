@@ -1,10 +1,10 @@
+import { TicketsMicroServiceModule } from '@app/microservices';
 import { Module } from '@nestjs/common';
-import { TicketsService } from './tickets.service';
 import { TicketsController } from './tickets.controller';
-import { TicketsMicroService } from '@app/microservices';
+import { TicketsService } from './tickets.service';
 
 @Module({
-  imports: [TicketsMicroService],
+  imports: [TicketsMicroServiceModule],
   controllers: [TicketsController],
   providers: [TicketsService],
 })
