@@ -108,6 +108,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/email/tsconfig.app.json"
       }
+    },
+    "locations": {
+      "type": "application",
+      "root": "apps/locations",
+      "entryFile": "main",
+      "sourceRoot": "apps/locations/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/locations/tsconfig.app.json"
+      }
     }
   }
 }
