@@ -1,6 +1,6 @@
 import {
   CreateTicketDto,
-  FindTicketOptionsDto,
+  FindTicketsOptionsDto,
   UpdateTicketDto,
 } from '@app/contracts/tickets';
 import {
@@ -64,7 +64,7 @@ export class TicketsService {
     return ticket;
   }
 
-  async findMany(options: FindTicketOptionsDto) {
+  async findMany(options: FindTicketsOptionsDto) {
     const {
       page,
       limit,

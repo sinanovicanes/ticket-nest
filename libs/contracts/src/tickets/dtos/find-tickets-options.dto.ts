@@ -23,7 +23,7 @@ enum OrderByFields {
   updatedAt = 'updatedAt',
 }
 
-export class FindTicketOptionsDto {
+export class FindTicketsOptionsDto {
   @IsOptional()
   @Type(() => Number)
   @IsInt()

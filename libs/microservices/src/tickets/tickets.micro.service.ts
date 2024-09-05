@@ -3,7 +3,7 @@ import {
   CreateTicketDuplicatesMessageDto,
   CreateTicketDto,
   FindOneTicketMessageDto,
-  FindTicketOptionsDto,
+  FindTicketsOptionsDto,
   TicketsMessagePatterns,
   UpdateTicketDto,
   UpdateTicketMessageDto,
@@ -44,7 +44,7 @@ export class TicketsMicroService {
     return firstValueFrom(source);
   }
 
-  findMany(options: FindTicketOptionsDto) {
+  findMany(options: FindTicketsOptionsDto) {
     const source = this.client
       .send(TicketsMessagePatterns.FIND_MANY, options)
       .pipe(timeout(5000));

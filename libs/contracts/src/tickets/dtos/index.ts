@@ -4,4 +4,4 @@ export * from './update-ticket.dto';
 export * from './update-ticket-message.dto';
 
 export * from './find-one-ticket-message.dto';
-export * from './find-ticket-options.dto';
+export * from './find-tickets-options.dto';

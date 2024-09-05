@@ -1,7 +1,7 @@
 import {
   CreateTicketDto,
   FindOneTicketMessageDto,
-  FindTicketOptionsDto,
+  FindTicketsOptionsDto,
   TicketsMessagePatterns,
   UpdateTicketMessageDto,
 } from '@app/contracts/tickets';
@@ -31,7 +31,7 @@ export class TicketsController {
   }
 
   @MessagePattern(TicketsMessagePatterns.FIND_MANY)
-  findMany(@Payload() options: FindTicketOptionsDto) {
+  findMany(@Payload() options: FindTicketsOptionsDto) {
     return this.ticketsService.findMany(options);
   }
 
