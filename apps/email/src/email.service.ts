@@ -51,7 +51,7 @@ export class EmailService {
     });
   }
 
-  sendEmail(template: EmailTemplates, to: string, options: IMailOptions) {
+  send(template: EmailTemplates, to: string, options: IMailOptions) {
     return this.transporter.sendMail({
       ...options,
       template,
