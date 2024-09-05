@@ -27,26 +27,6 @@ export class TicketSalesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.ticketSalesService.findOne(id, {
-      id: true,
-      name: true,
-      description: true,
-      price: true,
-      createdAt: true,
-      event: {
-        id: true,
-        name: true,
-        description: true,
-        date: true,
-        location: {
-          id: true,
-          name: true,
-          address: true,
-          address2: true,
-          city: true,
-          province: true,
-        },
-      },
-    });
+    return this.ticketSalesService.findOneWithEventDetails(id);
   }
 }

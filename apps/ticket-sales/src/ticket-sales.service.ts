@@ -1,6 +1,9 @@
 import {
+  AvailableTicketSales,
   CreateTicketSalesDto,
   FindTicketSalesOptionsDto,
+  ReleaseTicketSalesResponse,
+  TicketSalesWithEventDetails,
   UpdateTicketSalesDto,
 } from '@app/contracts/ticket-sales';
 import {
@@ -9,6 +12,7 @@ import {
   InjectDB,
   locationSchema,
   SelectFieldsFactory,
+  TicketSales,
   ticketSalesSchema,
   TicketSalesSelectFieldsDto,
   ticketSchema,
@@ -54,6 +58,46 @@ export class TicketSalesService {
     const results = await query;
 
     return results.pop() ?? null;
+  }
+
+  async findOneWithEventDetails(
+    id: string,
+  ): Promise<TicketSalesWithEventDetails> {
+    const results = await this.db
+      .select({
+        id: ticketSalesSchema.id,
+        price: ticketSalesSchema.price,
+        quantity: ticketSalesSchema.quantity,
+        name: ticketSalesSchema.name,
+        description: ticketSalesSchema.description,
+        createdAt: ticketSalesSchema.createdAt,
+        event: {
+          id: eventSchema.id,
+          date: eventSchema.date,
+          name: eventSchema.name,
+          description: eventSchema.description,
+        },
+        location: {
+          id: locationSchema.id,
+          name: locationSchema.name,
+          address: locationSchema.address,
+          address2: locationSchema.address2,
+          city: locationSchema.city,
+          province: locationSchema.province,
+        },
+      })
+      .from(ticketSalesSchema)
+      .leftJoin(eventSchema, eq(ticketSalesSchema.eventId, eventSchema.id))
+      .leftJoin(locationSchema, eq(eventSchema.locationId, locationSchema.id))
+      .where(eq(ticketSalesSchema.id, id));
+
+    const result = results.pop();
+
+    if (!result) {
+      throw new RpcException(new NotFoundException('Ticket sales not found'));
+    }
+
+    return result;
   }
 
   async findMany(options: FindTicketSalesOptionsDto) {
@@ -144,7 +188,10 @@ export class TicketSalesService {
     return result;
   }
 
-  async releaseTickets(id: string, quantity: number) {
+  async releaseTickets(
+    id: string,
+    quantity: number,
+  ): Promise<ReleaseTicketSalesResponse> {
     const results = await this.db
       .update(ticketSalesSchema)
       .set({
@@ -162,13 +209,14 @@ export class TicketSalesService {
     return result;
   }
 
-  async findByIdIfAvailable(id: string) {
+  async findByIdIfAvailable(id: string): Promise<AvailableTicketSales> {
     const results = await this.db
       .select({
         id: ticketSalesSchema.id,
         price: ticketSalesSchema.price,
         quantity: ticketSalesSchema.quantity,
         name: ticketSalesSchema.name,
+        description: ticketSalesSchema.description,
         event: {
           id: eventSchema.id,
           date: eventSchema.date,
@@ -197,11 +245,22 @@ export class TicketSalesService {
     return ticketSales;
   }
 
-  async create(dto: CreateTicketSalesDto) {
-    return await this.db.insert(ticketSalesSchema).values(dto).returning();
+  async create(dto: CreateTicketSalesDto): Promise<TicketSales> {
+    const results = await this.db
+      .insert(ticketSalesSchema)
+      .values(dto)
+      .returning();
+
+    const result = results.pop();
+
+    if (!result) {
+      throw new RpcException("Couldn't create ticket sales");
+    }
+
+    return result;
   }
 
-  async updateOne(id: string, dto: UpdateTicketSalesDto) {
+  async updateOne(id: string, dto: UpdateTicketSalesDto): Promise<TicketSales> {
     const results = await this.db
       .update(ticketSalesSchema)
       .set(dto)
@@ -211,12 +270,18 @@ export class TicketSalesService {
     return results.pop() ?? null;
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<TicketSales> {
     const results = await this.db
       .delete(ticketSalesSchema)
       .where(eq(ticketSalesSchema.id, id))
       .returning();
 
-    return results.pop() ?? null;
+    const result = results.pop();
+
+    if (!result) {
+      throw new RpcException(new NotFoundException('Ticket sales not found'));
+    }
+
+    return result;
   }
 }

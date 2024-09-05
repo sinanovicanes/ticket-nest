@@ -1,14 +1,18 @@
 import {
+  AvailableTicketSales,
   CreateTicketSalesDto,
   FindOneTicketSalesMessageDto,
   FindTicketSalesOptionsDto,
+  ReleaseTicketSalesResponse,
   ReleaseTicketsMessageDto,
+  ReserveTicketSalesResponse,
   ReserveTicketsMessageDto,
   TicketSalesMessagePatterns,
+  TicketSalesWithEventDetails,
   UpdateTicketSalesDto,
   UpdateTicketSalesMessageDto,
 } from '@app/contracts/ticket-sales';
-import { TicketSalesSelectFieldsDto } from '@app/database';
+import { TicketSales, TicketSalesSelectFieldsDto } from '@app/database';
 import { NatsServices } from '@app/microservices';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
@@ -18,7 +22,7 @@ import { firstValueFrom, timeout } from 'rxjs';
 export class TicketSalesMicroService {
   @Inject(NatsServices.TICKET_SALES) private readonly client: ClientProxy;
 
-  create(dto: CreateTicketSalesDto) {
+  create(dto: CreateTicketSalesDto): Promise<TicketSales> {
     const source = this.client
       .send(TicketSalesMessagePatterns.CREATE, dto)
       .pipe(timeout(5000));
@@ -45,7 +49,17 @@ export class TicketSalesMicroService {
     return firstValueFrom(source);
   }
 
-  findByIdIfAvailable(id: string) {
+  findOneWithEventDetails(id: string): Promise<TicketSalesWithEventDetails> {
+    const source = this.client
+      .send(TicketSalesMessagePatterns.FIND_ONE_WITH_EVENT_DETAILS, {
+        id,
+      } as FindOneTicketSalesMessageDto)
+      .pipe(timeout(5000));
+
+    return firstValueFrom(source);
+  }
+
+  findByIdIfAvailable(id: string): Promise<AvailableTicketSales> {
     const source = this.client
       .send(TicketSalesMessagePatterns.FIND_BY_ID_IF_AVAILABLE, id)
       .pipe(timeout(5000));
@@ -53,7 +67,10 @@ export class TicketSalesMicroService {
     return firstValueFrom(source);
   }
 
-  reserveTickets(id: string, quantity: number) {
+  reserveTickets(
+    id: string,
+    quantity: number,
+  ): Promise<ReserveTicketSalesResponse> {
     const source = this.client
       .send(TicketSalesMessagePatterns.RESERVE_TICKETS, {
         id,
@@ -64,7 +81,10 @@ export class TicketSalesMicroService {
     return firstValueFrom(source);
   }
 
-  releaseTickets(id: string, quantity: number) {
+  releaseTickets(
+    id: string,
+    quantity: number,
+  ): Promise<ReleaseTicketSalesResponse> {
     const source = this.client
       .send(TicketSalesMessagePatterns.RELEASE_TICKETS, {
         id,
@@ -75,7 +95,7 @@ export class TicketSalesMicroService {
     return firstValueFrom(source);
   }
 
-  update(id: string, dto: UpdateTicketSalesDto) {
+  update(id: string, dto: UpdateTicketSalesDto): Promise<TicketSales> {
     const source = this.client
       .send(TicketSalesMessagePatterns.UPDATE, {
         id,
@@ -86,7 +106,7 @@ export class TicketSalesMicroService {
     return firstValueFrom(source);
   }
 
-  remove(id: string) {
+  remove(id: string): Promise<TicketSales> {
     const source = this.client
       .send(TicketSalesMessagePatterns.DELETE, id)
       .pipe(timeout(5000));

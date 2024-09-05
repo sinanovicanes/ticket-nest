@@ -4,6 +4,7 @@ export enum TicketSalesMessagePatterns {
   DELETE = 'ticket-sales.delete',
   FIND_MANY = 'ticket-sales.findMany',
   FIND_ONE = 'ticket-sales.findOne',
+  FIND_ONE_WITH_EVENT_DETAILS = 'ticket-sales.findOne.eventDetails',
   FIND_BY_ID_IF_AVAILABLE = 'ticket-sales.findByIdIfAvailable',
   RESERVE_TICKETS = 'ticket-sales.reserveTickets',
   RELEASE_TICKETS = 'ticket-sales.releaseTickets',

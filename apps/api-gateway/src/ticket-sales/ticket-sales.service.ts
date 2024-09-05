@@ -25,6 +25,10 @@ export class TicketSalesService {
     return this.ticketSalesMicroService.findOne(id, selectFields);
   }
 
+  findOneWithEventDetails(id: string) {
+    return this.ticketSalesMicroService.findOneWithEventDetails(id);
+  }
+
   update(id: string, dto: UpdateTicketSalesDto) {
     return this.ticketSalesMicroService.update(id, dto);
   }

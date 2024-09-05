@@ -3,20 +3,23 @@ import {
   FindOneTicketSalesMessageDto,
   FindTicketSalesOptionsDto,
   ReleaseTicketsMessageDto,
+  ReserveTicketSalesResponse,
   ReserveTicketsMessageDto,
   TicketSalesMessagePatterns,
+  TicketSalesWithEventDetails,
   UpdateTicketSalesMessageDto,
 } from '@app/contracts/ticket-sales';
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { TicketSalesService } from './ticket-sales.service';
+import { TicketSales } from '@app/database';
 
 @Controller()
 export class TicketSalesController {
   constructor(private readonly ticketSalesService: TicketSalesService) {}
 
   @MessagePattern(TicketSalesMessagePatterns.CREATE)
-  create(@Payload() dto: CreateTicketSalesDto) {
+  create(@Payload() dto: CreateTicketSalesDto): Promise<TicketSales> {
     return this.ticketSalesService.create(dto);
   }
 
@@ -49,7 +52,7 @@ export class TicketSalesController {
   async reserveTicket(
     @Payload()
     { id, quantity }: ReserveTicketsMessageDto,
-  ) {
+  ): Promise<ReserveTicketSalesResponse> {
     const ticketSales = await this.findByIdIfAvailable(id);
     const reserveResults = await this.ticketSalesService.reserveTickets(
       id,
@@ -68,5 +71,12 @@ export class TicketSalesController {
     { id, quantity }: ReleaseTicketsMessageDto,
   ) {
     return this.ticketSalesService.releaseTickets(id, quantity);
+  }
+
+  @MessagePattern(TicketSalesMessagePatterns.FIND_ONE_WITH_EVENT_DETAILS)
+  findOneWithEventDetails(
+    @Payload() id: string,
+  ): Promise<TicketSalesWithEventDetails> {
+    return this.ticketSalesService.findOneWithEventDetails(id);
   }
 }
