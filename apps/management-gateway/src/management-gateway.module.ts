@@ -5,6 +5,7 @@ import { ManagementGatewayController } from './management-gateway.controller';
 import { ManagementGatewayService } from './management-gateway.service';
 import { LocationsModule } from './locations/locations.module';
 import { EventsModule } from './events/events.module';
+import { TicketSalesModule } from './ticket-sales/ticket-sales.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { EventsModule } from './events/events.module';
     }),
     LocationsModule,
     EventsModule,
+    TicketSalesModule,
   ],
   controllers: [ManagementGatewayController],
   providers: [ManagementGatewayService],
