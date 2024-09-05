@@ -4,6 +4,7 @@ import { validate } from './config/validation';
 import { ManagementGatewayController } from './management-gateway.controller';
 import { ManagementGatewayService } from './management-gateway.service';
 import { LocationsModule } from './locations/locations.module';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { LocationsModule } from './locations/locations.module';
       validate,
     }),
     LocationsModule,
+    EventsModule,
   ],
   controllers: [ManagementGatewayController],
   providers: [ManagementGatewayService],
