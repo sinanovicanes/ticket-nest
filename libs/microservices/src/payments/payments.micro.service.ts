@@ -5,11 +5,10 @@ import {
   FindPaymentsOptionsDto,
   PaymentsEventPatterns,
   PaymentsMessagePatterns,
-  StripeWebhookMessageDto,
   UpdatePaymentDto,
   UpdatePaymentMessageDto,
 } from '@app/contracts/payments';
-import { PaymentSelectFieldsDto } from '@app/database';
+import { Payment } from '@app/database';
 import { NatsServices } from '@app/microservices';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
@@ -20,7 +19,7 @@ import type Stripe from 'stripe';
 export class PaymentsMicroService {
   @Inject(NatsServices.PAYMENTS) private readonly client: ClientProxy;
 
-  create(dto: CreatePaymentDto) {
+  create(dto: CreatePaymentDto): Promise<Payment> {
     const source = this.client
       .send(PaymentsMessagePatterns.CREATE, dto)
       .pipe(timeout(5000));
@@ -28,7 +27,7 @@ export class PaymentsMicroService {
     return firstValueFrom(source);
   }
 
-  findMany(options: FindPaymentsOptionsDto) {
+  findMany(options: FindPaymentsOptionsDto): Promise<Payment[]> {
     const source = this.client
       .send(PaymentsMessagePatterns.FIND_MANY, options)
       .pipe(timeout(5000));
@@ -36,18 +35,17 @@ export class PaymentsMicroService {
     return firstValueFrom(source);
   }
 
-  findOne(id: string, selectFields: PaymentSelectFieldsDto) {
+  findOne(id: string): Promise<Payment> {
     const source = this.client
       .send(PaymentsMessagePatterns.FIND_ONE, {
         id,
-        selectFields,
       } as FindOnePaymentMessageDto)
       .pipe(timeout(5000));
 
     return firstValueFrom(source);
   }
 
-  update(id: string, dto: UpdatePaymentDto) {
+  update(id: string, dto: UpdatePaymentDto): Promise<Payment> {
     const source = this.client
       .send(PaymentsMessagePatterns.UPDATE, {
         id,
@@ -58,7 +56,7 @@ export class PaymentsMicroService {
     return firstValueFrom(source);
   }
 
-  remove(id: string) {
+  remove(id: string): Promise<Payment> {
     const source = this.client
       .send(PaymentsMessagePatterns.DELETE, id)
       .pipe(timeout(5000));
@@ -79,10 +77,8 @@ export class PaymentsMicroService {
   }
 
   emitStripeWebhookEvent(event: Stripe.Event) {
-    const source = this.client
+    this.client
       .emit(PaymentsEventPatterns.STRIPE_WEBHOOK_EVENT, event)
       .pipe(timeout(5000));
-
-    return firstValueFrom(source);
   }
 }

@@ -7,13 +7,10 @@ import {
   Database,
   eventSchema,
   InjectDB,
-  locationSchema,
+  Payment,
   paymentSchema,
-  PaymentSelectFieldsDto,
-  SelectFieldsFactory,
-  ticketSalesSchema,
-  ticketSchema,
 } from '@app/database';
+import { getOffset } from '@app/database/utils';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { asc, between, desc, eq, gte, lte } from 'drizzle-orm';
@@ -22,20 +19,9 @@ import { asc, between, desc, eq, gte, lte } from 'drizzle-orm';
 export class PaymentsService {
   constructor(@InjectDB() private readonly db: Database) {}
 
-  async findOne(id: string, selectFields: PaymentSelectFieldsDto) {
-    const fields = SelectFieldsFactory.createFromDto(
-      selectFields,
-      paymentSchema,
-      {
-        event: eventSchema,
-        location: locationSchema,
-        ticket: ticketSchema,
-        ticketSales: ticketSalesSchema,
-      },
-    );
-
+  async findOne(id: string): Promise<Payment> {
     const query = this.db
-      .select(fields)
+      .select()
       .from(paymentSchema)
       .where(eq(paymentSchema.id, id));
 
@@ -49,7 +35,7 @@ export class PaymentsService {
     return payment;
   }
 
-  async findMany(options: FindPaymentsOptionsDto) {
+  async findMany(options: FindPaymentsOptionsDto): Promise<Payment[]> {
     const {
       page,
       limit,
@@ -60,54 +46,37 @@ export class PaymentsService {
       maxPayment,
       minPayment,
       salesId,
-      ticketId,
       eventId,
-      selectFields,
     } = options;
-    const offset = (page - 1) * limit;
-    const fields = SelectFieldsFactory.createFromDto(
-      selectFields,
-      paymentSchema,
-      {
-        ticket: ticketSchema,
-        event: eventSchema,
-        location: locationSchema,
-        ticketSales: ticketSalesSchema,
-      },
-    );
-
-    const dbQuery = this.db
-      .select(fields)
+    const offset = getOffset(page, limit);
+    const query = this.db
+      .select()
       .from(paymentSchema)
       .offset(offset)
       .limit(limit);
 
     if (eventId) {
-      dbQuery.where(eq(eventSchema.id, eventId));
-    }
-
-    if (ticketId) {
-      dbQuery.where(eq(ticketSchema.id, ticketId));
+      query.where(eq(eventSchema.id, eventId));
     }
 
     if (salesId) {
-      dbQuery.where(eq(ticketSalesSchema.id, salesId));
+      query.where(eq(paymentSchema.ticketSalesId, salesId));
     }
 
     if (minPayment && maxPayment) {
-      dbQuery.where(between(paymentSchema.total, minPayment, maxPayment));
+      query.where(between(paymentSchema.total, minPayment, maxPayment));
     } else if (minPayment) {
-      dbQuery.where(gte(paymentSchema.total, minPayment));
+      query.where(gte(paymentSchema.total, minPayment));
     } else if (maxPayment) {
-      dbQuery.where(lte(paymentSchema.total, maxPayment));
+      query.where(lte(paymentSchema.total, maxPayment));
     }
 
     if (startDate && endDate) {
-      dbQuery.where(between(paymentSchema.createdAt, startDate, endDate));
+      query.where(between(paymentSchema.createdAt, startDate, endDate));
     } else if (startDate) {
-      dbQuery.where(gte(paymentSchema.createdAt, startDate));
+      query.where(gte(paymentSchema.createdAt, startDate));
     } else if (endDate) {
-      dbQuery.where(lte(paymentSchema.createdAt, endDate));
+      query.where(lte(paymentSchema.createdAt, endDate));
     }
 
     const orderByColumns = orderByFields.map((orderBy) =>
@@ -116,13 +85,16 @@ export class PaymentsService {
         : desc(paymentSchema[orderBy]),
     );
 
-    dbQuery.orderBy(...orderByColumns);
+    query.orderBy(...orderByColumns);
 
-    return await dbQuery;
+    return await query;
   }
 
   async create(dto: CreatePaymentDto) {
-    return await this.db.insert(paymentSchema).values(dto).returning();
+    const results = await this.db.insert(paymentSchema).values(dto).returning();
+    const result = results.pop();
+
+    return result;
   }
 
   async updateOne(id: string, dto: UpdatePaymentDto) {

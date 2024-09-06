@@ -1,7 +1,3 @@
-import {
-  PaymentSelectFieldsDto,
-  TicketSalesSelectFieldsDto,
-} from '@app/database/dtos';
 import { Transform, Type } from 'class-transformer';
 import {
   IsDateString,
@@ -9,10 +5,8 @@ import {
   IsInt,
   IsOptional,
   IsString,
-  Length,
   Max,
   Min,
-  ValidateNested,
 } from 'class-validator';
 
 enum OrderOptions {
@@ -70,10 +64,6 @@ export class FindPaymentsOptionsDto {
   salesId?: string;
 
   @IsOptional()
-  @IsString()
-  ticketId?: string;
-
-  @IsOptional()
   @IsInt()
   @Min(0)
   minPayment?: number;
@@ -82,9 +72,4 @@ export class FindPaymentsOptionsDto {
   @IsInt()
   @Min(0)
   maxPayment?: number;
-
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => PaymentSelectFieldsDto)
-  selectFields: PaymentSelectFieldsDto = new PaymentSelectFieldsDto();
 }

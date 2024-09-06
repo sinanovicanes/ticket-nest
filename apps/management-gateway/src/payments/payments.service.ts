@@ -19,7 +19,7 @@ export class PaymentsService {
   }
 
   findOne(id: string) {
-    return this.paymentsMicroService.findOne(id, {});
+    return this.paymentsMicroService.findOne(id);
   }
 
   update(id: string, updatePaymentDto: UpdatePaymentDto) {
