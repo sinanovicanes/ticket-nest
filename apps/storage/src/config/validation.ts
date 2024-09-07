@@ -2,9 +2,13 @@ import {
   ConfigValidationFactory,
   SharedEnvironmentVariables,
 } from '@app/common/config';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsPositive, IsString } from 'class-validator';
 
 export class EnvironmentVariables extends SharedEnvironmentVariables {
+  @IsInt()
+  @IsPositive()
+  MAX_FILE_SIZE: number = 1024 * 1024 * 5; // 5MB
+
   @IsString()
   @IsNotEmpty()
   AWS_BUCKET_NAME: string;
