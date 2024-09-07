@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { StorageMicroService } from './storage.micro.service';
 
 @Module({
-  imports: [NatsModule.register(NatsServices.TICKETS)],
+  imports: [NatsModule.register(NatsServices.STORAGE)],
   exports: [NatsModule, StorageMicroService],
   providers: [StorageMicroService],
 })
