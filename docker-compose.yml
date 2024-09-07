@@ -72,6 +72,7 @@ services:
     depends_on:
       - db
       - nats
+      - storage
     volumes:
       - .:/app
       - /app/node_modules
@@ -89,6 +90,7 @@ services:
       - nats
       - events
       - payments
+      - storage
     volumes:
       - .:/app
       - /app/node_modules
@@ -151,6 +153,21 @@ services:
     env_file:
       - .env
       - ./apps/email/.env
+    depends_on:
+      - db
+      - nats
+    volumes:
+      - .:/app
+      - /app/node_modules
+  storage:
+    build:
+      context: .
+      dockerfile: ./apps/storage/Dockerfile
+      target: development
+    command: npm run start:dev storage
+    env_file:
+      - .env
+      - ./apps/storage/.env
     depends_on:
       - db
       - nats
