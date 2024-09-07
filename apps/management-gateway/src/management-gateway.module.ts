@@ -15,7 +15,7 @@ import { TicketsModule } from './tickets/tickets.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env', 'apps/api-gateway/.env'],
+      envFilePath: ['.env', 'apps/management-gateway/.env'],
       validate,
     }),
     DatabaseModule,
