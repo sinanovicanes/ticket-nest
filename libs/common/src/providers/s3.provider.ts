@@ -11,10 +11,10 @@ export const S3Provider: Provider = {
   useExisting: ConfigService,
   useFactory: (configService: ConfigService) => {
     return new S3({
-      region: configService.get('AWS_REGION'),
+      region: configService.getOrThrow('AWS_REGION'),
       credentials: {
-        accessKeyId: configService.get('AWS_ACCESS_KEY_ID'),
-        secretAccessKey: configService.get('AWS_SECRET_ACCESS_KEY'),
+        accessKeyId: configService.getOrThrow('AWS_ACCESS_KEY_ID'),
+        secretAccessKey: configService.getOrThrow('AWS_SECRET_ACCESS_KEY'),
       },
     });
   },
