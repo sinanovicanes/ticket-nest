@@ -1,5 +1,6 @@
 export enum EventsEventPatterns {
-  EVENT_CREATED = 'event.created',
-  EVENT_UPDATED = 'event.updated',
-  EVENT_DELETED = 'event.deleted',
+  CREATED = 'event.created',
+  UPDATED = 'event.updated',
+  DELETED = 'event.deleted',
+  DELETE_IMAGE = 'event.images.delete',
 }

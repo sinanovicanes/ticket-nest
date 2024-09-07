@@ -4,4 +4,5 @@ export enum EventsMessagePatterns {
   DELETE = 'event.delete',
   FIND_MANY = 'event.findMany',
   FIND_ONE = 'event.findOne',
+  UPLOAD_IMAGE = 'event.images.upload',
 }

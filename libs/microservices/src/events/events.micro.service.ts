@@ -1,10 +1,12 @@
 import { NatsServices } from '@app/microservices';
 import {
   CreateEventDto,
+  EventsEventPatterns,
   EventsMessagePatterns,
   FindEventsOptionsDto,
   UpdateEventDto,
   UpdateEventMessageDto,
+  UploadEventImageDto,
 } from '@app/contracts/events';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
@@ -55,5 +57,20 @@ export class EventsMicroService {
       .pipe(timeout(5000));
 
     return firstValueFrom(source);
+  }
+
+  uploadImage(eventId: string, file: Express.Multer.File): Promise<string> {
+    const source = this.client
+      .send(EventsMessagePatterns.UPLOAD_IMAGE, {
+        eventId,
+        file,
+      } as UploadEventImageDto)
+      .pipe(timeout(5000));
+
+    return firstValueFrom(source);
+  }
+
+  deleteImage(url: string) {
+    this.client.emit(EventsEventPatterns.DELETE_IMAGE, url);
   }
 }

@@ -6,8 +6,10 @@ import { InferSelectModel, relations } from 'drizzle-orm';
 export type EventImage = InferSelectModel<typeof eventImageSchema>;
 export const eventImageSchema = pgTable('event_images', {
   id: uuid('id').primaryKey(),
-  eventId: uuid('event_id').references(() => eventSchema.id),
-  url: varchar('url', { length: 255 }),
+  eventId: uuid('event_id')
+    .notNull()
+    .references(() => eventSchema.id),
+  url: varchar('url', { length: 255 }).notNull().unique(),
   ...createPgTimestamps(),
 });
 
