@@ -1,4 +1,5 @@
 import {
+  AddTicketSalesImageDto,
   AvailableTicketSales,
   CreateTicketSalesDto,
   FindOneTicketSalesMessageDto,
@@ -7,6 +8,7 @@ import {
   ReleaseTicketsMessageDto,
   ReserveTicketSalesResponse,
   ReserveTicketsMessageDto,
+  TicketSalesEventPatterns,
   TicketSalesMessagePatterns,
   TicketSalesWithEventDetails,
   UpdateTicketSalesDto,
@@ -112,5 +114,16 @@ export class TicketSalesMicroService {
       .pipe(timeout(5000));
 
     return firstValueFrom(source);
+  }
+
+  addImage(ticketSalesId: string, url: string) {
+    this.client.emit(TicketSalesEventPatterns.ADD_IMAGE, {
+      ticketSalesId,
+      url,
+    } as AddTicketSalesImageDto);
+  }
+
+  removeImage(url: string) {
+    this.client.emit(TicketSalesEventPatterns.REMOVE_IMAGE, url);
   }
 }

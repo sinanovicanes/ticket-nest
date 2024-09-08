@@ -8,3 +8,5 @@ export * from './find-one-ticket-sales-message.dto';
 
 export * from './reserve-tickets-message.dto';
 export * from './release-tickets-message.dto';
+
+export * from './add-ticket-sales-image.dto';
