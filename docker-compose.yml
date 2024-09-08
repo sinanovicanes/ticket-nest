@@ -191,6 +191,10 @@ services:
       - NATS_URL=nats://nats:4222
     ports:
       - 4222:4222
+  redis-cache:
+    image: redis
+    ports:
+      - 6379:6379
 volumes:
   pgdata:
     driver: local

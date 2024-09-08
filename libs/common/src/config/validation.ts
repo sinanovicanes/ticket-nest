@@ -1,5 +1,6 @@
 import { ClassConstructor, plainToInstance } from 'class-transformer';
 import { IsEnum, IsString, validateSync } from 'class-validator';
+import { IsValidPort } from '../validators';
 
 export enum Environment {
   DEVELOPMENT = 'development',
@@ -14,6 +15,12 @@ export class SharedEnvironmentVariables {
 
   @IsString()
   DATABASE_URL: string;
+
+  @IsString()
+  REDIS_HOST: string;
+
+  @IsValidPort()
+  REDIS_PORT: number;
 }
 
 export class ConfigValidationFactory {
