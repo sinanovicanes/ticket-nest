@@ -1,7 +1,11 @@
 import { ImageFileValidationPipe } from '@app/common/pipes';
 import { StorageMicroService } from '@app/microservices';
 import {
+  Body,
   Controller,
+  Delete,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   UploadedFile,
@@ -9,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { EventImagesService } from '../services/event-images.service';
+import { DeleteEventImageDto } from '../dtos';
 
 // TODO: Add guard to check if event exists
 @Controller('events/:eventId/images')
@@ -38,5 +43,12 @@ export class EventImagesController {
     this.eventImagesService.addImage(eventId, url);
 
     return url;
+  }
+
+  @Delete()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  remove(@Body() { url }: DeleteEventImageDto) {
+    this.storageMicroService.delete(url);
+    this.eventImagesService.removeImage(url);
   }
 }
