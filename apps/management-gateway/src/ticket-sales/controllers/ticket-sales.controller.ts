@@ -13,7 +13,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { TicketSalesService } from './ticket-sales.service';
+import { TicketSalesService } from '../services/ticket-sales.service';
 
 @Controller('ticket-sales')
 export class TicketSalesController {
