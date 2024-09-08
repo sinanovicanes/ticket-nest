@@ -10,6 +10,10 @@ import { ManagementGatewayService } from './management-gateway.service';
 import { PaymentsModule } from './payments/payments.module';
 import { TicketSalesModule } from './ticket-sales/ticket-sales.module';
 import { TicketsModule } from './tickets/tickets.module';
+import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
+import { CacheConfigService } from '@app/common/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { CacheInterceptorProvider } from '@app/common/providers';
 
 @Module({
   imports: [
@@ -17,6 +21,9 @@ import { TicketsModule } from './tickets/tickets.module';
       isGlobal: true,
       envFilePath: ['.env', 'apps/management-gateway/.env'],
       validate,
+    }),
+    CacheModule.registerAsync({
+      useClass: CacheConfigService,
     }),
     DatabaseModule,
     LocationsModule,
@@ -27,6 +34,6 @@ import { TicketsModule } from './tickets/tickets.module';
     AuthModule,
   ],
   controllers: [ManagementGatewayController],
-  providers: [ManagementGatewayService],
+  providers: [CacheInterceptorProvider, ManagementGatewayService],
 })
 export class ManagementGatewayModule {}

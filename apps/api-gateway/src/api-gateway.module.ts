@@ -1,12 +1,16 @@
+import { CacheConfigService } from '@app/common/config';
+import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ApiGatewayController } from './api-gateway.controller';
 import { ApiGatewayService } from './api-gateway.service';
-import { StripeModule } from './stripe/stripe.module';
 import { validate } from './config/validation';
 import { EventsModule } from './events/events.module';
-import { TicketSalesModule } from './ticket-sales/ticket-sales.module';
 import { LocationsModule } from './locations/locations.module';
+import { StripeModule } from './stripe/stripe.module';
+import { TicketSalesModule } from './ticket-sales/ticket-sales.module';
+import { CacheInterceptorProvider } from '@app/common/providers';
 
 @Module({
   imports: [
@@ -15,12 +19,15 @@ import { LocationsModule } from './locations/locations.module';
       envFilePath: ['.env', 'apps/api-gateway/.env'],
       validate,
     }),
+    CacheModule.registerAsync({
+      useClass: CacheConfigService,
+    }),
     EventsModule,
     TicketSalesModule,
     StripeModule,
     LocationsModule,
   ],
   controllers: [ApiGatewayController],
-  providers: [ApiGatewayService],
+  providers: [CacheInterceptorProvider, ApiGatewayService],
 })
 export class ApiGatewayModule {}
