@@ -10,15 +10,17 @@ interface ImageFileValidationPipeOptions {
   maxSize?: number;
 }
 
+const MAX_FILE_SIZE = 1024 * 1024;
+
 export class ImageFileValidationPipe extends ParseFilePipe {
   constructor(
     options: ImageFileValidationPipeOptions = {
       required: true,
-      maxSize: 1024,
+      maxSize: MAX_FILE_SIZE,
     },
   ) {
     const fileIsRequired = options.required ?? true;
-    const maxSize = options.maxSize ?? 1024;
+    const maxSize = options.maxSize ?? MAX_FILE_SIZE;
 
     super({
       errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,

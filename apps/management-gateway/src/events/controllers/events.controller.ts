@@ -8,7 +8,7 @@ import {
   Delete,
   Query,
 } from '@nestjs/common';
-import { EventsService } from './events.service';
+import { EventsService } from '../services/events.service';
 import {
   CreateEventDto,
   FindEventsOptionsDto,
