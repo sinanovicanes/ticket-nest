@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ImagesService } from './images.service';
 import { ImagesController } from './images.controller';
-import { StorageMicroServiceModule } from '@app/microservices';
+import { ImagesService } from './images.service';
 
 @Module({
-  imports: [StorageMicroServiceModule],
+  imports: [],
   controllers: [ImagesController],
   providers: [ImagesService],
 })

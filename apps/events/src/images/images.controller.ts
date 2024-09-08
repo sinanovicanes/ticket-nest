@@ -1,34 +1,19 @@
-import {
-  EventsEventPatterns,
-  EventsMessagePatterns,
-  UploadEventImageDto,
-} from '@app/contracts/events';
-import { StorageMicroService } from '@app/microservices';
+import { AddEventImageDto, EventsEventPatterns } from '@app/contracts/events';
 import { Controller } from '@nestjs/common';
-import { EventPattern, MessagePattern } from '@nestjs/microservices';
+import { EventPattern } from '@nestjs/microservices';
 import { ImagesService } from './images.service';
 
 @Controller()
 export class ImagesController {
-  constructor(
-    private readonly imagesService: ImagesService,
-    private readonly storageMicroService: StorageMicroService,
-  ) {}
+  constructor(private readonly imagesService: ImagesService) {}
 
-  @MessagePattern(EventsMessagePatterns.UPLOAD_IMAGE)
-  async uploadImage({ eventId, file }: UploadEventImageDto): Promise<string> {
-    const imageId = await this.imagesService.generateUUID();
-    file.originalname = `events-${imageId}.${file.originalname.split('.').pop()}`;
-    const url = await this.storageMicroService.upload(file);
-
-    await this.imagesService.saveImageWithId(imageId, eventId, url);
-
-    return url;
+  @EventPattern(EventsEventPatterns.ADD_IMAGE)
+  async addImage({ eventId, url }: AddEventImageDto) {
+    this.imagesService.addImage(eventId, url);
   }
 
-  @EventPattern(EventsEventPatterns.DELETE_IMAGE)
-  async deleteImageByURL(url: string) {
-    this.storageMicroService.delete(url);
-    this.imagesService.deleteImageByURL(url);
+  @EventPattern(EventsEventPatterns.REMOVE_IMAGE)
+  async removeImage(url: string) {
+    this.imagesService.removeImage(url);
   }
 }
