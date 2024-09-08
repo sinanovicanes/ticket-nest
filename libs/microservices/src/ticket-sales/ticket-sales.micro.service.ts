@@ -2,7 +2,6 @@ import {
   AddTicketSalesImageDto,
   AvailableTicketSales,
   CreateTicketSalesDto,
-  FindOneTicketSalesMessageDto,
   FindTicketSalesOptionsDto,
   ReleaseTicketSalesResponse,
   ReleaseTicketsMessageDto,
@@ -32,7 +31,7 @@ export class TicketSalesMicroService {
     return firstValueFrom(source);
   }
 
-  findMany(options: FindTicketSalesOptionsDto) {
+  findMany(options: FindTicketSalesOptionsDto): Promise<TicketSales[]> {
     const source = this.client
       .send(TicketSalesMessagePatterns.FIND_MANY, options)
       .pipe(timeout(5000));
@@ -40,12 +39,12 @@ export class TicketSalesMicroService {
     return firstValueFrom(source);
   }
 
-  findOne(id: string, selectFields: TicketSalesSelectFieldsDto) {
+  findOne(
+    id: string,
+    selectFields: TicketSalesSelectFieldsDto,
+  ): Promise<TicketSales> {
     const source = this.client
-      .send(TicketSalesMessagePatterns.FIND_ONE, {
-        id,
-        selectFields,
-      } as FindOneTicketSalesMessageDto)
+      .send(TicketSalesMessagePatterns.FIND_ONE, id)
       .pipe(timeout(5000));
 
     return firstValueFrom(source);
@@ -53,9 +52,7 @@ export class TicketSalesMicroService {
 
   findOneWithEventDetails(id: string): Promise<TicketSalesWithEventDetails> {
     const source = this.client
-      .send(TicketSalesMessagePatterns.FIND_ONE_WITH_EVENT_DETAILS, {
-        id,
-      } as FindOneTicketSalesMessageDto)
+      .send(TicketSalesMessagePatterns.FIND_ONE_WITH_EVENT_DETAILS, id)
       .pipe(timeout(5000));
 
     return firstValueFrom(source);

@@ -17,7 +17,7 @@ import {
   TicketSalesSelectFieldsDto,
   ticketSchema,
 } from '@app/database';
-import { decrement, increment } from '@app/database/utils';
+import { decrement, getOffset, increment } from '@app/database/utils';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { and, asc, between, desc, eq, gte, ilike, lte, or } from 'drizzle-orm';
@@ -26,38 +26,29 @@ import { and, asc, between, desc, eq, gte, ilike, lte, or } from 'drizzle-orm';
 export class TicketSalesService {
   @InjectDB() private readonly db: Database;
 
-  async findOne(id: string, selectFields: TicketSalesSelectFieldsDto) {
-    const fields = SelectFieldsFactory.createFromDto(
-      selectFields,
-      ticketSalesSchema,
-      {
-        event: eventSchema,
-        location: locationSchema,
-      },
-    );
-
-    const query = this.db
-      .select(fields)
+  async findOne(id: string): Promise<TicketSales> {
+    const results = await this.db
+      .select({
+        id: ticketSalesSchema.id,
+        price: ticketSalesSchema.price,
+        quantity: ticketSalesSchema.quantity,
+        name: ticketSalesSchema.name,
+        description: ticketSalesSchema.description,
+        sold: ticketSalesSchema.sold,
+        createdAt: ticketSalesSchema.createdAt,
+        updatedAt: ticketSalesSchema.updatedAt,
+        eventId: ticketSalesSchema.eventId,
+      })
       .from(ticketSalesSchema)
       .where(eq(ticketSalesSchema.id, id));
 
-    if (selectFields.event) {
-      query.leftJoin(
-        eventSchema,
-        eq(ticketSalesSchema.eventId, eventSchema.id),
-      );
+    const result = results.pop();
+
+    if (!result) {
+      throw new RpcException(new NotFoundException('Ticket sales not found'));
     }
 
-    if (selectFields.event.location) {
-      query.leftJoin(
-        locationSchema,
-        eq(eventSchema.locationId, locationSchema.id),
-      );
-    }
-
-    const results = await query;
-
-    return results.pop() ?? null;
+    return result;
   }
 
   async findOneWithEventDetails(
@@ -100,7 +91,7 @@ export class TicketSalesService {
     return result;
   }
 
-  async findMany(options: FindTicketSalesOptionsDto) {
+  async findMany(options: FindTicketSalesOptionsDto): Promise<TicketSales[]> {
     const {
       page,
       limit,
@@ -113,24 +104,21 @@ export class TicketSalesService {
       minPrice,
       maxPrice,
       eventId,
-      selectFields,
     } = options;
-    const offset = (page - 1) * limit;
-
-    const fields = SelectFieldsFactory.createFromDto(
-      selectFields,
-      ticketSalesSchema,
-      {
-        event: eventSchema,
-        location: locationSchema,
-      },
-    );
-
+    const offset = getOffset(page, limit);
     const dbQuery = this.db
-      .select(fields)
+      .select({
+        id: ticketSalesSchema.id,
+        price: ticketSalesSchema.price,
+        quantity: ticketSalesSchema.quantity,
+        name: ticketSalesSchema.name,
+        description: ticketSalesSchema.description,
+        sold: ticketSalesSchema.sold,
+        createdAt: ticketSalesSchema.createdAt,
+        updatedAt: ticketSalesSchema.updatedAt,
+        eventId: ticketSalesSchema.eventId,
+      })
       .from(ticketSalesSchema)
-      .leftJoin(eventSchema, eq(ticketSalesSchema.eventId, eventSchema.id))
-      .leftJoin(locationSchema, eq(eventSchema.locationId, locationSchema.id))
       .offset(offset)
       .limit(limit);
 
@@ -139,6 +127,10 @@ export class TicketSalesService {
     } else {
       // Only filter by date if eventId is not provided
       if (!eventId && startDate && endDate) {
+        dbQuery.leftJoin(
+          eventSchema,
+          eq(ticketSalesSchema.eventId, eventSchema.id),
+        );
         dbQuery.where(between(eventSchema.date, startDate, endDate));
       }
     }

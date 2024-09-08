@@ -1,4 +1,4 @@
-import { FindTicketSalesQueryDto } from '@app/contracts/ticket-sales';
+import { FindTicketSalesOptionsDto } from '@app/contracts/ticket-sales';
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { TicketSalesService } from './ticket-sales.service';
 
@@ -9,19 +9,12 @@ export class TicketSalesController {
   @Get()
   findMany(
     @Param('eventId') eventId: string,
-    @Query() options: FindTicketSalesQueryDto,
+    @Query() options: FindTicketSalesOptionsDto,
   ) {
     // Add eventId to options
     options.eventId = eventId;
     return this.ticketSalesService.findMany({
       ...options,
-      selectFields: {
-        id: true,
-        name: true,
-        description: true,
-        price: true,
-        createdAt: true,
-      },
     });
   }
 

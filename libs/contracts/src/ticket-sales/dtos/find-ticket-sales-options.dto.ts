@@ -89,9 +89,4 @@ export class FindTicketSalesOptionsDto {
   @IsOptional()
   @IsString()
   eventId?: string;
-
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => TicketSalesSelectFieldsDto)
-  selectFields: TicketSalesSelectFieldsDto = new TicketSalesSelectFieldsDto();
 }
