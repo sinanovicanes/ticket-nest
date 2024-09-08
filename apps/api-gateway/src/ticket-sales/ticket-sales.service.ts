@@ -6,6 +6,7 @@ import {
 import { TicketSalesSelectFieldsDto } from '@app/database';
 import { TicketSalesMicroService } from '@app/microservices';
 import { Injectable } from '@nestjs/common';
+import { TicketSaleDto } from './dtos';
 
 @Injectable()
 export class TicketSalesService {
@@ -17,12 +18,16 @@ export class TicketSalesService {
     return this.ticketSalesMicroService.create(dto);
   }
 
-  findMany(options: FindTicketSalesOptionsDto) {
-    return this.ticketSalesMicroService.findMany(options);
+  async findMany(options: FindTicketSalesOptionsDto): Promise<TicketSaleDto[]> {
+    const ticketSales = await this.ticketSalesMicroService.findMany(options);
+
+    return ticketSales.map(TicketSaleDto.fromEntity);
   }
 
-  findOne(id: string, selectFields: TicketSalesSelectFieldsDto) {
-    return this.ticketSalesMicroService.findOne(id, selectFields);
+  async findOne(id: string): Promise<TicketSaleDto> {
+    const ticketSale = await this.ticketSalesMicroService.findOne(id);
+
+    return TicketSaleDto.fromEntity(ticketSale);
   }
 
   findOneWithEventDetails(id: string) {

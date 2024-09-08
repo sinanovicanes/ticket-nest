@@ -13,7 +13,7 @@ import {
   UpdateTicketSalesDto,
   UpdateTicketSalesMessageDto,
 } from '@app/contracts/ticket-sales';
-import { TicketSales, TicketSalesSelectFieldsDto } from '@app/database';
+import { TicketSales } from '@app/database';
 import { NatsServices } from '@app/microservices';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
@@ -39,10 +39,7 @@ export class TicketSalesMicroService {
     return firstValueFrom(source);
   }
 
-  findOne(
-    id: string,
-    selectFields: TicketSalesSelectFieldsDto,
-  ): Promise<TicketSales> {
+  findOne(id: string): Promise<TicketSales> {
     const source = this.client
       .send(TicketSalesMessagePatterns.FIND_ONE, id)
       .pipe(timeout(5000));

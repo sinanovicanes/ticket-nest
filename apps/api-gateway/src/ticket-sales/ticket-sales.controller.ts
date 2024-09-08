@@ -13,9 +13,7 @@ export class TicketSalesController {
   ) {
     // Add eventId to options
     options.eventId = eventId;
-    return this.ticketSalesService.findMany({
-      ...options,
-    });
+    return this.ticketSalesService.findMany(options);
   }
 
   @Get(':id')
