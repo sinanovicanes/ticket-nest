@@ -6,4 +6,5 @@ export * from './discount.schema';
 export * from './location.schema';
 export * from './payment.schema';
 export * from './ticket-sales.schema';
+export * from './ticket-sales-images.schema';
 export * from './management-accounts.schema';
