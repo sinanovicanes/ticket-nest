@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1725085027419,
-      "tag": "0000_omniscient_ted_forrester",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1725713901608,
-      "tag": "0001_condemned_mister_sinister",
+      "when": 1725790135922,
+      "tag": "0000_common_nick_fury",
       "breakpoints": true
     }
   ]
