@@ -7,7 +7,7 @@ export class EventImagesService {
   private readonly logger = new Logger(EventImagesService.name);
   constructor(private readonly eventsMicroService: EventsMicroService) {}
 
-  generateImageId() {
+  generateImageName() {
     return `events-${randomUUID()}`;
   }
 
@@ -16,8 +16,13 @@ export class EventImagesService {
     this.eventsMicroService.addImage(eventId, url);
   }
 
-  removeImage(url: string) {
-    this.logger.log(`Removing image ${url}`);
-    this.eventsMicroService.removeImage(url);
+  removeImage(imageId: string) {
+    this.logger.log(`Removing image ${imageId}`);
+    this.eventsMicroService.removeImage(imageId);
+  }
+
+  removeImageByURL(url: string) {
+    this.logger.log(`Removing image by url ${url}`);
+    this.eventsMicroService.removeImageByURL(url);
   }
 }

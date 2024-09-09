@@ -7,6 +7,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -30,11 +31,11 @@ export class EventImagesController {
     @UploadedFile(new ImageFileValidationPipe())
     file: Express.Multer.File,
   ) {
-    const imageId = this.eventImagesService.generateImageId();
+    const imageName = this.eventImagesService.generateImageName();
     const fileExtension = file.originalname.split('.').pop();
 
     // File name is the key in the storage service
-    file.originalname = `${imageId}.${fileExtension}`;
+    file.originalname = `${imageName}.${fileExtension}`;
 
     // Upload the file to the storage service
     const url = await this.storageMicroService.upload(file);
@@ -47,8 +48,14 @@ export class EventImagesController {
 
   @Delete()
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Body() { url }: DeleteEventImageDto) {
+  removeByURL(@Body() { url }: DeleteEventImageDto) {
     this.storageMicroService.delete(url);
-    this.eventImagesService.removeImage(url);
+    this.eventImagesService.removeImageByURL(url);
+  }
+
+  @Delete(':imageId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  remove(@Param('imageId', ParseUUIDPipe) imageId: string) {
+    this.eventImagesService.removeImage(imageId);
   }
 }

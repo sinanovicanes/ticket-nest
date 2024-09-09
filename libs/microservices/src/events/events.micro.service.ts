@@ -66,7 +66,11 @@ export class EventsMicroService {
     } as AddEventImageDto);
   }
 
-  removeImage(url: string) {
-    this.client.emit(EventsEventPatterns.REMOVE_IMAGE, url);
+  removeImage(imageId: string) {
+    this.client.emit(EventsEventPatterns.REMOVE_IMAGE, imageId);
+  }
+
+  removeImageByURL(url: string) {
+    this.client.emit(EventsEventPatterns.REMOVE_IMAGE_BY_URL, url);
   }
 }
