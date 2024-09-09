@@ -9,7 +9,7 @@ export class TicketSalesImagesService {
     private readonly ticketSalesMicroService: TicketSalesMicroService,
   ) {}
 
-  generateImageId() {
+  generateImageName() {
     return `ticket-sales-${randomUUID()}`;
   }
 
@@ -18,8 +18,13 @@ export class TicketSalesImagesService {
     this.ticketSalesMicroService.addImage(ticketSalesId, url);
   }
 
-  removeImage(url: string) {
-    this.logger.log(`Removing image ${url}`);
-    this.ticketSalesMicroService.removeImage(url);
+  removeImage(imageId: string) {
+    this.logger.log(`Removing image ${imageId}`);
+    this.ticketSalesMicroService.removeImage(imageId);
+  }
+
+  removeImageByURL(url: string) {
+    this.logger.log(`Removing image by url ${url}`);
+    this.ticketSalesMicroService.removeImageByURL(url);
   }
 }

@@ -21,7 +21,7 @@ export class TicketSalesService {
   }
 
   findOne(id: string) {
-    return this.ticketSalesMicroService.findOne(id, {});
+    return this.ticketSalesMicroService.findOne(id);
   }
 
   update(id: string, dto: UpdateTicketSalesDto) {

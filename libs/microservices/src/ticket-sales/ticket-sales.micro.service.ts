@@ -117,7 +117,11 @@ export class TicketSalesMicroService {
     } as AddTicketSalesImageDto);
   }
 
-  removeImage(url: string) {
-    this.client.emit(TicketSalesEventPatterns.REMOVE_IMAGE, url);
+  removeImage(imageId: string) {
+    this.client.emit(TicketSalesEventPatterns.REMOVE_IMAGE, imageId);
+  }
+
+  removeImageByURL(url: string) {
+    this.client.emit(TicketSalesEventPatterns.REMOVE_IMAGE_BY_URL, url);
   }
 }
