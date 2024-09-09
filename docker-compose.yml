@@ -127,23 +127,6 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-  discounts:
-    build:
-      context: .
-      dockerfile: ./apps/discounts/Dockerfile
-      target: development
-    command: npm run start:dev discounts
-    env_file:
-      - .env
-      - ./apps/discounts/.env
-    depends_on:
-      - db
-      - nats
-      - events
-      - ticket-sales
-    volumes:
-      - .:/app
-      - /app/node_modules
   email:
     build:
       context: .

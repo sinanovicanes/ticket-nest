@@ -1,5 +1,5 @@
 {
-  "id": "1513cc4e-ba4a-49cc-a54f-e91b2f63682d",
+  "id": "e1b857cc-195d-4e52-bc54-ae37057d9c79",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -235,94 +235,6 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.discounts": {
-      "name": "discounts",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "ticket_sales_id": {
-          "name": "ticket_sales_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "kind": {
-          "name": "kind",
-          "type": "discount_kind",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "amount": {
-          "name": "amount",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "code": {
-          "name": "code",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "used": {
-          "name": "used",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "max_usage": {
-          "name": "max_usage",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "expires_at": {
-          "name": "expires_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "discounts_ticket_sales_id_ticket_sales_id_fk": {
-          "name": "discounts_ticket_sales_id_ticket_sales_id_fk",
-          "tableFrom": "discounts",
-          "tableTo": "ticket_sales",
-          "columnsFrom": [
-            "ticket_sales_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "public.locations": {
       "name": "locations",
       "schema": "",
@@ -407,12 +319,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "discount_id": {
-          "name": "discount_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
         "total": {
           "name": "total",
           "type": "integer",
@@ -462,19 +368,6 @@
           "tableTo": "ticket_sales",
           "columnsFrom": [
             "ticket_sales_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "payments_discount_id_discounts_id_fk": {
-          "name": "payments_discount_id_discounts_id_fk",
-          "tableFrom": "payments",
-          "tableTo": "discounts",
-          "columnsFrom": [
-            "discount_id"
           ],
           "columnsTo": [
             "id"
@@ -687,14 +580,6 @@
     }
   },
   "enums": {
-    "public.discount_kind": {
-      "name": "discount_kind",
-      "schema": "public",
-      "values": [
-        "PERCENTAGE",
-        "FIXED"
-      ]
-    },
     "public.ticket_status": {
       "name": "ticket_status",
       "schema": "public",

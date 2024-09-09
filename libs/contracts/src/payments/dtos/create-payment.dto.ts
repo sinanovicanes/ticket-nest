@@ -31,8 +31,4 @@ export class CreatePaymentDto {
   @IsInt()
   @Min(1)
   ticketCount: number;
-
-  @IsOptional()
-  @IsUUID()
-  discountId?: string;
 }

@@ -1,7 +1,6 @@
 import { InferSelectModel, relations } from 'drizzle-orm';
 import { integer, pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
 import { createPgTimestamps } from '../utils';
-import { discountSchema } from './discount.schema';
 import { eventSchema } from './event.schema';
 import { ticketSchema } from './ticket.schema';
 
@@ -26,7 +25,6 @@ export const ticketSalesRelations = relations(
       fields: [ticketSalesSchema.eventId],
       references: [eventSchema.id],
     }),
-    discount: many(discountSchema),
     tickets: many(ticketSchema),
   }),
 );

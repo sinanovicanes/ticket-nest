@@ -15,10 +15,6 @@ export class CreateCheckoutDto {
   @Min(1)
   quantity: number = 1;
 
-  @IsOptional()
-  @IsString()
-  discountCode?: string;
-
   @IsEmail()
   email: string;
 }

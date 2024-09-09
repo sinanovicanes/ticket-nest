@@ -1,7 +1,6 @@
 import { InferSelectModel, relations } from 'drizzle-orm';
 import { integer, pgTable, uuid, varchar } from 'drizzle-orm/pg-core';
 import { createPgTimestamps } from '../utils';
-import { discountSchema } from './discount.schema';
 import { ticketSchema } from './ticket.schema';
 import { paymentStatus } from './enums';
 import { PaymentStatus } from '../enums';
@@ -14,7 +13,6 @@ export const paymentSchema = pgTable('payments', {
   ticketSalesId: uuid('ticket_sales_id')
     .notNull()
     .references(() => ticketSalesSchema.id),
-  discountId: uuid('discount_id').references(() => discountSchema.id),
   total: integer('total').notNull(),
   email: varchar('owner_email').notNull(),
   status: paymentStatus('status').notNull().default(PaymentStatus.PENDING),
@@ -27,9 +25,5 @@ export const paymentRelations = relations(paymentSchema, ({ one, many }) => ({
   ticketSales: one(ticketSalesSchema, {
     fields: [paymentSchema.ticketSalesId],
     references: [ticketSalesSchema.id],
-  }),
-  discount: one(discountSchema, {
-    fields: [paymentSchema.id],
-    references: [discountSchema.id],
   }),
 }));

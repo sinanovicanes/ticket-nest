@@ -1,10 +1,4 @@
 DO $$ BEGIN
- CREATE TYPE "public"."discount_kind" AS ENUM('PERCENTAGE', 'FIXED');
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
  CREATE TYPE "public"."ticket_status" AS ENUM('ACTIVE', 'DEACTIVE', 'USED', 'CANCELLED');
 EXCEPTION
  WHEN duplicate_object THEN null;
@@ -45,19 +39,6 @@ CREATE TABLE IF NOT EXISTS "tickets" (
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "discounts" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"ticket_sales_id" uuid NOT NULL,
-	"kind" "discount_kind" NOT NULL,
-	"amount" integer NOT NULL,
-	"code" varchar(255) NOT NULL,
-	"used" integer NOT NULL,
-	"max_usage" integer NOT NULL,
-	"expires_at" timestamp,
-	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL
-);
---> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "locations" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar(255) NOT NULL,
@@ -73,7 +54,6 @@ CREATE TABLE IF NOT EXISTS "payments" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"checkout_session_id" varchar NOT NULL,
 	"ticket_sales_id" uuid NOT NULL,
-	"discount_id" uuid,
 	"total" integer NOT NULL,
 	"owner_email" varchar NOT NULL,
 	"status" "payment_status" DEFAULT 'PENDING' NOT NULL,
@@ -143,19 +123,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "discounts" ADD CONSTRAINT "discounts_ticket_sales_id_ticket_sales_id_fk" FOREIGN KEY ("ticket_sales_id") REFERENCES "public"."ticket_sales"("id") ON DELETE no action ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
  ALTER TABLE "payments" ADD CONSTRAINT "payments_ticket_sales_id_ticket_sales_id_fk" FOREIGN KEY ("ticket_sales_id") REFERENCES "public"."ticket_sales"("id") ON DELETE no action ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "payments" ADD CONSTRAINT "payments_discount_id_discounts_id_fk" FOREIGN KEY ("discount_id") REFERENCES "public"."discounts"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

@@ -1,11 +1,9 @@
 import { paymentSchema } from '@app/database/schemas';
 import { TableFields } from '@app/database/types';
-import { Transform, Type } from 'class-transformer';
-import { IsOptional, ValidateNested } from 'class-validator';
-import { DiscountSelectFieldsDto } from './discount-select-fields.dto';
+import { IsOptional } from 'class-validator';
 
 export class PaymentSelectFieldsDto
-  implements Partial<Omit<TableFields<typeof paymentSchema>, 'discountId'>>
+  implements Partial<TableFields<typeof paymentSchema>>
 {
   @IsOptional()
   id?: boolean;
@@ -30,14 +28,6 @@ export class PaymentSelectFieldsDto
 
   @IsOptional()
   updatedAt?: boolean;
-
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => DiscountSelectFieldsDto)
-  @Transform(({ value }) =>
-    value === true ? new DiscountSelectFieldsDto() : value,
-  )
-  discount?: DiscountSelectFieldsDto;
 
   constructor(partial?: Partial<PaymentSelectFieldsDto>) {
     if (partial) {
