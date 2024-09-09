@@ -1,5 +1,5 @@
 {
-  "id": "5a5cf1b7-8919-4277-8923-6927ef5e66f3",
+  "id": "1513cc4e-ba4a-49cc-a54f-e91b2f63682d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -77,10 +77,17 @@
       "name": "event_images",
       "schema": "",
       "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
         "url": {
           "name": "url",
           "type": "varchar(255)",
-          "primaryKey": true,
+          "primaryKey": false,
           "notNull": true
         },
         "event_id": {
@@ -121,7 +128,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "event_images_url_unique": {
+          "name": "event_images_url_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "url"
+          ]
+        }
+      }
     },
     "public.tickets": {
       "name": "tickets",
@@ -559,6 +574,71 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
+    },
+    "public.ticket_sales_images": {
+      "name": "ticket_sales_images",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "url": {
+          "name": "url",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ticket_sales_is": {
+          "name": "ticket_sales_is",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "ticket_sales_images_ticket_sales_is_ticket_sales_id_fk": {
+          "name": "ticket_sales_images_ticket_sales_is_ticket_sales_id_fk",
+          "tableFrom": "ticket_sales_images",
+          "tableTo": "ticket_sales",
+          "columnsFrom": [
+            "ticket_sales_is"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "ticket_sales_images_url_unique": {
+          "name": "ticket_sales_images_url_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "url"
+          ]
+        }
+      }
     },
     "public.management_accounts": {
       "name": "management_accounts",

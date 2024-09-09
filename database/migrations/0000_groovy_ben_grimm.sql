@@ -27,10 +27,12 @@ CREATE TABLE IF NOT EXISTS "events" (
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "event_images" (
-	"url" varchar(255) PRIMARY KEY NOT NULL,
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"url" varchar(255) NOT NULL,
 	"event_id" uuid NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
-	"updated_at" timestamp DEFAULT now() NOT NULL
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "event_images_url_unique" UNIQUE("url")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "tickets" (
@@ -93,6 +95,15 @@ CREATE TABLE IF NOT EXISTS "ticket_sales" (
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "ticket_sales_images" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"url" varchar(255) NOT NULL,
+	"ticket_sales_is" uuid NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "ticket_sales_images_url_unique" UNIQUE("url")
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "management_accounts" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"email" varchar(255) NOT NULL,
@@ -151,6 +162,12 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "ticket_sales" ADD CONSTRAINT "ticket_sales_event_id_events_id_fk" FOREIGN KEY ("event_id") REFERENCES "public"."events"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "ticket_sales_images" ADD CONSTRAINT "ticket_sales_images_ticket_sales_is_ticket_sales_id_fk" FOREIGN KEY ("ticket_sales_is") REFERENCES "public"."ticket_sales"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

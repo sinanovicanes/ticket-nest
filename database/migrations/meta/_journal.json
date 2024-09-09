@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1725790135922,
-      "tag": "0000_common_nick_fury",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1725794452508,
-      "tag": "0001_glamorous_tiger_shark",
+      "when": 1725879654490,
+      "tag": "0000_groovy_ben_grimm",
       "breakpoints": true
     }
   ]
