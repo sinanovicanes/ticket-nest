@@ -40,6 +40,11 @@ export class TicketsController {
     return this.ticketsService.findOne(id, selectFields);
   }
 
+  @MessagePattern(TicketsMessagePatterns.FIND_ONE_WITH_DETAILS)
+  findOneWithDetails(@Payload() { id }: FindOneTicketMessageDto) {
+    return this.ticketsService.findOneWithDetails(id);
+  }
+
   @MessagePattern(TicketsMessagePatterns.UPDATE)
   update(@Payload() { id, dto }: UpdateTicketMessageDto) {
     return this.ticketsService.updateOne(id, dto);

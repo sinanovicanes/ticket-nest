@@ -3,6 +3,7 @@ import {
   FindTicketsOptionsDto,
   UpdateTicketDto,
 } from '@app/contracts/tickets';
+import { TicketWithDetails } from '@app/contracts/tickets/types';
 import {
   Database,
   eventSchema,
@@ -20,6 +21,23 @@ import { asc, between, desc, eq, gte, lte } from 'drizzle-orm';
 @Injectable()
 export class TicketsService {
   @InjectDB() private readonly db: Database;
+
+  findOneWithDetails(id: string): Promise<TicketWithDetails> {
+    const query = this.db.query.ticketSchema.findFirst({
+      where: eq(ticketSchema.id, id),
+      with: {
+        event: {
+          with: {
+            location: true,
+          },
+        },
+        payment: true,
+        ticketSales: true,
+      },
+    });
+
+    return query.execute();
+  }
 
   async findOne(id: string, selectFields: TicketSelectFieldsDto) {
     const fields = SelectFieldsFactory.createFromDto(

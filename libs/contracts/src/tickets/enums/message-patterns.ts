@@ -6,4 +6,5 @@ export enum TicketsMessagePatterns {
   DELETE = 'ticket.delete',
   FIND_MANY = 'ticket.findMany',
   FIND_ONE = 'ticket.findOne',
+  FIND_ONE_WITH_DETAILS = 'ticket.findOneWithDetails',
 }

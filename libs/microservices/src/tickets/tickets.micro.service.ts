@@ -1,84 +1,77 @@
-import { NatsServices } from '@app/microservices';
 import {
-  CreateTicketDuplicatesMessageDto,
   CreateTicketDto,
+  CreateTicketDuplicatesMessageDto,
   FindOneTicketMessageDto,
   FindTicketsOptionsDto,
+  TicketsEventPatterns,
   TicketsMessagePatterns,
+  TicketWithDetails,
   UpdateTicketDto,
   UpdateTicketMessageDto,
 } from '@app/contracts/tickets';
-import { TicketSelectFieldsDto } from '@app/database';
+import { Ticket, TicketSelectFieldsDto } from '@app/database';
+import { NatsServices } from '@app/microservices';
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy, RpcException } from '@nestjs/microservices';
-import { catchError, firstValueFrom, throwError, timeout } from 'rxjs';
+import { ClientProxy } from '@nestjs/microservices';
+import { firstValueFrom, timeout } from 'rxjs';
 
 @Injectable()
 export class TicketsMicroService {
   @Inject(NatsServices.TICKETS) private readonly client: ClientProxy;
 
-  create(dto: CreateTicketDto) {
-    const source = this.client
-      .send(TicketsMessagePatterns.CREATE, dto)
-      .pipe(timeout(5000));
+  private send<T>(pattern: TicketsMessagePatterns, data: any): Promise<T> {
+    const source = this.client.send<T>(pattern, data).pipe(timeout(5000));
 
     return firstValueFrom(source);
+  }
+
+  emit(pattern: TicketsEventPatterns, data: any) {
+    this.client.emit(pattern, data);
+  }
+
+  create(dto: CreateTicketDto) {
+    return this.send<string>(TicketsMessagePatterns.CREATE, dto);
   }
 
   createMany(dtos: CreateTicketDto[]): Promise<string[]> {
-    const source = this.client
-      .send<string[]>(TicketsMessagePatterns.CREATE_MANY, dtos)
-      .pipe(timeout(5000));
-
-    return firstValueFrom(source);
+    return this.send<string[]>(TicketsMessagePatterns.CREATE_MANY, dtos);
   }
 
   createDuplicates(dto: CreateTicketDto, quantity: number): Promise<string[]> {
-    const source = this.client
-      .send<string[]>(TicketsMessagePatterns.CREATE_DUPLICATES, {
-        dto,
-        quantity,
-      } as CreateTicketDuplicatesMessageDto)
-      .pipe(timeout(5000));
-
-    return firstValueFrom(source);
+    return this.send<string[]>(TicketsMessagePatterns.CREATE_DUPLICATES, {
+      dto,
+      quantity,
+    } as CreateTicketDuplicatesMessageDto);
   }
 
   findMany(options: FindTicketsOptionsDto) {
-    const source = this.client
-      .send(TicketsMessagePatterns.FIND_MANY, options)
-      .pipe(timeout(5000));
-
-    return firstValueFrom(source);
+    return this.send<Ticket[]>(TicketsMessagePatterns.FIND_MANY, options);
   }
 
   findOne(id: string, selectFields: TicketSelectFieldsDto) {
-    const source = this.client
-      .send(TicketsMessagePatterns.FIND_ONE, {
-        id,
-        selectFields,
-      } as FindOneTicketMessageDto)
-      .pipe(timeout(5000));
-
-    return firstValueFrom(source);
+    return this.send<Ticket>(TicketsMessagePatterns.FIND_ONE, {
+      id,
+      selectFields,
+    } as FindOneTicketMessageDto);
   }
 
-  update(id: string, dto: UpdateTicketDto) {
-    const source = this.client
-      .send(TicketsMessagePatterns.UPDATE, {
+  findOneWithDetails(id: string): Promise<TicketWithDetails> {
+    return this.send<TicketWithDetails>(
+      TicketsMessagePatterns.FIND_ONE_WITH_DETAILS,
+      {
         id,
-        dto,
-      } as UpdateTicketMessageDto)
-      .pipe(timeout(5000));
-
-    return firstValueFrom(source);
+      } as FindOneTicketMessageDto,
+    );
   }
 
-  remove(id: string) {
-    const source = this.client
-      .send(TicketsMessagePatterns.DELETE, id)
-      .pipe(timeout(5000));
+  update(id: string, dto: UpdateTicketDto): Promise<Ticket> {
+    return this.send<Ticket>(TicketsMessagePatterns.UPDATE, {
+      id,
+      dto,
+    } as UpdateTicketMessageDto);
+  }
 
-    return firstValueFrom(source);
+  remove(id: string): Promise<Ticket> {
+    return this.send(TicketsMessagePatterns.DELETE, id);
   }
 }
