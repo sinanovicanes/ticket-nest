@@ -4,6 +4,7 @@ import {
   FindTicketSalesOptionsDto,
   ReleaseTicketSalesResponse,
   TicketSalesWithEventDetails,
+  TicketSalesWithImages,
   UpdateTicketSalesDto,
 } from '@app/contracts/ticket-sales';
 import {
@@ -11,13 +12,17 @@ import {
   eventSchema,
   InjectDB,
   locationSchema,
-  SelectFieldsFactory,
   TicketSales,
+  ticketSalesImageSchema,
   ticketSalesSchema,
-  TicketSalesSelectFieldsDto,
   ticketSchema,
 } from '@app/database';
-import { decrement, getOffset, increment } from '@app/database/utils';
+import {
+  decrement,
+  getOffset,
+  increment,
+  jsonAggBuildObject,
+} from '@app/database/utils';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { and, asc, between, desc, eq, gte, ilike, lte, or } from 'drizzle-orm';
@@ -26,7 +31,7 @@ import { and, asc, between, desc, eq, gte, ilike, lte, or } from 'drizzle-orm';
 export class TicketSalesService {
   @InjectDB() private readonly db: Database;
 
-  async findOne(id: string): Promise<TicketSales> {
+  async findOne(id: string): Promise<TicketSalesWithImages> {
     const results = await this.db
       .select({
         id: ticketSalesSchema.id,
@@ -38,8 +43,17 @@ export class TicketSalesService {
         createdAt: ticketSalesSchema.createdAt,
         updatedAt: ticketSalesSchema.updatedAt,
         eventId: ticketSalesSchema.eventId,
+        images: jsonAggBuildObject({
+          id: ticketSalesImageSchema.id,
+          url: ticketSalesImageSchema.url,
+        }),
       })
       .from(ticketSalesSchema)
+      .leftJoin(
+        ticketSalesImageSchema,
+        eq(ticketSalesSchema.id, ticketSalesImageSchema.ticketSalesId),
+      )
+      .groupBy(ticketSalesSchema.id)
       .where(eq(ticketSalesSchema.id, id));
 
     const result = results.pop();
@@ -76,10 +90,19 @@ export class TicketSalesService {
           city: locationSchema.city,
           province: locationSchema.province,
         },
+        images: jsonAggBuildObject({
+          id: ticketSalesImageSchema.id,
+          url: ticketSalesImageSchema.url,
+        }),
       })
       .from(ticketSalesSchema)
       .leftJoin(eventSchema, eq(ticketSalesSchema.eventId, eventSchema.id))
       .leftJoin(locationSchema, eq(eventSchema.locationId, locationSchema.id))
+      .leftJoin(
+        ticketSalesImageSchema,
+        eq(ticketSalesSchema.id, ticketSalesImageSchema.ticketSalesId),
+      )
+      .groupBy(ticketSalesSchema.id)
       .where(eq(ticketSalesSchema.id, id));
 
     const result = results.pop();
@@ -91,7 +114,9 @@ export class TicketSalesService {
     return result;
   }
 
-  async findMany(options: FindTicketSalesOptionsDto): Promise<TicketSales[]> {
+  async findMany(
+    options: FindTicketSalesOptionsDto,
+  ): Promise<TicketSalesWithImages[]> {
     const {
       page,
       limit,
@@ -117,8 +142,17 @@ export class TicketSalesService {
         createdAt: ticketSalesSchema.createdAt,
         updatedAt: ticketSalesSchema.updatedAt,
         eventId: ticketSalesSchema.eventId,
+        images: jsonAggBuildObject({
+          id: ticketSalesImageSchema.id,
+          url: ticketSalesImageSchema.url,
+        }),
       })
       .from(ticketSalesSchema)
+      .leftJoin(
+        ticketSalesImageSchema,
+        eq(ticketSalesSchema.id, ticketSalesImageSchema.ticketSalesId),
+      )
+      .groupBy(ticketSalesSchema.id)
       .offset(offset)
       .limit(limit);
 

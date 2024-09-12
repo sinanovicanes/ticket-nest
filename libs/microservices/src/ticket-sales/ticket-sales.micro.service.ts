@@ -10,6 +10,7 @@ import {
   TicketSalesEventPatterns,
   TicketSalesMessagePatterns,
   TicketSalesWithEventDetails,
+  TicketSalesWithImages,
   UpdateTicketSalesDto,
   UpdateTicketSalesMessageDto,
 } from '@app/contracts/ticket-sales';
@@ -31,7 +32,9 @@ export class TicketSalesMicroService {
     return firstValueFrom(source);
   }
 
-  findMany(options: FindTicketSalesOptionsDto): Promise<TicketSales[]> {
+  findMany(
+    options: FindTicketSalesOptionsDto,
+  ): Promise<TicketSalesWithImages[]> {
     const source = this.client
       .send(TicketSalesMessagePatterns.FIND_MANY, options)
       .pipe(timeout(5000));
@@ -39,7 +42,7 @@ export class TicketSalesMicroService {
     return firstValueFrom(source);
   }
 
-  findOne(id: string): Promise<TicketSales> {
+  findOne(id: string): Promise<TicketSalesWithImages> {
     const source = this.client
       .send(TicketSalesMessagePatterns.FIND_ONE, id)
       .pipe(timeout(5000));

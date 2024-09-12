@@ -6,6 +6,7 @@ import {
   ReserveTicketsMessageDto,
   TicketSalesMessagePatterns,
   TicketSalesWithEventDetails,
+  TicketSalesWithImages,
   UpdateTicketSalesMessageDto,
 } from '@app/contracts/ticket-sales';
 import { Controller } from '@nestjs/common';
@@ -23,12 +24,14 @@ export class TicketSalesController {
   }
 
   @MessagePattern(TicketSalesMessagePatterns.FIND_MANY)
-  findMany(@Payload() options: FindTicketSalesOptionsDto) {
+  findMany(
+    @Payload() options: FindTicketSalesOptionsDto,
+  ): Promise<TicketSalesWithImages[]> {
     return this.ticketSalesService.findMany(options);
   }
 
   @MessagePattern(TicketSalesMessagePatterns.FIND_ONE)
-  findOne(@Payload() id: string) {
+  findOne(@Payload() id: string): Promise<TicketSalesWithImages> {
     return this.ticketSalesService.findOne(id);
   }
 
